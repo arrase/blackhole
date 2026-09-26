@@ -13,7 +13,6 @@ uniform vec3 uCamFwd;
 uniform vec3 uCamRight;
 uniform vec3 uCamUp;
 uniform float uFov;
-uniform float uDoppler;
 uniform float uIntensity;
 uniform float uDiskSpeed;
 uniform float uSteps;
@@ -106,15 +105,15 @@ vec4 diskSample(vec3 p, vec3 vel){
   float cosT = dot(vDir, -normalize(vel));
   float D = 1.0 / (gamma * (1.0 - beta * cosT));
   float g = sqrt(max(1.0 - 1.0 / r, 0.0));
-  float shift = mix(1.0, D * g, uDoppler);
-  float boost = mix(1.0, pow(D, 3.0) * g, uDoppler);
+  float shift = D * g;
+  float boost = pow(D, 3.0) * g;
 
   vec3 hot = vec3(1.0, 0.93, 0.82);
   vec3 warm = vec3(1.0, 0.55, 0.2);
   vec3 cold = vec3(0.7, 0.18, 0.04);
   float tc = clamp(temp * 1.6 * shift, 0.0, 1.5);
   vec3 col = tc < 0.5 ? mix(cold, warm, tc * 2.0) : mix(warm, hot, clamp((tc - 0.5) * 1.5, 0.0, 1.0));
-  if(shift > 1.0) col = mix(col, vec3(0.8, 0.88, 1.0), clamp((shift - 1.0) * 0.8, 0.0, 0.6) * uDoppler);
+  if(shift > 1.0) col = mix(col, vec3(0.8, 0.88, 1.0), clamp((shift - 1.0) * 0.8, 0.0, 0.6));
 
   vec3 emit = col * bright * boost * uIntensity * 2.2;
   float alpha = clamp(bright * 1.4, 0.0, 1.0) * 0.95;

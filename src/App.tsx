@@ -32,14 +32,13 @@ export default function App() {
   const [panel, setPanel] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
   const [settings, setSettings] = useState<SimSettings>({
-    doppler: 0,
-    intensity: 1.1,
+    intensity: 0.35,
     diskSpeed: 1.5,
     quality: 1,
     stars: 1,
     glow: 0.6,
     autoRotate: true,
-    fov: 1.6,
+    fov: 1.3,
   });
   const set = <K extends keyof SimSettings>(k: K, v: SimSettings[K]) => setSettings((s) => ({ ...s, [k]: v }));
   const onFps = useCallback((f: number) => setFps(f), []);
@@ -65,7 +64,6 @@ export default function App() {
 
       {/* Título */}
       <div className="pointer-events-none absolute left-6 top-6 md:left-10 md:top-8">
-        <h1 className="text-3xl font-extralight tracking-[0.6em] text-white/90 md:text-5xl">GARGANTUA</h1>
         <p className="mt-2 text-[11px] uppercase tracking-[0.35em] text-amber-200/60">
           Agujero negro supermasivo · Simulación relativista en tiempo real
         </p>
@@ -101,23 +99,6 @@ export default function App() {
       {panel && (
         <div className="absolute right-4 top-16 w-64 space-y-4 rounded-2xl border border-white/10 bg-black/50 p-5 backdrop-blur-xl">
           <div>
-            <div className="mb-2 text-[11px] uppercase tracking-widest text-amber-100/70">Modo de renderizado</div>
-            <div className="grid grid-cols-2 gap-1 rounded-lg bg-white/5 p-1 text-xs">
-              <button onClick={() => set("doppler", 0)}
-                className={`rounded-md py-1.5 transition ${settings.doppler === 0 ? "bg-amber-400/90 text-black" : "text-white/70"}`}>
-                Película
-              </button>
-              <button onClick={() => set("doppler", 1)}
-                className={`rounded-md py-1.5 transition ${settings.doppler === 1 ? "bg-amber-400/90 text-black" : "text-white/70"}`}>
-                Físico
-              </button>
-            </div>
-            <p className="mt-1.5 text-[10px] leading-snug text-white/40">
-              "Físico" activa el efecto Doppler relativista: un lado del disco brilla más y se azula.
-            </p>
-          </div>
-
-          <div>
             <div className="mb-2 text-[11px] uppercase tracking-widest text-amber-100/70">Calidad</div>
             <div className="grid grid-cols-3 gap-1 rounded-lg bg-white/5 p-1 text-xs">
               {["Baja", "Media", "Alta"].map((l, i) => (
@@ -151,7 +132,7 @@ export default function App() {
           <p><b className="text-white">Lente gravitacional:</b> cada píxel es un rayo de luz trazado siguiendo las geodésicas de Schwarzschild. Por eso vemos la parte trasera del disco doblada por encima y por debajo del agujero.</p>
           <p><b className="text-white">Anillo de fotones:</b> a 1,5 radios de Schwarzschild la luz puede orbitar el agujero, creando un fino anillo brillante.</p>
           <p><b className="text-white">Disco de acreción:</b> gas a millones de grados girando a velocidades cercanas a la luz (órbitas keplerianas: el interior gira más rápido).</p>
-          <p className="text-xs text-white/45">En Interstellar se omitió el efecto Doppler para que el público no se confundiera. Prueba el modo "Físico" para ver cómo se vería realmente.</p>
+          <p className="text-xs text-white/45">Incluye el efecto Doppler relativista y corrimiento gravitacional: el gas que se aproxima brilla con más intensidad y se azula (beaming relativista).</p>
           <button onClick={() => setShowInfo(false)} className="text-xs text-amber-300 hover:underline">Cerrar</button>
         </div>
       )}

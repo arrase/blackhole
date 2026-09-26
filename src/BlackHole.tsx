@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { fragmentShader, vertexShader } from "./shaders";
 
 export interface SimSettings {
-  doppler: number;
   intensity: number;
   diskSpeed: number;
   quality: number; // 0 baja, 1 media, 2 alta
@@ -69,7 +68,7 @@ export default function BlackHole({ settings, camera, onFps }: Props) {
     const u = (n: string) => gl.getUniformLocation(prog, n);
     const U = {
       res: u("uRes"), time: u("uTime"), camPos: u("uCamPos"), fwd: u("uCamFwd"),
-      right: u("uCamRight"), up: u("uCamUp"), fov: u("uFov"), doppler: u("uDoppler"),
+      right: u("uCamRight"), up: u("uCamUp"), fov: u("uFov"),
       intensity: u("uIntensity"), speed: u("uDiskSpeed"), steps: u("uSteps"),
       stars: u("uStars"), glow: u("uGlow"),
     };
@@ -120,7 +119,6 @@ export default function BlackHole({ settings, camera, onFps }: Props) {
       gl.uniform3fv(U.right, r2);
       gl.uniform3fv(U.up, up2);
       gl.uniform1f(U.fov, s.fov);
-      gl.uniform1f(U.doppler, s.doppler);
       gl.uniform1f(U.intensity, s.intensity);
       gl.uniform1f(U.speed, s.diskSpeed);
       gl.uniform1f(U.steps, q.steps);
