@@ -112,11 +112,11 @@ export default function App() {
   };
 
   return (
-    <div className="relative h-screen h-dvh w-screen overflow-hidden bg-black text-white select-none">
+    <div className="fixed inset-0 overflow-hidden bg-black text-white select-none">
       <BlackHole settings={settings} camera={camera} onFps={onFps} webglUnsupportedMessage={t.webglUnsupported} />
 
       {/* Barra superior */}
-      <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-3 sm:p-4 md:px-8 md:py-6 pointer-events-none pt-[max(0.75rem,env(safe-area-inset-top))]">
+      <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-3.5 sm:p-5 md:px-8 md:py-6 pointer-events-none pt-[max(0.875rem,env(safe-area-inset-top))]">
         <div className="pointer-events-none min-w-0 pr-2">
           <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.35em] text-amber-200/70 truncate font-light">
             {t.subtitle}
@@ -164,7 +164,7 @@ export default function App() {
       </header>
 
       {/* Barra inferior */}
-      <div className="absolute bottom-3 sm:bottom-6 inset-x-0 flex justify-center px-3 sm:px-4 z-10 pointer-events-none pb-[env(safe-area-inset-bottom,0px)]">
+      <div className="absolute bottom-6 sm:bottom-8 inset-x-0 flex justify-center px-3 sm:px-4 z-10 pointer-events-none pb-[env(safe-area-inset-bottom,0px)]">
         <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 max-w-full">
           {(Object.keys(PRESET_CAMERAS) as PresetKey[]).map((k) => (
             <button
