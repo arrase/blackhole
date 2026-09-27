@@ -2,8 +2,9 @@ import { useCallback, useRef, useState } from "react";
 import BlackHole, { CameraState, SimSettings } from "./BlackHole";
 
 const PRESETS: Record<string, { cam: CameraState; label: string }> = {
-  cine: { label: "Vista Interstellar", cam: { theta: 1.2, phi: 0.07, dist: 22 } },
-  cerca: { label: "Aproximación", cam: { theta: 0.6, phi: 0.12, dist: 9 } },
+  cine: { label: "Vista Interstellar", cam: { theta: 1.2, phi: 0.12, dist: 22 } },
+  kerr: { label: "Sombra de Kerr", cam: { theta: 0.0, phi: 0.08, dist: 14 } },
+  cerca: { label: "Aproximación", cam: { theta: 0.6, phi: 0.14, dist: 9 } },
   arriba: { label: "Desde arriba", cam: { theta: 0.3, phi: 1.1, dist: 26 } },
   plano: { label: "Plano del disco", cam: { theta: 2.0, phi: 0.01, dist: 18 } },
 };
@@ -39,6 +40,7 @@ export default function App() {
     glow: 0.6,
     autoRotate: true,
     fov: 1.3,
+    spin: 0.85,
   });
   const set = <K extends keyof SimSettings>(k: K, v: SimSettings[K]) => setSettings((s) => ({ ...s, [k]: v }));
   const onFps = useCallback((f: number) => setFps(f), []);
@@ -110,6 +112,7 @@ export default function App() {
             </div>
           </div>
 
+          <Slider label="Rotación (Spin Kerr)" value={settings.spin} min={0} max={0.95} step={0.01} onChange={(v) => set("spin", v)} />
           <Slider label="Brillo del disco" value={settings.intensity} min={0.2} max={2.5} step={0.01} onChange={(v) => set("intensity", v)} />
           <Slider label="Velocidad del disco" value={settings.diskSpeed} min={0} max={6} step={0.01} onChange={(v) => set("diskSpeed", v)} />
           <Slider label="Anillo de fotones" value={settings.glow} min={0} max={2} step={0.01} onChange={(v) => set("glow", v)} />
@@ -128,11 +131,11 @@ export default function App() {
       {showInfo && (
         <div className="absolute left-6 top-32 max-w-sm space-y-3 rounded-2xl border border-white/10 bg-black/60 p-5 text-sm leading-relaxed text-white/75 backdrop-blur-xl">
           <h2 className="text-base font-light tracking-widest text-amber-200">LA FÍSICA DETRÁS</h2>
-          <p><b className="text-white">Horizonte de eventos:</b> la sombra negra central. Nada, ni siquiera la luz, puede escapar de ella.</p>
-          <p><b className="text-white">Lente gravitacional:</b> cada píxel es un rayo de luz trazado siguiendo las geodésicas de Schwarzschild. Por eso vemos la parte trasera del disco doblada por encima y por debajo del agujero.</p>
-          <p><b className="text-white">Anillo de fotones:</b> a 1,5 radios de Schwarzschild la luz puede orbitar el agujero, creando un fino anillo brillante.</p>
-          <p><b className="text-white">Disco de acreción:</b> gas a millones de grados girando a velocidades cercanas a la luz (órbitas keplerianas: el interior gira más rápido).</p>
-          <p className="text-xs text-white/45">Incluye el efecto Doppler relativista y corrimiento gravitacional: el gas que se aproxima brilla con más intensidad y se azula (beaming relativista).</p>
+          <p><b className="text-white">Métrica de Kerr y Spin:</b> simula un agujero negro en rotación relativista. El giro arrastra el propio tejido del espaciotiempo (efecto Lense-Thirring / <i>frame dragging</i>), achatando la sombra en el lado que rota hacia nosotros para formar una característica silueta en forma de "D".</p>
+          <p><b className="text-white">Horizonte y Ergosfera:</b> el horizonte de sucesos se contrae con el spin según $r_+ = M + \sqrt{M^2-a^2}$. Por fuera surge la ergosfera, donde el arrastre obliga a toda la materia a orbitar a favor del giro.</p>
+          <p><b className="text-white">Órbita circular estable (ISCO):</b> calculada con la fórmula de Bardeen-Press-Teukolsky. Al aumentar el spin a $0.95$, el borde interior del disco pasa de $3.0$ a $0.95$, permitiendo al gas penetrar mucho más hondo y liberar enorme energía gravitatoria.</p>
+          <p><b className="text-white">Lente gravitacional y Anillo de fotones:</b> cada rayo sigue geodésicas nulas integradas con Verlet simpléctico de 2º orden considerando la aceleración gravitomagnética.</p>
+          <p><b className="text-white">Efecto Doppler y Beaming:</b> el gas prógrado que viaja hacia el observador sufre un intenso corrimiento al azul y amplificación luminosa cuártica ($\delta^4$).</p>
           <button onClick={() => setShowInfo(false)} className="text-xs text-amber-300 hover:underline">Cerrar</button>
         </div>
       )}

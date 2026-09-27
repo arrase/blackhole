@@ -9,6 +9,7 @@ export interface SimSettings {
   glow: number;
   autoRotate: boolean;
   fov: number;
+  spin: number;
 }
 
 export interface CameraState {
@@ -70,7 +71,7 @@ export default function BlackHole({ settings, camera, onFps }: Props) {
       res: u("uRes"), time: u("uTime"), camPos: u("uCamPos"), fwd: u("uCamFwd"),
       right: u("uCamRight"), up: u("uCamUp"), fov: u("uFov"),
       intensity: u("uIntensity"), speed: u("uDiskSpeed"), steps: u("uSteps"),
-      stars: u("uStars"), glow: u("uGlow"),
+      stars: u("uStars"), glow: u("uGlow"), spin: u("uSpin"),
     };
 
     let raf = 0;
@@ -124,6 +125,7 @@ export default function BlackHole({ settings, camera, onFps }: Props) {
       gl.uniform1f(U.steps, q.steps);
       gl.uniform1f(U.stars, s.stars);
       gl.uniform1f(U.glow, s.glow);
+      gl.uniform1f(U.spin, s.spin);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       frames++;
