@@ -23,8 +23,7 @@ export const hi: Translation = {
     "qualityLevels": [
       "निम्न",
       "मध्यम",
-      "उच्च",
-      "अल्ट्रा"
+      "उच्च"
     ],
     "spin": "घूर्णन (केर स्पिन)",
     "intensity": "डिस्क चमक",

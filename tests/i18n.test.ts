@@ -40,7 +40,7 @@ describe("i18n system", () => {
       expect(t.buttons.close).toBeTruthy();
 
       expect(t.controls.quality).toBeTruthy();
-      expect(t.controls.qualityLevels).toHaveLength(4);
+      expect(t.controls.qualityLevels).toHaveLength(3);
       t.controls.qualityLevels.forEach((level) => expect(level).toBeTruthy());
       expect(t.controls.spin).toBeTruthy();
       expect(t.controls.intensity).toBeTruthy();

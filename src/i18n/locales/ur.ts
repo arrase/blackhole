@@ -23,8 +23,7 @@ export const ur: Translation = {
     "qualityLevels": [
       "کم",
       "درمیانہ",
-      "اعلیٰ",
-      "الٹرا"
+      "اعلیٰ"
     ],
     "spin": "گردش (کیر اسپن)",
     "intensity": "ڈسک کی چمک",

@@ -23,8 +23,7 @@ export const sv: Translation = {
     "qualityLevels": [
       "Låg",
       "Medel",
-      "Hög",
-      "Ultra"
+      "Hög"
     ],
     "spin": "Rotation (Kerr-spinn)",
     "intensity": "Diskens ljusstyrka",

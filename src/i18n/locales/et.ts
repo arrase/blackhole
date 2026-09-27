@@ -23,8 +23,7 @@ export const et: Translation = {
     "qualityLevels": [
       "Madal",
       "Keskmine",
-      "Kõrge",
-      "Ultra"
+      "Kõrge"
     ],
     "spin": "Pöörlemine (Kerri spinn)",
     "intensity": "Ketta heledus",

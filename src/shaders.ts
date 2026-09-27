@@ -39,6 +39,11 @@ float getIsco(float spin){
   return 0.5 * (3.0 + z2 - sqrt(max(0.0, (3.0 - z1) * (3.0 + z1 + 2.0 * z2))));
 }
 
+float diskHeight(float r, float rPlus){
+  if(r <= rPlus || r >= DISK_OUT) return 0.0;
+  return 0.065 * r * sqrt(max(0.0, (r - rPlus) / r));
+}
+
 // Aceleracion geodesica para rayos nulos en metrica de Kerr:
 // a_Kerr = a_Schw + 2 * (v_photon x B_gm)
 vec3 geodesicAcc(vec3 p, vec3 vel){
@@ -135,7 +140,7 @@ vec3 background(vec3 d){
   return stars * uStars + nebula;
 }
 
-// Muestreo del disco de acrecion con bordes suaves transparentes (sin borde negro ni corte de pegatina)
+// Muestreo del disco de acrecion 2D base (Modo Baja)
 vec4 sampleDisk(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount){
   float r = length(p.xz);
   if(r < rPlus * 1.01 || r > DISK_OUT) return vec4(0.0);
@@ -178,55 +183,97 @@ vec4 sampleDisk(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount){
     aRot += 1.8 * sqrt(rIsco - r);
   }
 
-  if(uQuality < 2.5){
-    // Estructura de plasma fluido organico base (Baja, Media, Alta)
-    vec3 q1 = vec3(r * 2.2, cos(aRot) * 2.2, sin(aRot) * 2.2);
-    vec3 q2 = vec3(r * 4.6, cos(aRot * 1.6 + tAnim * 0.12) * 3.2, sin(aRot * 1.6 + tAnim * 0.12) * 3.2);
-    float n1 = fbm(q1);
-    float n2 = fbm(q2);
-    float streaks = 0.55 + 0.75 * n1 * (0.6 + 0.7 * n2);
-    float rings = 0.82 + 0.18 * sin(r * 5.2 + n1 * 1.3);
-    float bright = temp * rings * streaks * 2.8;
+  // Estructura de plasma fluido organico base
+  vec3 q1 = vec3(r * 2.2, cos(aRot) * 2.2, sin(aRot) * 2.2);
+  vec3 q2 = vec3(r * 4.6, cos(aRot * 1.6 + tAnim * 0.12) * 3.2, sin(aRot * 1.6 + tAnim * 0.12) * 3.2);
+  float n1 = fbm(q1);
+  float n2 = fbm(q2);
+  float streaks = 0.55 + 0.75 * n1 * (0.6 + 0.7 * n2);
+  float rings = 0.82 + 0.18 * sin(r * 5.2 + n1 * 1.3);
+  float bright = temp * rings * streaks * 2.8;
 
-    float edgeIn = smoothstep(rPlus * 1.01, rPlus * 1.15, r);
-    float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.45, r);
-    bright *= edgeIn * edgeOut;
-    if(bright <= 0.0001) return vec4(0.0);
+  float edgeIn = smoothstep(rPlus * 1.01, rPlus * 1.15, r);
+  float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.45, r);
+  bright *= edgeIn * edgeOut;
+  if(bright <= 0.0001) return vec4(0.0);
 
-    float beta = min(length(vGas), 0.95);
-    float gamma = 1.0 / sqrt(1.0 - beta * beta);
-    vec3 nPhoton = -normalize(vel);
-    float D = 1.0 / (gamma * (1.0 - dot(vGas, nPhoton)));
-    float g = sqrt(max(1.0 - rPlus / r, 0.0));
-    float shift = clamp(D * g, 0.04, 3.2);
-    float boost = pow(shift, 2.6);
+  float beta = min(length(vGas), 0.95);
+  float gamma = 1.0 / sqrt(1.0 - beta * beta);
+  vec3 nPhoton = -normalize(vel);
+  float D = 1.0 / (gamma * (1.0 - dot(vGas, nPhoton)));
+  float g = sqrt(max(1.0 - rPlus / r, 0.0));
+  float shift = clamp(D * g, 0.04, 3.2);
+  float boost = pow(shift, 2.6);
 
-    float tc = temp * shift * 1.45;
-    vec3 cold = vec3(0.72, 0.15, 0.02);
-    vec3 warm = vec3(1.0, 0.58, 0.18);
-    vec3 hot = vec3(1.0, 0.95, 0.88);
-    vec3 blueShift = vec3(0.82, 0.91, 1.0);
+  float tc = temp * shift * 1.45;
+  vec3 cold = vec3(0.72, 0.15, 0.02);
+  vec3 warm = vec3(1.0, 0.58, 0.18);
+  vec3 hot = vec3(1.0, 0.95, 0.88);
+  vec3 blueShift = vec3(0.82, 0.91, 1.0);
 
-    vec3 col;
-    if(tc < 0.35){
-      col = mix(cold, warm, tc / 0.35);
-    } else if(tc < 0.85){
-      col = mix(warm, hot, (tc - 0.35) / 0.5);
-    } else {
-      col = mix(hot, blueShift, min((tc - 0.85) * 0.7, 0.65));
-    }
-
-    float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.6) : (1.0 + uGlow * (0.25 / r));
-    vec3 emit = col * bright * boost * uIntensity * ringBoost * 2.1;
-
-    float cosIncidence = max(abs(vel.y) / max(length(vel), 0.001), 0.15);
-    float tau = (2.2 * bright) / cosIncidence;
-    float alpha = clamp(1.0 - exp(-tau), 0.0, 0.96);
-
-    return vec4(emit, alpha);
+  vec3 col;
+  if(tc < 0.35){
+    col = mix(cold, warm, tc / 0.35);
+  } else if(tc < 0.85){
+    col = mix(warm, hot, (tc - 0.35) / 0.5);
+  } else {
+    col = mix(hot, blueShift, min((tc - 0.85) * 0.7, 0.65));
   }
 
-  // Modo Ultra (uQuality >= 2.5): turbulencia MHD realista con domain warping y ondas de choque espirales
+  float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.6) : (1.0 + uGlow * (0.25 / r));
+  vec3 emit = col * bright * boost * uIntensity * ringBoost * 2.1;
+
+  float cosIncidence = max(abs(vel.y) / max(length(vel), 0.001), 0.15);
+  float tau = (2.2 * bright) / cosIncidence;
+  float alpha = clamp(1.0 - exp(-tau), 0.0, 0.96);
+
+  return vec4(emit, alpha);
+}
+
+// Muestreo del disco de acrecion 2D con turbulencia MHD (Modo Media)
+vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount){
+  float r = length(p.xz);
+  if(r < rPlus * 1.01 || r > DISK_OUT) return vec4(0.0);
+
+  float M = 0.5;
+  float a_spin = uSpin * M;
+  float sqrtM = sqrt(M);
+
+  // Frecuencia kepleriana prograda en Kerr
+  float omega = sqrtM / (pow(r, 1.5) + a_spin * sqrtM);
+  float phi = atan(p.z, p.x);
+
+  // Adveccion temporal acotada: evita moire por cizalladura radial infinita
+  float tAnim = mod(uTime * uDiskSpeed, 62.831853);
+  float shearFlow = tAnim * (0.5 / (r + 1.4));
+  float aRot = phi + shearFlow;
+
+  vec3 rHat = vec3(p.x, 0.0, p.z) / r;
+  vec3 phiHat = vec3(-p.z, 0.0, p.x) / r;
+  vec3 vGas;
+  float temp;
+
+  if(r >= rIsco){
+    // Zona kepleriana estable (Novikov-Thorne / Shakura-Sunyaev)
+    float vTangential = min(r * omega / sqrt(max(1.0 - 1.0 / r, 0.05)), 0.85);
+    vGas = vTangential * phiHat;
+
+    float x = rIsco / r;
+    temp = pow(x, 0.75) * pow(max(1.0 - sqrt(x) * 0.95, 0.0), 0.25);
+  } else {
+    // Plunging Region: caida libre suave en espiral hacia el horizonte
+    float f = max(1.0 - rPlus / r, 0.0);
+    float omegaIsco = sqrtM / (pow(rIsco, 1.5) + a_spin * sqrtM);
+    float vIsco = rIsco * omegaIsco;
+    float vTangential = vIsco * (rIsco / r) * sqrt(max(f, 0.001));
+    float vRadial = -sqrt(clamp(1.0 - f * (1.0 + (rIsco * rIsco) / (r * r)), 0.0, 1.0)) * 0.85;
+    vGas = vTangential * phiHat + vRadial * rHat;
+
+    temp = 0.48 * pow(max(r - rPlus, 0.0) / max(rIsco - rPlus, 0.001), 0.5);
+    aRot += 1.8 * sqrt(rIsco - r);
+  }
+
+  // Turbulencia MHD realista con domain warping y ondas de choque espirales
   float spiral1 = 2.0 * aRot - 1.8 * log(max(r / max(rIsco, 0.1), 0.001));
   float spiral2 = 4.0 * aRot - 2.6 * log(max(r / max(rIsco, 0.1), 0.001));
   float shock = pow(0.5 + 0.5 * sin(spiral1), 1.8) * (0.8 + 0.2 * sin(spiral2));
@@ -305,6 +352,133 @@ vec4 sampleDisk(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount){
   return vec4(emit, alpha);
 }
 
+// Muestreo volumetrico continuo 3D del disco de acrecion (Modo Alta)
+vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, int crossingCount, float H){
+  float r = length(pos.xz);
+  if(r < rPlus * 1.01 || r > DISK_OUT) return vec4(0.0);
+
+  float M = 0.5;
+  float a_spin = uSpin * M;
+  float sqrtM = sqrt(M);
+
+  // Frecuencia kepleriana prograda en Kerr
+  float omega = sqrtM / (pow(r, 1.5) + a_spin * sqrtM);
+  float phi = atan(pos.z, pos.x);
+
+  // Adveccion temporal acotada: evita moire por cizalladura radial infinita
+  float tAnim = mod(uTime * uDiskSpeed, 62.831853);
+  float shearFlow = tAnim * (0.5 / (r + 1.4));
+  float aRot = phi + shearFlow;
+
+  vec3 rHat = vec3(pos.x, 0.0, pos.z) / r;
+  vec3 phiHat = vec3(-pos.z, 0.0, pos.x) / r;
+  vec3 vGas;
+  float temp;
+
+  if(r >= rIsco){
+    // Zona kepleriana estable (Novikov-Thorne / Shakura-Sunyaev)
+    float vTangential = min(r * omega / sqrt(max(1.0 - 1.0 / r, 0.05)), 0.85);
+    vGas = vTangential * phiHat;
+
+    float x = rIsco / r;
+    temp = pow(x, 0.75) * pow(max(1.0 - sqrt(x) * 0.95, 0.0), 0.25);
+  } else {
+    // Plunging Region: caida libre suave en espiral hacia el horizonte
+    float f = max(1.0 - rPlus / r, 0.0);
+    float omegaIsco = sqrtM / (pow(rIsco, 1.5) + a_spin * sqrtM);
+    float vIsco = rIsco * omegaIsco;
+    float vTangential = vIsco * (rIsco / r) * sqrt(max(f, 0.001));
+    float vRadial = -sqrt(clamp(1.0 - f * (1.0 + (rIsco * rIsco) / (r * r)), 0.0, 1.0)) * 0.85;
+    vGas = vTangential * phiHat + vRadial * rHat;
+
+    temp = 0.48 * pow(max(r - rPlus, 0.0) / max(rIsco - rPlus, 0.001), 0.5);
+    aRot += 1.8 * sqrt(rIsco - r);
+  }
+
+  // Turbulencia MHD realista con domain warping y ondas de choque espirales
+  float spiral1 = 2.0 * aRot - 1.8 * log(max(r / max(rIsco, 0.1), 0.001));
+  float spiral2 = 4.0 * aRot - 2.6 * log(max(r / max(rIsco, 0.1), 0.001));
+  float shock = pow(0.5 + 0.5 * sin(spiral1), 1.8) * (0.8 + 0.2 * sin(spiral2));
+
+  // Multi-octave domain warping para filamentos magneticos y remolinos de plasma en 3D
+  vec3 q = vec3(r * 2.5, cos(aRot) * 2.5, sin(aRot) * 2.5 + pos.y * 3.5);
+  vec3 qWarp = q + vec3(
+    fbm(q + vec3(tAnim * 0.1, 0.0, 1.5)),
+    fbm(q + vec3(2.1, tAnim * 0.12, 0.0)),
+    fbm(q + vec3(0.0, 3.4, -tAnim * 0.08))
+  ) * 1.4;
+  float n1 = fbm(qWarp);
+  float n2 = fbm(qWarp * 2.2 + vec3(r * 1.6, 0.0, tAnim * 0.15));
+
+  // Filamentos finos con gradientes pronunciados
+  float filament = 1.0 - smoothstep(0.04, 0.35, abs(n1 - 0.5) * 2.0);
+
+  // Estrias keplerianas de alta cizalladura combinadas con ondas de choque espirales en 3D
+  vec3 qStreak = vec3(r * 6.0, cos(aRot * 4.0 + n1 * 2.2) * 4.5, sin(aRot * 4.0 + n1 * 2.2) * 4.5 + pos.y * 5.0);
+  float fineStreak = fbm(qStreak);
+  float streaks = (0.4 + 0.85 * n1 * (0.5 + 0.8 * n2) + 0.45 * fineStreak + 0.55 * filament) * (0.7 + 0.65 * shock);
+
+  // Anillos concentricos y modulacion de ondas de densidad
+  float rings = (0.8 + 0.2 * sin(r * 6.2 + n1 * 2.0 + sin(spiral1) * 0.6)) * (0.88 + 0.12 * cos(r * 12.5 + n2 * 1.5));
+
+  float bright = temp * rings * streaks * 2.8;
+
+  // Transicion suave hacia el borde exterior
+  float edgeIn = smoothstep(rPlus * 1.01, rPlus * 1.15, r);
+  float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.45, r);
+  bright *= edgeIn * edgeOut;
+  if(bright <= 0.0001) return vec4(0.0);
+
+  // Doppler relativista + corrimiento gravitacional
+  float beta = min(length(vGas), 0.95);
+  float gamma = 1.0 / sqrt(1.0 - beta * beta);
+  vec3 nPhoton = -normalize(vel);
+  float D = 1.0 / (gamma * (1.0 - dot(vGas, nPhoton)));
+  float g = sqrt(max(1.0 - rPlus / r, 0.0));
+  float shift = clamp(D * g, 0.04, 3.4);
+  float boost = pow(shift, 2.3);
+  boost = boost / (1.0 + 0.1 * boost);
+
+  // Temperatura local con nucleos incandescentes y colas infrarrojas
+  float localTemp = temp * (0.75 + 0.55 * filament + 0.35 * shock);
+  float tc = localTemp * shift * 1.45;
+
+  vec3 colCrimson = vec3(0.42, 0.02, 0.005);
+  vec3 colAmber = vec3(0.96, 0.32, 0.03);
+  vec3 colGold = vec3(1.0, 0.82, 0.38);
+  vec3 colWhite = vec3(1.0, 0.96, 0.90);
+  vec3 colBlue = vec3(0.65, 0.84, 1.0);
+  vec3 colDeepBlue = vec3(0.42, 0.65, 1.0);
+
+  vec3 col;
+  if(tc < 0.22){
+    col = mix(colCrimson, colAmber, tc / 0.22);
+  } else if(tc < 0.55){
+    col = mix(colAmber, colGold, (tc - 0.22) / 0.33);
+  } else if(tc < 0.95){
+    col = mix(colGold, colWhite, (tc - 0.55) / 0.40);
+  } else if(tc < 1.45){
+    col = mix(colWhite, colBlue, (tc - 0.95) / 0.50);
+  } else {
+    col = mix(colBlue, colDeepBlue, min((tc - 1.45) * 0.6, 1.0));
+  }
+
+  // Modulacion de fotones en cruces secundarios con intensidad fisica suave
+  float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.8) : (1.0 + uGlow * (0.3 / r));
+
+  // Perfil vertical gaussiano de densidad
+  float yNorm = pos.y / H;
+  float rhoVertical = exp(-2.5 * yNorm * yNorm);
+
+  // Densidad volumetrica y transporte radiativo del paso
+  float rho = 7.0 * rhoVertical * bright;
+  float dTau = rho * dt;
+  float stepAlpha = clamp(1.0 - exp(-dTau), 0.0, 0.98);
+  vec3 stepEmit = col * rho * boost * uIntensity * ringBoost * 2.0;
+
+  return vec4(stepEmit, stepAlpha);
+}
+
 vec3 aces(vec3 x){
   const float a = 2.51, b = 0.03, c = 2.43, d = 0.59, e = 0.14;
   return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
@@ -335,7 +509,7 @@ void main(){
 
     float dt = clamp(0.06 * r * r / (r + 2.0), 0.015, 1.4);
     if(abs(pos.y) < 1.0 && r < DISK_OUT + 2.0){
-      float baseDt = (uQuality >= 2.5) ? 0.04 : 0.08;
+      float baseDt = (uQuality >= 1.5) ? 0.04 : 0.08;
       dt = min(dt, baseDt + abs(pos.y) * 0.2);
     }
     if(r < 3.2){
@@ -347,15 +521,34 @@ void main(){
     vec3 nextAcc = geodesicAcc(nextPos, predVel);
     vec3 nextVel = vel + 0.5 * (acc + nextAcc) * dt;
 
-    if(pos.y * nextPos.y < 0.0){
-      crossingCount++;
-      float t = pos.y / (pos.y - nextPos.y);
-      vec3 p = mix(pos, nextPos, t);
-      vec3 velAtP = mix(vel, nextVel, t);
-      vec4 d = sampleDisk(p, velAtP, rPlus, rIsco, crossingCount);
-      col += tr * d.rgb * d.a;
-      tr *= (1.0 - d.a);
-      if(tr < 0.008) break;
+    if(uQuality >= 1.5){
+      if(pos.y * nextPos.y < 0.0 && r < DISK_OUT){
+        crossingCount++;
+      }
+      float rDisk = length(pos.xz);
+      float H = diskHeight(rDisk, rPlus);
+      if(H > 0.001 && abs(pos.y) < H){
+        vec4 step = sampleDiskVolume(pos, vel, dt, rPlus, rIsco, crossingCount, H);
+        col += tr * step.rgb * step.a;
+        tr *= (1.0 - step.a);
+        if(tr < 0.008) break;
+      }
+    } else {
+      if(pos.y * nextPos.y < 0.0){
+        crossingCount++;
+        float t = pos.y / (pos.y - nextPos.y);
+        vec3 p = mix(pos, nextPos, t);
+        vec3 velAtP = mix(vel, nextVel, t);
+        vec4 d;
+        if(uQuality >= 0.5){
+          d = sampleDiskMHD(p, velAtP, rPlus, rIsco, crossingCount);
+        } else {
+          d = sampleDisk(p, velAtP, rPlus, rIsco, crossingCount);
+        }
+        col += tr * d.rgb * d.a;
+        tr *= (1.0 - d.a);
+        if(tr < 0.008) break;
+      }
     }
 
     pos = nextPos;

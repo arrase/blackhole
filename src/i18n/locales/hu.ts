@@ -23,8 +23,7 @@ export const hu: Translation = {
     "qualityLevels": [
       "Alacsony",
       "Közepes",
-      "Magas",
-      "Ultra"
+      "Magas"
     ],
     "spin": "Forgás (Kerr-spin)",
     "intensity": "Korong fényessége",

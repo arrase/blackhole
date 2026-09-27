@@ -23,8 +23,7 @@ export const ja: Translation = {
     "qualityLevels": [
       "低",
       "中",
-      "高",
-      "ウルトラ"
+      "高"
     ],
     "spin": "回転 (カー・スピン)",
     "intensity": "円盤の輝度",

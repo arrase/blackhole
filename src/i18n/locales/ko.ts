@@ -23,8 +23,7 @@ export const ko: Translation = {
     "qualityLevels": [
       "낮음",
       "중간",
-      "높음",
-      "울트라"
+      "높음"
     ],
     "spin": "회전 (커 스핀)",
     "intensity": "강착원반 밝기",

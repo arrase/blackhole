@@ -23,8 +23,7 @@ export const el: Translation = {
     "qualityLevels": [
       "Χαμηλή",
       "Μεσαία",
-      "Υψηλή",
-      "Ultra"
+      "Υψηλή"
     ],
     "spin": "Περιστροφή (Spin Kerr)",
     "intensity": "Φωτεινότητα δίσκου",

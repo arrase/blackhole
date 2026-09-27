@@ -23,8 +23,7 @@ export const eu: Translation = {
     "qualityLevels": [
       "Baxua",
       "Ertaina",
-      "Altua",
-      "Ultra"
+      "Altua"
     ],
     "spin": "Errotazioa (Kerr Spina)",
     "intensity": "Diskoaren distira",

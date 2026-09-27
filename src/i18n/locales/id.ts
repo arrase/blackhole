@@ -23,8 +23,7 @@ export const id: Translation = {
     "qualityLevels": [
       "Rendah",
       "Sedang",
-      "Tinggi",
-      "Ultra"
+      "Tinggi"
     ],
     "spin": "Rotasi (Spin Kerr)",
     "intensity": "Kecerahan Piringan",

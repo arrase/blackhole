@@ -23,8 +23,7 @@ export const zh: Translation = {
     "qualityLevels": [
       "低",
       "中",
-      "高",
-      "极致"
+      "高"
     ],
     "spin": "自旋 (克尔自旋)",
     "intensity": "吸积盘亮度",

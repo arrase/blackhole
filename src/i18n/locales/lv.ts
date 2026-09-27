@@ -23,8 +23,7 @@ export const lv: Translation = {
     "qualityLevels": [
       "Zema",
       "Vidēja",
-      "Augsta",
-      "Ultra"
+      "Augsta"
     ],
     "spin": "Rotācija (Kerra spins)",
     "intensity": "Diska spilgtums",

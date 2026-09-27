@@ -23,8 +23,7 @@ export const sr: Translation = {
     "qualityLevels": [
       "Низак",
       "Средњи",
-      "Висок",
-      "Ултра"
+      "Висок"
     ],
     "spin": "Ротација (Керов спин)",
     "intensity": "Сјај диска",

@@ -23,8 +23,7 @@ export const sw: Translation = {
     "qualityLevels": [
       "Chini",
       "Wastani",
-      "Juu",
-      "Ultra"
+      "Juu"
     ],
     "spin": "Mzunguko (Spin ya Kerr)",
     "intensity": "Mwangaza wa Diski",

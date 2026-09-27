@@ -23,8 +23,7 @@ export const he: Translation = {
     "qualityLevels": [
       "נמוכה",
       "בינונית",
-      "גבוהה",
-      "אולטרה"
+      "גבוהה"
     ],
     "spin": "סיבוב (ספין קר)",
     "intensity": "בהירות הדיסקה",

@@ -23,8 +23,7 @@ export const ms: Translation = {
     "qualityLevels": [
       "Rendah",
       "Sederhana",
-      "Tinggi",
-      "Ultra"
+      "Tinggi"
     ],
     "spin": "Putaran (Putaran Kerr)",
     "intensity": "Kecerahan Cakera",

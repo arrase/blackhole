@@ -5,7 +5,7 @@ import { fragmentShader, vertexShader } from "./shaders";
 export interface SimSettings {
   readonly intensity: number;
   readonly diskSpeed: number;
-  readonly quality: number; // 0 baja, 1 media, 2 alta, 3 ultra
+  readonly quality: number; // 0 baja, 1 media, 2 alta
   readonly stars: number;
   readonly glow: number;
   readonly autoRotate: boolean;
@@ -27,10 +27,9 @@ interface Props {
 }
 
 const QUALITY = [
-  { scale: 0.45, steps: 220 },
-  { scale: 0.7, steps: 350 },
-  { scale: 1.0, steps: 550 },
-  { scale: 1.0, steps: 1000 },
+  { scale: 0.7, steps: 350 },  // Baja (antiguo Media)
+  { scale: 1.0, steps: 600 },  // Media (turbulencia MHD 2D)
+  { scale: 1.0, steps: 1000 }, // Alta (volumetrico 3D)
 ];
 
 function compile(gl: WebGLRenderingContext, type: number, src: string) {
