@@ -32,7 +32,8 @@ export const fa: Translation = {
     "glow": "حلقه فوتونی",
     "stars": "ستاره‌ها",
     "fov": "بزرگ‌نمایی لنز",
-    "autoRotate": "چرخش خودکار"
+    "autoRotate": "چرخش خودکار",
+    "accretionDisk": "قرص برافزایشی"
   },
   "info": {
     "title": "فیزیک پدیده",

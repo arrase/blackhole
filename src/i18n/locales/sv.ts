@@ -32,7 +32,8 @@ export const sv: Translation = {
     "glow": "Fotonring",
     "stars": "Stjärnor",
     "fov": "Kameralinszoom",
-    "autoRotate": "Automatisk rotation"
+    "autoRotate": "Automatisk rotation",
+    "accretionDisk": "Ackretionsskiva"
   },
   "info": {
     "title": "FYSIKEN BAKOM",

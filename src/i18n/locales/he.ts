@@ -32,7 +32,8 @@ export const he: Translation = {
     "glow": "טבעת פוטונים",
     "stars": "כוכבים",
     "fov": "זום עדשה",
-    "autoRotate": "סיבוב אוטומטי"
+    "autoRotate": "סיבוב אוטומטי",
+    "accretionDisk": "דיסקת ספיחה"
   },
   "info": {
     "title": "הפיזיקה מאחורי זה",

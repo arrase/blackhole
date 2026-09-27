@@ -32,7 +32,8 @@ export const hu: Translation = {
     "glow": "Fotongyűrű",
     "stars": "Csillagok",
     "fov": "Lencse zoom",
-    "autoRotate": "Automatikus forgás"
+    "autoRotate": "Automatikus forgás",
+    "accretionDisk": "Akkréciós korong"
   },
   "info": {
     "title": "A MÖGÖTTES FIZIKA",

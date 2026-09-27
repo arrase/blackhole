@@ -32,7 +32,8 @@ export const en: Translation = {
     "glow": "Photon Ring",
     "stars": "Stars",
     "fov": "Lens Zoom",
-    "autoRotate": "Auto Rotation"
+    "autoRotate": "Auto Rotation",
+    "accretionDisk": "Accretion Disk"
   },
   "info": {
     "title": "THE PHYSICS BEHIND IT",

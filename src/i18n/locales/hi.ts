@@ -32,7 +32,8 @@ export const hi: Translation = {
     "glow": "फोटॉन रिंग",
     "stars": "तारे",
     "fov": "लेंस ज़ूम",
-    "autoRotate": "स्वचालित घूर्णन"
+    "autoRotate": "स्वचालित घूर्णन",
+    "accretionDisk": "अभिवृद्धि डिस्क"
   },
   "info": {
     "title": "इसके पीछे का भौतिक विज्ञान",

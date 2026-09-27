@@ -32,7 +32,8 @@ export const it: Translation = {
     "glow": "Anello di fotoni",
     "stars": "Stelle",
     "fov": "Zoom dell'obiettivo",
-    "autoRotate": "Rotazione automatica"
+    "autoRotate": "Rotazione automatica",
+    "accretionDisk": "Disco di accrescimento"
   },
   "info": {
     "title": "LA FISICA DIETRO",

@@ -32,7 +32,8 @@ export const th: Translation = {
     "glow": "วงแหวนโฟตอน",
     "stars": "ดวงดาว",
     "fov": "ซูมเลนส์",
-    "autoRotate": "หมุนอัตโนมัติ"
+    "autoRotate": "หมุนอัตโนมัติ",
+    "accretionDisk": "จานพอกพูนมวล"
   },
   "info": {
     "title": "ฟิสิกส์เบื้องหลัง",

@@ -32,7 +32,8 @@ export const id: Translation = {
     "glow": "Cincin Foton",
     "stars": "Bintang-bintang",
     "fov": "Zoom Lensa",
-    "autoRotate": "Rotasi Otomatis"
+    "autoRotate": "Rotasi Otomatis",
+    "accretionDisk": "Piringan Akresi"
   },
   "info": {
     "title": "FISIKA DI BALIKNYA",

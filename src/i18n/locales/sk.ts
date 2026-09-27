@@ -32,7 +32,8 @@ export const sk: Translation = {
     "glow": "Fotónový prstenec",
     "stars": "Hviezdy",
     "fov": "Zoom objektívu",
-    "autoRotate": "Automatická rotácia"
+    "autoRotate": "Automatická rotácia",
+    "accretionDisk": "Akréčny disk"
   },
   "info": {
     "title": "FYZIKÁLNE PRINCÍPY",

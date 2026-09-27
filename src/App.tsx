@@ -74,6 +74,7 @@ export default function App() {
     autoRotate: true,
     fov: 1.3,
     spin: 0.85,
+    accretionDisk: true,
   });
 
   const t = translations[lang];
@@ -228,6 +229,16 @@ export default function App() {
           <Slider label={t.controls.glow} value={settings.glow} min={0} max={2} step={0.01} onChange={(v) => set("glow", v)} />
           <Slider label={t.controls.stars} value={settings.stars} min={0} max={2} step={0.01} onChange={(v) => set("stars", v)} />
           <Slider label={t.controls.fov} value={settings.fov} min={0.8} max={3.5} step={0.01} onChange={(v) => set("fov", v)} />
+
+          <label className="flex cursor-pointer items-center justify-between text-xs text-white/80 py-1">
+            <span className="uppercase tracking-widest text-[11px] text-amber-100/70">{t.controls.accretionDisk}</span>
+            <input
+              type="checkbox"
+              checked={settings.accretionDisk}
+              onChange={(e) => set("accretionDisk", e.target.checked)}
+              className="h-4 w-4 accent-amber-400 cursor-pointer"
+            />
+          </label>
 
           <label className="flex cursor-pointer items-center justify-between text-xs text-white/80 py-1">
             <span className="uppercase tracking-widest text-[11px] text-amber-100/70">{t.controls.autoRotate}</span>

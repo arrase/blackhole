@@ -32,7 +32,8 @@ export const da: Translation = {
     "glow": "Fotonring",
     "stars": "Stjerner",
     "fov": "Kamerazoom",
-    "autoRotate": "Automatisk rotation"
+    "autoRotate": "Automatisk rotation",
+    "accretionDisk": "Akkretionsskive"
   },
   "info": {
     "title": "FYSIKKEN BAGVED",

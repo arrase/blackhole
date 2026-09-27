@@ -30,6 +30,8 @@ describe("shaders", () => {
     expect(fragmentShader).toContain("float dTau = min(rho * dt * 0.70, 0.25);");
     expect(fragmentShader).toContain("vec3 stepEmit = col * rho * boost * uIntensity * ringBoost * 2.2;");
     expect(fragmentShader).toContain("pos.y * nextPos.y < 0.0 && r < DISK_OUT");
+    expect(fragmentShader).toContain("uniform float uAccretionDisk;");
+    expect(fragmentShader).toContain("uAccretionDisk > 0.5");
   });
 
   it("implements Planckian blackbody radiation and physically based relativistic temperature with thermal floor", () => {

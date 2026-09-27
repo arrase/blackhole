@@ -32,7 +32,8 @@ export const ru: Translation = {
     "glow": "Фотонное кольцо",
     "stars": "Звезды",
     "fov": "Угол обзора (FOV)",
-    "autoRotate": "Автоповорот"
+    "autoRotate": "Автоповорот",
+    "accretionDisk": "Аккреционный диск"
   },
   "info": {
     "title": "ФИЗИЧЕСКИЕ ОСНОВЫ",

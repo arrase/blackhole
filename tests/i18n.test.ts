@@ -50,6 +50,7 @@ describe("i18n system", () => {
       expect(t.controls.stars).toBeTruthy();
       expect(t.controls.fov).toBeTruthy();
       expect(t.controls.autoRotate).toBeTruthy();
+      expect(t.controls.accretionDisk).toBeTruthy();
 
       expect(t.info.title).toBeTruthy();
       expect(t.info.metricTitle).toBeTruthy();

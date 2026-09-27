@@ -32,7 +32,8 @@ export const sw: Translation = {
     "glow": "Pete ya Fotoni",
     "stars": "Nyota",
     "fov": "Ukuaji wa Lenzi",
-    "autoRotate": "Zungusha Kiotomatiki"
+    "autoRotate": "Zungusha Kiotomatiki",
+    "accretionDisk": "Diski ya Uongezaji"
   },
   "info": {
     "title": "FIZIKIA NYUMA YAKE",

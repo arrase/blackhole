@@ -32,7 +32,8 @@ export const eu: Translation = {
     "glow": "Fotoi-eraztuna",
     "stars": "Izarrak",
     "fov": "Lentearen zooma",
-    "autoRotate": "Errotazio automatikoa"
+    "autoRotate": "Errotazio automatikoa",
+    "accretionDisk": "Akrezio-diskoa"
   },
   "info": {
     "title": "ATZEKO FISIKA",

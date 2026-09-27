@@ -32,7 +32,8 @@ export const ca: Translation = {
     "glow": "Anell de fotons",
     "stars": "Estrelles",
     "fov": "Zoom de lent",
-    "autoRotate": "Rotació automàtica"
+    "autoRotate": "Rotació automàtica",
+    "accretionDisk": "Disc d'acreció"
   },
   "info": {
     "title": "LA FÍSICA AL DARRERE",

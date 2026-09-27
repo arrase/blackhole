@@ -32,7 +32,8 @@ export const zh: Translation = {
     "glow": "光子环",
     "stars": "背景恒星",
     "fov": "镜头视角 (FOV)",
-    "autoRotate": "自动旋转"
+    "autoRotate": "自动旋转",
+    "accretionDisk": "吸积盘"
   },
   "info": {
     "title": "背后的物理原理",

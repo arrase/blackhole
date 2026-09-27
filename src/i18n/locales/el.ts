@@ -32,7 +32,8 @@ export const el: Translation = {
     "glow": "Δακτύλιος φωτονίων",
     "stars": "Άστρα",
     "fov": "Ζουμ φακού",
-    "autoRotate": "Αυτόματη περιστροφή"
+    "autoRotate": "Αυτόματη περιστροφή",
+    "accretionDisk": "Δίσκος προσαύξησης"
   },
   "info": {
     "title": "Η ΦΥΣΙΚΗ ΠΙΣΩ ΑΠΟ ΑΥΤΟ",

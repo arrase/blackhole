@@ -32,7 +32,8 @@ export const ko: Translation = {
     "glow": "광자 고리",
     "stars": "배경 별빛",
     "fov": "렌즈 화각",
-    "autoRotate": "자동 회전"
+    "autoRotate": "자동 회전",
+    "accretionDisk": "강착원반"
   },
   "info": {
     "title": "배경 물리 이론",

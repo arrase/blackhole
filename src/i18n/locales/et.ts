@@ -32,7 +32,8 @@ export const et: Translation = {
     "glow": "Footonirõngas",
     "stars": "Tähed",
     "fov": "Kaamera suum",
-    "autoRotate": "Automaatne pöörlemine"
+    "autoRotate": "Automaatne pöörlemine",
+    "accretionDisk": "Akretsiooniketas"
   },
   "info": {
     "title": "FÜÜSIKA SELLE TAGA",

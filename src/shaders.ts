@@ -21,6 +21,7 @@ uniform float uGlow;
 uniform float uSpin;
 uniform float uQuality;
 uniform float uDiskTemp;
+uniform float uAccretionDisk;
 
 const int MAX_STEPS = 1100;
 const float DISK_OUT = 13.0;
@@ -527,7 +528,7 @@ void main(){
       }
       float rDisk = length(pos.xz);
       float H = diskHeight(rDisk, rPlus);
-      if(H > 0.001 && abs(pos.y) < H){
+      if(uAccretionDisk > 0.5 && H > 0.001 && abs(pos.y) < H){
         vec4 step = sampleDiskVolume(pos, vel, dt, rPlus, rIsco, crossingCount, H);
         col += tr * step.rgb * step.a;
         tr *= (1.0 - step.a);
@@ -536,18 +537,20 @@ void main(){
     } else {
       if(pos.y * nextPos.y < 0.0){
         crossingCount++;
-        float t = pos.y / (pos.y - nextPos.y);
-        vec3 p = mix(pos, nextPos, t);
-        vec3 velAtP = mix(vel, nextVel, t);
-        vec4 d;
-        if(uQuality >= 0.5){
-          d = sampleDiskMHD(p, velAtP, rPlus, rIsco, crossingCount);
-        } else {
-          d = sampleDisk(p, velAtP, rPlus, rIsco, crossingCount);
+        if(uAccretionDisk > 0.5){
+          float t = pos.y / (pos.y - nextPos.y);
+          vec3 p = mix(pos, nextPos, t);
+          vec3 velAtP = mix(vel, nextVel, t);
+          vec4 d;
+          if(uQuality >= 0.5){
+            d = sampleDiskMHD(p, velAtP, rPlus, rIsco, crossingCount);
+          } else {
+            d = sampleDisk(p, velAtP, rPlus, rIsco, crossingCount);
+          }
+          col += tr * d.rgb * d.a;
+          tr *= (1.0 - d.a);
+          if(tr < 0.008) break;
         }
-        col += tr * d.rgb * d.a;
-        tr *= (1.0 - d.a);
-        if(tr < 0.008) break;
       }
     }
 

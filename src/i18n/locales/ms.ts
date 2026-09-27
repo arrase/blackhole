@@ -32,7 +32,8 @@ export const ms: Translation = {
     "glow": "Cincin Foton",
     "stars": "Bintang",
     "fov": "Zum Kanta",
-    "autoRotate": "Putaran Automatik"
+    "autoRotate": "Putaran Automatik",
+    "accretionDisk": "Cakera Akresi"
   },
   "info": {
     "title": "FIZIK DI SEBALIKNYA",

@@ -32,7 +32,8 @@ export const bg: Translation = {
     "glow": "Фотонен пръстен",
     "stars": "Звезди",
     "fov": "Мащаб на обектива",
-    "autoRotate": "Автоматично въртене"
+    "autoRotate": "Автоматично въртене",
+    "accretionDisk": "Акреционен диск"
   },
   "info": {
     "title": "ФИЗИКАТА ЗАД ТОВА",

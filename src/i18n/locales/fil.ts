@@ -32,7 +32,8 @@ export const fil: Translation = {
     "glow": "Singsing ng Photon",
     "stars": "Mga Bituin",
     "fov": "Zoom ng Lens",
-    "autoRotate": "Awtomatikong Pag-ikot"
+    "autoRotate": "Awtomatikong Pag-ikot",
+    "accretionDisk": "Accretion Disk"
   },
   "info": {
     "title": "ANG PISIKA SA LIKOD NITO",

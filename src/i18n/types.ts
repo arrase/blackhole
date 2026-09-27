@@ -76,6 +76,7 @@ export interface Translation {
     stars: string;
     fov: string;
     autoRotate: string;
+    accretionDisk: string;
   };
   info: {
     title: string;

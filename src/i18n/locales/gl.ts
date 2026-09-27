@@ -32,7 +32,8 @@ export const gl: Translation = {
     "glow": "Anel de fotóns",
     "stars": "Estrelas",
     "fov": "Zoom de lente",
-    "autoRotate": "Rotación automática"
+    "autoRotate": "Rotación automática",
+    "accretionDisk": "Disco de acreción"
   },
   "info": {
     "title": "A FÍSICA DETRÁS",

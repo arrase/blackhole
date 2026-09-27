@@ -12,6 +12,7 @@ export interface SimSettings {
   readonly autoRotate: boolean;
   readonly fov: number;
   readonly spin: number;
+  readonly accretionDisk: boolean;
 }
 
 export interface CameraState {
@@ -75,7 +76,7 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
       right: u("uCamRight"), up: u("uCamUp"), fov: u("uFov"),
       intensity: u("uIntensity"), speed: u("uDiskSpeed"), steps: u("uSteps"),
       stars: u("uStars"), glow: u("uGlow"), spin: u("uSpin"), quality: u("uQuality"),
-      diskTemp: u("uDiskTemp"),
+      diskTemp: u("uDiskTemp"), accretionDisk: u("uAccretionDisk"),
     };
 
     let raf = 0;
@@ -132,6 +133,7 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
       gl.uniform1f(U.glow, s.glow);
       gl.uniform1f(U.spin, s.spin);
       gl.uniform1f(U.quality, s.quality);
+      gl.uniform1f(U.accretionDisk, s.accretionDisk ? 1.0 : 0.0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       frames++;

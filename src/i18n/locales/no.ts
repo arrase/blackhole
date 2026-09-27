@@ -32,7 +32,8 @@ export const no: Translation = {
     "glow": "Fotonring",
     "stars": "Stjerner",
     "fov": "Kamerazoom",
-    "autoRotate": "Automatisk rotasjon"
+    "autoRotate": "Automatisk rotasjon",
+    "accretionDisk": "Akkresjonsskive"
   },
   "info": {
     "title": "FYSIKKEN BAK",

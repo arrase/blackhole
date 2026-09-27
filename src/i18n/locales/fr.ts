@@ -32,7 +32,8 @@ export const fr: Translation = {
     "glow": "Anneau de photons",
     "stars": "Étoiles",
     "fov": "Zoom de l'objectif",
-    "autoRotate": "Rotation automatique"
+    "autoRotate": "Rotation automatique",
+    "accretionDisk": "Disque d'accrétion"
   },
   "info": {
     "title": "LA PHYSIQUE SOUS-JACENTE",

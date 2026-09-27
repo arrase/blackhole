@@ -32,7 +32,8 @@ export const ja: Translation = {
     "glow": "光子リング",
     "stars": "恒星",
     "fov": "レンズ画角 (FOV)",
-    "autoRotate": "自動回転"
+    "autoRotate": "自動回転",
+    "accretionDisk": "降着円盤"
   },
   "info": {
     "title": "背後にある物理学",

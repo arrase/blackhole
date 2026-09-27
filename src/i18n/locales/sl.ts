@@ -32,7 +32,8 @@ export const sl: Translation = {
     "glow": "Fotonski obroč",
     "stars": "Zvezde",
     "fov": "Povečava objektiva",
-    "autoRotate": "Samodejno vrtenje"
+    "autoRotate": "Samodejno vrtenje",
+    "accretionDisk": "Akrecijski disk"
   },
   "info": {
     "title": "FIZIKALNO OZADJE",

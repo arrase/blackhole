@@ -32,7 +32,8 @@ export const ro: Translation = {
     "glow": "Inel de fotoni",
     "stars": "Stele",
     "fov": "Zoom lentilă",
-    "autoRotate": "Rotație automată"
+    "autoRotate": "Rotație automată",
+    "accretionDisk": "Disc de acreție"
   },
   "info": {
     "title": "FIZICA DIN SPATE",

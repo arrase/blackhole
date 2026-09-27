@@ -32,7 +32,8 @@ export const bn: Translation = {
     "glow": "ফোটন রিং",
     "stars": "তারা",
     "fov": "লেন্স জুম",
-    "autoRotate": "স্বয়ংক্রিয় ঘূর্ণন"
+    "autoRotate": "স্বয়ংক্রিয় ঘূর্ণন",
+    "accretionDisk": "অ্যাক্রিশন ডিস্ক"
   },
   "info": {
     "title": "পেছনের পদার্থবিজ্ঞান",

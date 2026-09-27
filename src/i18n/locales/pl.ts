@@ -32,7 +32,8 @@ export const pl: Translation = {
     "glow": "Pierścień fotonowy",
     "stars": "Gwiazdy",
     "fov": "Zoom soczewki",
-    "autoRotate": "Automatyczny obrót"
+    "autoRotate": "Automatyczny obrót",
+    "accretionDisk": "Dysk akrecyjny"
   },
   "info": {
     "title": "FIZYKA ZJAWISKA",

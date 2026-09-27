@@ -32,7 +32,8 @@ export const ur: Translation = {
     "glow": "فوٹون رنگ",
     "stars": "ستارے",
     "fov": "لینس زوم",
-    "autoRotate": "خودکار گردش"
+    "autoRotate": "خودکار گردش",
+    "accretionDisk": "تکوینی قرص"
   },
   "info": {
     "title": "اس کے پیچھے کی طبیعیات",

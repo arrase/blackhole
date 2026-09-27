@@ -32,7 +32,8 @@ export const uk: Translation = {
     "glow": "Фотонне кільце",
     "stars": "Зірки",
     "fov": "Зум об'єктива",
-    "autoRotate": "Автоматичне обертання"
+    "autoRotate": "Автоматичне обертання",
+    "accretionDisk": "Акреційний диск"
   },
   "info": {
     "title": "ФІЗИКА ПРОЦЕСУ",

@@ -32,7 +32,8 @@ export const hr: Translation = {
     "glow": "Fotonski prsten",
     "stars": "Zvijezde",
     "fov": "Zum objektiva",
-    "autoRotate": "Automatska rotacija"
+    "autoRotate": "Automatska rotacija",
+    "accretionDisk": "Akrecijski disk"
   },
   "info": {
     "title": "FIZIKA IZA POJAVE",

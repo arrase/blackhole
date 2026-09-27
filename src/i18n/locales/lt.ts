@@ -32,7 +32,8 @@ export const lt: Translation = {
     "glow": "Fotonų žiedas",
     "stars": "Žvaigždės",
     "fov": "Objektyvo artinimas",
-    "autoRotate": "Automatinis sukimasis"
+    "autoRotate": "Automatinis sukimasis",
+    "accretionDisk": "Akrecinis diskas"
   },
   "info": {
     "title": "FIZIKINIAI PAGRINDAI",

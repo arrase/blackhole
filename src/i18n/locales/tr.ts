@@ -32,7 +32,8 @@ export const tr: Translation = {
     "glow": "Foton Halkası",
     "stars": "Yıldızlar",
     "fov": "Görüş Alanı (FOV)",
-    "autoRotate": "Otomatik Döndürme"
+    "autoRotate": "Otomatik Döndürme",
+    "accretionDisk": "Yığılma Diski"
   },
   "info": {
     "title": "ARKASINDAKİ FİZİK",

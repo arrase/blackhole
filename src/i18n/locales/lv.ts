@@ -32,7 +32,8 @@ export const lv: Translation = {
     "glow": "Fotonu gredzens",
     "stars": "Zvaigznes",
     "fov": "Kameras tālummaiņa",
-    "autoRotate": "Automātiska rotācija"
+    "autoRotate": "Automātiska rotācija",
+    "accretionDisk": "Akrēcijas disks"
   },
   "info": {
     "title": "FIZIKĀLIE PAMATI",

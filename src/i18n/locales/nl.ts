@@ -32,7 +32,8 @@ export const nl: Translation = {
     "glow": "Fotonenring",
     "stars": "Sterren",
     "fov": "Lenszoom",
-    "autoRotate": "Automatisch draaien"
+    "autoRotate": "Automatisch draaien",
+    "accretionDisk": "Accretieschijf"
   },
   "info": {
     "title": "DE FYSICA ERACTER",

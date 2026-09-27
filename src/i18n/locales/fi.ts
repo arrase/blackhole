@@ -32,7 +32,8 @@ export const fi: Translation = {
     "glow": "Fotonirengas",
     "stars": "Tähdet",
     "fov": "Linssin zoom",
-    "autoRotate": "Automaattinen pyöritys"
+    "autoRotate": "Automaattinen pyöritys",
+    "accretionDisk": "Kertymäkiekko"
   },
   "info": {
     "title": "TAUSTALLA OLEVA FYSIIKKA",

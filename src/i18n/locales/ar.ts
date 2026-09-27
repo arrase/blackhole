@@ -32,7 +32,8 @@ export const ar: Translation = {
     "glow": "حلقة الفوتونات",
     "stars": "النجوم",
     "fov": "تقريب العدسة",
-    "autoRotate": "دوران تلقائي"
+    "autoRotate": "دوران تلقائي",
+    "accretionDisk": "قرص التنامي"
   },
   "info": {
     "title": "الفيزياء وراء ذلك",

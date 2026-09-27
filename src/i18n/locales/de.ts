@@ -32,7 +32,8 @@ export const de: Translation = {
     "glow": "Photonenring",
     "stars": "Sterne",
     "fov": "Kamerazoom",
-    "autoRotate": "Automatische Rotation"
+    "autoRotate": "Automatische Rotation",
+    "accretionDisk": "Akkretionsscheibe"
   },
   "info": {
     "title": "DIE PHYSIK DAHINTER",

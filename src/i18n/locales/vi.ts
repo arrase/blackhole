@@ -32,7 +32,8 @@ export const vi: Translation = {
     "glow": "Vòng photon",
     "stars": "Các vì sao",
     "fov": "Tiêu cự ống kính",
-    "autoRotate": "Tự động quay"
+    "autoRotate": "Tự động quay",
+    "accretionDisk": "Đĩa bồi tụ"
   },
   "info": {
     "title": "VẬT LÝ ĐẰNG SAU",
