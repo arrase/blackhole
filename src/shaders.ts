@@ -19,8 +19,9 @@ uniform float uSteps;
 uniform float uStars;
 uniform float uGlow;
 uniform float uSpin;
+uniform float uQuality;
 
-const int MAX_STEPS = 600;
+const int MAX_STEPS = 1100;
 const float DISK_OUT = 13.0;
 
 // Radio del horizonte de eventos en metrica de Kerr: r+(a) = M + sqrt(M^2 - a^2) con M = 0.5
@@ -177,16 +178,83 @@ vec4 sampleDisk(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount){
     aRot += 1.8 * sqrt(rIsco - r);
   }
 
-  // Estructura de plasma fluido organico
-  vec3 q1 = vec3(r * 2.2, cos(aRot) * 2.2, sin(aRot) * 2.2);
-  vec3 q2 = vec3(r * 4.6, cos(aRot * 1.6 + tAnim * 0.12) * 3.2, sin(aRot * 1.6 + tAnim * 0.12) * 3.2);
-  float n1 = fbm(q1);
-  float n2 = fbm(q2);
-  float streaks = 0.55 + 0.75 * n1 * (0.6 + 0.7 * n2);
-  float rings = 0.82 + 0.18 * sin(r * 5.2 + n1 * 1.3);
+  if(uQuality < 2.5){
+    // Estructura de plasma fluido organico base (Baja, Media, Alta)
+    vec3 q1 = vec3(r * 2.2, cos(aRot) * 2.2, sin(aRot) * 2.2);
+    vec3 q2 = vec3(r * 4.6, cos(aRot * 1.6 + tAnim * 0.12) * 3.2, sin(aRot * 1.6 + tAnim * 0.12) * 3.2);
+    float n1 = fbm(q1);
+    float n2 = fbm(q2);
+    float streaks = 0.55 + 0.75 * n1 * (0.6 + 0.7 * n2);
+    float rings = 0.82 + 0.18 * sin(r * 5.2 + n1 * 1.3);
+    float bright = temp * rings * streaks * 2.8;
+
+    float edgeIn = smoothstep(rPlus * 1.01, rPlus * 1.15, r);
+    float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.45, r);
+    bright *= edgeIn * edgeOut;
+    if(bright <= 0.0001) return vec4(0.0);
+
+    float beta = min(length(vGas), 0.95);
+    float gamma = 1.0 / sqrt(1.0 - beta * beta);
+    vec3 nPhoton = -normalize(vel);
+    float D = 1.0 / (gamma * (1.0 - dot(vGas, nPhoton)));
+    float g = sqrt(max(1.0 - rPlus / r, 0.0));
+    float shift = clamp(D * g, 0.04, 3.2);
+    float boost = pow(shift, 2.6);
+
+    float tc = temp * shift * 1.45;
+    vec3 cold = vec3(0.72, 0.15, 0.02);
+    vec3 warm = vec3(1.0, 0.58, 0.18);
+    vec3 hot = vec3(1.0, 0.95, 0.88);
+    vec3 blueShift = vec3(0.82, 0.91, 1.0);
+
+    vec3 col;
+    if(tc < 0.35){
+      col = mix(cold, warm, tc / 0.35);
+    } else if(tc < 0.85){
+      col = mix(warm, hot, (tc - 0.35) / 0.5);
+    } else {
+      col = mix(hot, blueShift, min((tc - 0.85) * 0.7, 0.65));
+    }
+
+    float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.6) : (1.0 + uGlow * (0.25 / r));
+    vec3 emit = col * bright * boost * uIntensity * ringBoost * 2.1;
+
+    float cosIncidence = max(abs(vel.y) / max(length(vel), 0.001), 0.15);
+    float tau = (2.2 * bright) / cosIncidence;
+    float alpha = clamp(1.0 - exp(-tau), 0.0, 0.96);
+
+    return vec4(emit, alpha);
+  }
+
+  // Modo Ultra (uQuality >= 2.5): turbulencia MHD realista con domain warping y ondas de choque espirales
+  float spiral1 = 2.0 * aRot - 1.8 * log(max(r / max(rIsco, 0.1), 0.001));
+  float spiral2 = 4.0 * aRot - 2.6 * log(max(r / max(rIsco, 0.1), 0.001));
+  float shock = pow(0.5 + 0.5 * sin(spiral1), 1.8) * (0.8 + 0.2 * sin(spiral2));
+
+  // Multi-octave domain warping para filamentos magneticos y remolinos de plasma
+  vec3 q = vec3(r * 2.5, cos(aRot) * 2.5, sin(aRot) * 2.5);
+  vec3 qWarp = q + vec3(
+    fbm(q + vec3(tAnim * 0.1, 0.0, 1.5)),
+    fbm(q + vec3(2.1, tAnim * 0.12, 0.0)),
+    fbm(q + vec3(0.0, 3.4, -tAnim * 0.08))
+  ) * 1.4;
+  float n1 = fbm(qWarp);
+  float n2 = fbm(qWarp * 2.2 + vec3(r * 1.6, 0.0, tAnim * 0.15));
+
+  // Filamentos finos con gradientes pronunciados
+  float filament = 1.0 - smoothstep(0.04, 0.35, abs(n1 - 0.5) * 2.0);
+
+  // Estrias keplerianas de alta cizalladura combinadas con ondas de choque espirales
+  vec3 qStreak = vec3(r * 6.0, cos(aRot * 4.0 + n1 * 2.2) * 4.5, sin(aRot * 4.0 + n1 * 2.2) * 4.5);
+  float fineStreak = fbm(qStreak);
+  float streaks = (0.4 + 0.85 * n1 * (0.5 + 0.8 * n2) + 0.45 * fineStreak + 0.55 * filament) * (0.7 + 0.65 * shock);
+
+  // Anillos concentricos y modulacion de ondas de densidad
+  float rings = (0.8 + 0.2 * sin(r * 6.2 + n1 * 2.0 + sin(spiral1) * 0.6)) * (0.88 + 0.12 * cos(r * 12.5 + n2 * 1.5));
+
   float bright = temp * rings * streaks * 2.8;
 
-  // Transicion suave hacia el borde exterior (desvanecimiento continuo sin cortes)
+  // Transicion suave hacia el borde exterior
   float edgeIn = smoothstep(rPlus * 1.01, rPlus * 1.15, r);
   float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.45, r);
   bright *= edgeIn * edgeOut;
@@ -198,37 +266,41 @@ vec4 sampleDisk(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount){
   vec3 nPhoton = -normalize(vel);
   float D = 1.0 / (gamma * (1.0 - dot(vGas, nPhoton)));
   float g = sqrt(max(1.0 - rPlus / r, 0.0));
-  float shift = clamp(D * g, 0.04, 3.2);
+  float shift = clamp(D * g, 0.04, 3.4);
+  float boost = pow(shift, 2.3);
+  boost = boost / (1.0 + 0.1 * boost);
 
-  // Beaming suave para preservar detalles en el lado brillante sin saturar en bloque
-  float boost = pow(shift, 2.6);
+  // Temperatura local con nucleos incandescentes y colas infrarrojas
+  float localTemp = temp * (0.75 + 0.55 * filament + 0.35 * shock);
+  float tc = localTemp * shift * 1.45;
 
-  // Locus de Planck continuo segun temperatura observada
-  float tc = temp * shift * 1.45;
-  vec3 cold = vec3(0.72, 0.15, 0.02);
-  vec3 warm = vec3(1.0, 0.58, 0.18);
-  vec3 hot = vec3(1.0, 0.95, 0.88);
-  vec3 blueShift = vec3(0.82, 0.91, 1.0);
+  vec3 colCrimson = vec3(0.42, 0.02, 0.005);
+  vec3 colAmber = vec3(0.96, 0.32, 0.03);
+  vec3 colGold = vec3(1.0, 0.82, 0.38);
+  vec3 colWhite = vec3(1.0, 0.96, 0.90);
+  vec3 colBlue = vec3(0.65, 0.84, 1.0);
+  vec3 colDeepBlue = vec3(0.42, 0.65, 1.0);
 
   vec3 col;
-  if(tc < 0.35){
-    col = mix(cold, warm, tc / 0.35);
-  } else if(tc < 0.85){
-    col = mix(warm, hot, (tc - 0.35) / 0.5);
+  if(tc < 0.22){
+    col = mix(colCrimson, colAmber, tc / 0.22);
+  } else if(tc < 0.55){
+    col = mix(colAmber, colGold, (tc - 0.22) / 0.33);
+  } else if(tc < 0.95){
+    col = mix(colGold, colWhite, (tc - 0.55) / 0.40);
+  } else if(tc < 1.45){
+    col = mix(colWhite, colBlue, (tc - 0.95) / 0.50);
   } else {
-    col = mix(hot, blueShift, min((tc - 0.85) * 0.7, 0.65));
+    col = mix(colBlue, colDeepBlue, min((tc - 1.45) * 0.6, 1.0));
   }
 
-  // Modulacion de fotones en cruces secundarios (anillo de Einstein/fotones)
-  float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.6) : (1.0 + uGlow * (0.25 / r));
-  vec3 emit = col * bright * boost * uIntensity * ringBoost * 2.1;
+  // Modulacion de fotones en cruces secundarios con intensidad fisica suave
+  float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.8) : (1.0 + uGlow * (0.3 / r));
+  vec3 emit = col * bright * boost * uIntensity * ringBoost * 2.0;
 
-  // Profundidad optica directamente proporcional al brillo/densidad:
-  // en el borde exterior bright -> 0, por lo que tau -> 0 y alpha -> 0.
-  // Esto elimina el borde negro opaco permitiendo que las estrellas de fondo se vean limpiamente.
   float cosIncidence = max(abs(vel.y) / max(length(vel), 0.001), 0.15);
-  float tau = (2.2 * bright) / cosIncidence;
-  float alpha = clamp(1.0 - exp(-tau), 0.0, 0.96);
+  float tau = (2.4 * bright) / cosIncidence;
+  float alpha = clamp(1.0 - exp(-tau), 0.0, 0.97);
 
   return vec4(emit, alpha);
 }
@@ -263,7 +335,8 @@ void main(){
 
     float dt = clamp(0.06 * r * r / (r + 2.0), 0.015, 1.4);
     if(abs(pos.y) < 1.0 && r < DISK_OUT + 2.0){
-      dt = min(dt, 0.08 + abs(pos.y) * 0.25);
+      float baseDt = (uQuality >= 2.5) ? 0.04 : 0.08;
+      dt = min(dt, baseDt + abs(pos.y) * 0.2);
     }
     if(r < 3.2){
       dt = min(dt, 0.02 + 0.04 * (r - rPlus));

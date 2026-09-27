@@ -23,7 +23,8 @@ export const cs: Translation = {
     "qualityLevels": [
       "Nízká",
       "Střední",
-      "Vysoká"
+      "Vysoká",
+      "Ultra"
     ],
     "spin": "Rotace (Kerrův spin)",
     "intensity": "Jas disku",

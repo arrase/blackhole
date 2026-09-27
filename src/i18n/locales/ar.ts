@@ -23,7 +23,8 @@ export const ar: Translation = {
     "qualityLevels": [
       "منخفضة",
       "متوسطة",
-      "عالية"
+      "عالية",
+      "فائق"
     ],
     "spin": "الدوران (غزل كير)",
     "intensity": "سطوع القرص",

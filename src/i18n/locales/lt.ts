@@ -23,7 +23,8 @@ export const lt: Translation = {
     "qualityLevels": [
       "Žema",
       "Vidutinė",
-      "Aukšta"
+      "Aukšta",
+      "Ultra"
     ],
     "spin": "Sukimasis (Kero spinas)",
     "intensity": "Disko ryškumas",

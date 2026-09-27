@@ -23,7 +23,8 @@ export const bg: Translation = {
     "qualityLevels": [
       "Ниско",
       "Средно",
-      "Високо"
+      "Високо",
+      "Ултра"
     ],
     "spin": "Въртене (Спин на Кер)",
     "intensity": "Яркост на диска",

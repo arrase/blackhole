@@ -165,7 +165,7 @@ export default function App() {
         <div className="absolute right-4 top-16 w-64 space-y-4 rounded-2xl border border-white/10 bg-black/50 p-5 backdrop-blur-xl">
           <div>
             <div className="mb-2 text-[11px] uppercase tracking-widest text-amber-100/70">{t.controls.quality}</div>
-            <div className="grid grid-cols-3 gap-1 rounded-lg bg-white/5 p-1 text-xs">
+            <div className="grid grid-cols-4 gap-1 rounded-lg bg-white/5 p-1 text-xs">
               {t.controls.qualityLevels.map((l, i) => (
                 <button key={l} onClick={() => set("quality", i)}
                   className={`rounded-md py-1.5 transition ${settings.quality === i ? "bg-amber-400/90 text-black" : "text-white/70"}`}>

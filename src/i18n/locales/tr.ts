@@ -23,7 +23,8 @@ export const tr: Translation = {
     "qualityLevels": [
       "Düşük",
       "Orta",
-      "Yüksek"
+      "Yüksek",
+      "Ultra"
     ],
     "spin": "Dönüş (Kerr Spini)",
     "intensity": "Disk Parlaklığı",

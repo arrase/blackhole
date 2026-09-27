@@ -23,7 +23,8 @@ export const bn: Translation = {
     "qualityLevels": [
       "কম",
       "মাঝারি",
-      "উচ্চ"
+      "উচ্চ",
+      "আল্ট্রা"
     ],
     "spin": "ঘূর্ণন (কার স্পিন)",
     "intensity": "ডিস্কের উজ্জ্বলতা",

@@ -23,7 +23,8 @@ export const fi: Translation = {
     "qualityLevels": [
       "Matala",
       "Keskitaso",
-      "Korkea"
+      "Korkea",
+      "Ultra"
     ],
     "spin": "Pyöriminen (Kerr-spin)",
     "intensity": "Kiekon kirkkaus",

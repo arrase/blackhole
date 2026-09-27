@@ -23,7 +23,8 @@ export const no: Translation = {
     "qualityLevels": [
       "Lav",
       "Middels",
-      "Høy"
+      "Høy",
+      "Ultra"
     ],
     "spin": "Rotasjon (Kerr-spinn)",
     "intensity": "Skivens lysstyrke",

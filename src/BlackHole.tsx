@@ -5,7 +5,7 @@ import { fragmentShader, vertexShader } from "./shaders";
 export interface SimSettings {
   readonly intensity: number;
   readonly diskSpeed: number;
-  readonly quality: number; // 0 baja, 1 media, 2 alta
+  readonly quality: number; // 0 baja, 1 media, 2 alta, 3 ultra
   readonly stars: number;
   readonly glow: number;
   readonly autoRotate: boolean;
@@ -30,6 +30,7 @@ const QUALITY = [
   { scale: 0.45, steps: 220 },
   { scale: 0.7, steps: 350 },
   { scale: 1.0, steps: 550 },
+  { scale: 1.0, steps: 1000 },
 ];
 
 function compile(gl: WebGLRenderingContext, type: number, src: string) {
@@ -73,7 +74,7 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
       res: u("uRes"), time: u("uTime"), camPos: u("uCamPos"), fwd: u("uCamFwd"),
       right: u("uCamRight"), up: u("uCamUp"), fov: u("uFov"),
       intensity: u("uIntensity"), speed: u("uDiskSpeed"), steps: u("uSteps"),
-      stars: u("uStars"), glow: u("uGlow"), spin: u("uSpin"),
+      stars: u("uStars"), glow: u("uGlow"), spin: u("uSpin"), quality: u("uQuality"),
     };
 
     let raf = 0;
@@ -128,6 +129,7 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
       gl.uniform1f(U.stars, s.stars);
       gl.uniform1f(U.glow, s.glow);
       gl.uniform1f(U.spin, s.spin);
+      gl.uniform1f(U.quality, s.quality);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       frames++;

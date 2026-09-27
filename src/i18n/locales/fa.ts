@@ -23,7 +23,8 @@ export const fa: Translation = {
     "qualityLevels": [
       "پایین",
       "متوسط",
-      "بالا"
+      "بالا",
+      "فوق‌العاده"
     ],
     "spin": "چرخش (اسپین کر)",
     "intensity": "روشنایی قرص",

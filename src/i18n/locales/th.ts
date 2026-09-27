@@ -23,7 +23,8 @@ export const th: Translation = {
     "qualityLevels": [
       "ต่ำ",
       "ปานกลาง",
-      "สูง"
+      "สูง",
+      "อัลตรา"
     ],
     "spin": "การหมุน (สปินเคอรร์)",
     "intensity": "ความสว่างจานสะสมมวล",

@@ -23,7 +23,8 @@ export const vi: Translation = {
     "qualityLevels": [
       "Thấp",
       "Trung bình",
-      "Cao"
+      "Cao",
+      "Ultra"
     ],
     "spin": "Độ xoay (Spin Kerr)",
     "intensity": "Độ sáng đĩa bồi tụ",

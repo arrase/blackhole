@@ -23,7 +23,8 @@ export const gl: Translation = {
     "qualityLevels": [
       "Baixa",
       "Media",
-      "Alta"
+      "Alta",
+      "Ultra"
     ],
     "spin": "Rotación (Spin Kerr)",
     "intensity": "Brillo do disco",

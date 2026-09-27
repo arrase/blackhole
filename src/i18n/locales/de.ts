@@ -23,7 +23,8 @@ export const de: Translation = {
     "qualityLevels": [
       "Niedrig",
       "Mittel",
-      "Hoch"
+      "Hoch",
+      "Ultra"
     ],
     "spin": "Rotation (Kerr-Spin)",
     "intensity": "Scheibenhelligkeit",

@@ -23,7 +23,8 @@ export const fil: Translation = {
     "qualityLevels": [
       "Mababa",
       "Katamtaman",
-      "Mataas"
+      "Mataas",
+      "Ultra"
     ],
     "spin": "Pag-ikot (Kerr Spin)",
     "intensity": "Liwanag ng Disk",

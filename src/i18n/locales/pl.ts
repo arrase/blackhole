@@ -23,7 +23,8 @@ export const pl: Translation = {
     "qualityLevels": [
       "Niska",
       "Średnia",
-      "Wysoka"
+      "Wysoka",
+      "Ultra"
     ],
     "spin": "Rotacja (Spin Kerra)",
     "intensity": "Jasność dysku",

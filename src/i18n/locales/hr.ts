@@ -23,7 +23,8 @@ export const hr: Translation = {
     "qualityLevels": [
       "Niska",
       "Srednja",
-      "Visoka"
+      "Visoka",
+      "Ultra"
     ],
     "spin": "Rotacija (Kerrov spin)",
     "intensity": "Svjetlina diska",

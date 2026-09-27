@@ -23,7 +23,8 @@ export const ca: Translation = {
     "qualityLevels": [
       "Baixa",
       "Mitjana",
-      "Alta"
+      "Alta",
+      "Ultra"
     ],
     "spin": "Rotació (Spin Kerr)",
     "intensity": "Brillantor del disc",

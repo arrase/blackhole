@@ -23,7 +23,8 @@ export const nl: Translation = {
     "qualityLevels": [
       "Laag",
       "Gemiddeld",
-      "Hoog"
+      "Hoog",
+      "Ultra"
     ],
     "spin": "Rotatie (Kerr-spin)",
     "intensity": "Schijfhelderheid",

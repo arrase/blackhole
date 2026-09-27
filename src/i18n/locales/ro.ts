@@ -23,7 +23,8 @@ export const ro: Translation = {
     "qualityLevels": [
       "Scăzută",
       "Medie",
-      "Ridicată"
+      "Ridicată",
+      "Ultra"
     ],
     "spin": "Rotație (Spin Kerr)",
     "intensity": "Luminozitate disc",
