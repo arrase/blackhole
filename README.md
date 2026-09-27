@@ -2,6 +2,8 @@
 
 Real-time relativistic simulation of a spinning supermassive black hole (Kerr metric) directly in the web browser using WebGL and GLSL shaders.
 
+> 🌐 **Try it Live in your Browser:** [arrase.github.io/blackhole](https://arrase.github.io/blackhole/)
+
 ![Gargantua - Black Hole Simulation](screenshot.png)
 
 ---
