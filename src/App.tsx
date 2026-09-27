@@ -138,6 +138,7 @@ export default function App() {
           </select>
 
           <button
+            type="button"
             onClick={() => setShowInfo((v) => !v)}
             aria-label={t.buttons.info}
             title={t.buttons.info}
@@ -150,6 +151,7 @@ export default function App() {
           </button>
 
           <button
+            type="button"
             onClick={() => setPanel((v) => !v)}
             aria-label={panel ? t.buttons.hideControls : t.buttons.showControls}
             title={panel ? t.buttons.hideControls : t.buttons.showControls}
@@ -169,6 +171,7 @@ export default function App() {
           {(Object.keys(PRESET_CAMERAS) as PresetKey[]).map((k) => (
             <button
               key={k}
+              type="button"
               onClick={() => goTo(k)}
               className="whitespace-nowrap rounded-full border border-white/15 bg-black/50 px-3 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs tracking-wider text-white/80 backdrop-blur-md transition hover:border-amber-300/60 hover:text-amber-200 active:scale-95 shrink-0 cursor-pointer"
             >
@@ -190,6 +193,7 @@ export default function App() {
               {t.buttons.showControls}
             </span>
             <button
+              type="button"
               onClick={() => setPanel(false)}
               aria-label={t.buttons.close}
               className="rounded p-1 text-white/50 hover:text-white hover:bg-white/10 transition cursor-pointer"
@@ -206,6 +210,7 @@ export default function App() {
               {t.controls.qualityLevels.map((l, i) => (
                 <button
                   key={l}
+                  type="button"
                   onClick={() => set("quality", i)}
                   className={`rounded-md py-1.5 transition cursor-pointer ${settings.quality === i ? "bg-amber-400/90 text-black font-medium" : "text-white/70 hover:text-white"}`}
                 >
@@ -236,17 +241,19 @@ export default function App() {
 
       {/* Información */}
       {showInfo && (
-        <div
-          className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          onClick={() => setShowInfo(false)}
-        >
-          <div
-            className="relative w-full max-w-md max-h-[85dvh] flex flex-col rounded-2xl border border-white/10 bg-black/80 p-5 sm:p-6 text-sm leading-relaxed text-white/75 backdrop-blur-xl shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
+          <button
+            type="button"
+            aria-label={t.buttons.close}
+            tabIndex={-1}
+            onClick={() => setShowInfo(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm cursor-default"
+          />
+          <div className="relative w-full max-w-md max-h-[85dvh] flex flex-col rounded-2xl border border-white/10 bg-black/80 p-5 sm:p-6 text-sm leading-relaxed text-white/75 backdrop-blur-xl shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
-              <h2 className="text-base font-light tracking-widest text-amber-200">{t.info.title}</h2>
+              <h2 id="info-dialog-title" className="text-base font-light tracking-widest text-amber-200">{t.info.title}</h2>
               <button
+                type="button"
                 onClick={() => setShowInfo(false)}
                 aria-label={t.buttons.close}
                 className="rounded-lg p-1 text-white/50 hover:text-white hover:bg-white/10 transition cursor-pointer"
@@ -265,6 +272,7 @@ export default function App() {
             </div>
             <div className="pt-3 border-t border-white/10 flex justify-end shrink-0">
               <button
+                type="button"
                 onClick={() => setShowInfo(false)}
                 className="rounded-lg bg-white/10 hover:bg-white/20 px-4 py-1.5 text-xs text-amber-300 font-medium transition cursor-pointer"
               >
