@@ -9,6 +9,8 @@ import {
   translations,
 } from "./i18n";
 
+const ALLOWED_LANGUAGES = new Set<string>(LANGUAGES.map((l) => l.code));
+
 const PRESET_CAMERAS: Record<PresetKey, CameraState> = {
   cine: { theta: 1.2, phi: 0.12, dist: 22 },
   kerr: { theta: 0.0, phi: 0.08, dist: 14 },
@@ -17,21 +19,34 @@ const PRESET_CAMERAS: Record<PresetKey, CameraState> = {
   plano: { theta: 2.0, phi: 0.01, dist: 18 },
 };
 
-function Slider({ label, value, min, max, step, onChange }: {
-  label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void;
-}) {
+interface SliderProps {
+  readonly label: string;
+  readonly value: number;
+  readonly min: number;
+  readonly max: number;
+  readonly step: number;
+  readonly onChange: (v: number) => void;
+}
+
+function Slider({ label, value, min, max, step, onChange }: Readonly<SliderProps>) {
+  const id = `slider-${label.toLowerCase().replace(/\s+/g, "-")}`;
   return (
-    <label className="block">
+    <div className="block">
       <div className="mb-1 flex justify-between text-[11px] uppercase tracking-widest text-amber-100/70">
-        <span>{label}</span>
+        <label htmlFor={id}>{label}</label>
         <span className="font-mono text-amber-200">{value.toFixed(2)}</span>
       </div>
       <input
-        type="range" min={min} max={max} step={step} value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
+        id={id}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number.parseFloat(e.target.value))}
         className="w-full accent-amber-400"
       />
-    </label>
+    </div>
   );
 }
 
@@ -61,7 +76,9 @@ export default function App() {
     document.title = t.title;
     document.documentElement.lang = lang;
     document.documentElement.dir = langMeta.dir;
-    localStorage.setItem("blackhole_lang", lang);
+    if (ALLOWED_LANGUAGES.has(lang)) {
+      localStorage.setItem("blackhole_lang", lang);
+    }
   }, [lang, t.title, langMeta.dir]);
 
   const set = <K extends keyof SimSettings>(k: K, v: SimSettings[K]) => setSettings((s) => ({ ...s, [k]: v }));
@@ -111,7 +128,12 @@ export default function App() {
       <div className="absolute right-4 top-4 flex flex-wrap items-center justify-end gap-2">
         <select
           value={lang}
-          onChange={(e) => setLang(e.target.value as LanguageCode)}
+          onChange={(e) => {
+            const nextLang = e.target.value;
+            if (ALLOWED_LANGUAGES.has(nextLang)) {
+              setLang(nextLang as LanguageCode);
+            }
+          }}
           aria-label="Language"
           className="rounded-lg border border-white/15 bg-black/60 px-2.5 py-2 text-xs text-white/90 backdrop-blur-md hover:border-amber-300/60 hover:text-amber-200 cursor-pointer outline-none transition"
         >
@@ -138,7 +160,7 @@ export default function App() {
             <div className="mb-2 text-[11px] uppercase tracking-widest text-amber-100/70">{t.controls.quality}</div>
             <div className="grid grid-cols-3 gap-1 rounded-lg bg-white/5 p-1 text-xs">
               {t.controls.qualityLevels.map((l, i) => (
-                <button key={i} onClick={() => set("quality", i)}
+                <button key={l} onClick={() => set("quality", i)}
                   className={`rounded-md py-1.5 transition ${settings.quality === i ? "bg-amber-400/90 text-black" : "text-white/70"}`}>
                   {l}
                 </button>

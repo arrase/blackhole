@@ -1,15 +1,16 @@
+import type { RefObject } from "react";
 import { useEffect, useRef } from "react";
 import { fragmentShader, vertexShader } from "./shaders";
 
 export interface SimSettings {
-  intensity: number;
-  diskSpeed: number;
-  quality: number; // 0 baja, 1 media, 2 alta
-  stars: number;
-  glow: number;
-  autoRotate: boolean;
-  fov: number;
-  spin: number;
+  readonly intensity: number;
+  readonly diskSpeed: number;
+  readonly quality: number; // 0 baja, 1 media, 2 alta
+  readonly stars: number;
+  readonly glow: number;
+  readonly autoRotate: boolean;
+  readonly fov: number;
+  readonly spin: number;
 }
 
 export interface CameraState {
@@ -19,10 +20,10 @@ export interface CameraState {
 }
 
 interface Props {
-  settings: SimSettings;
-  camera: React.MutableRefObject<CameraState>;
-  onFps?: (fps: number) => void;
-  webglUnsupportedMessage: string;
+  readonly settings: SimSettings;
+  readonly camera: RefObject<CameraState>;
+  readonly onFps?: (fps: number) => void;
+  readonly webglUnsupportedMessage: string;
 }
 
 const QUALITY = [
@@ -41,7 +42,7 @@ function compile(gl: WebGLRenderingContext, type: number, src: string) {
   return s;
 }
 
-export default function BlackHole({ settings, camera, onFps, webglUnsupportedMessage }: Props) {
+export default function BlackHole({ settings, camera, onFps, webglUnsupportedMessage }: Readonly<Props>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
