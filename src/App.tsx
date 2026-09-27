@@ -9,7 +9,13 @@ import {
   translations,
 } from "./i18n";
 
-const ALLOWED_LANGUAGES = new Set<string>(LANGUAGES.map((l) => l.code));
+const ALLOWED_LANGUAGES = [
+  "es", "en", "ca", "gl", "eu", "fr", "de", "it", "pt", "ru",
+  "zh", "ja", "ko", "ar", "hi", "bn", "nl", "pl", "tr", "uk",
+  "vi", "id", "sv", "el", "cs", "da", "fi", "no", "hu", "he",
+  "th", "ro", "fa", "ur", "sw", "sk", "bg", "sr", "hr", "lt",
+  "lv", "et", "sl", "ms", "fil",
+] as const;
 
 const PRESET_CAMERAS: Record<PresetKey, CameraState> = {
   cine: { theta: 1.2, phi: 0.12, dist: 22 },
@@ -76,10 +82,16 @@ export default function App() {
     document.title = t.title;
     document.documentElement.lang = lang;
     document.documentElement.dir = langMeta.dir;
-    if (ALLOWED_LANGUAGES.has(lang)) {
-      localStorage.setItem("blackhole_lang", lang);
-    }
   }, [lang, t.title, langMeta.dir]);
+
+  const handleLanguageChange = (selected: string) => {
+    if (!ALLOWED_LANGUAGES.includes(selected as LanguageCode)) {
+      return;
+    }
+    const safeCode = selected as LanguageCode;
+    setLang(safeCode);
+    localStorage.setItem("blackhole_lang", safeCode);
+  };
 
   const set = <K extends keyof SimSettings>(k: K, v: SimSettings[K]) => setSettings((s) => ({ ...s, [k]: v }));
   const onFps = useCallback((f: number) => setFps(f), []);
@@ -128,12 +140,7 @@ export default function App() {
       <div className="absolute right-4 top-4 flex flex-wrap items-center justify-end gap-2">
         <select
           value={lang}
-          onChange={(e) => {
-            const nextLang = e.target.value;
-            if (ALLOWED_LANGUAGES.has(nextLang)) {
-              setLang(nextLang as LanguageCode);
-            }
-          }}
+          onChange={(e) => handleLanguageChange(e.target.value)}
           aria-label="Language"
           className="rounded-lg border border-white/15 bg-black/60 px-2.5 py-2 text-xs text-white/90 backdrop-blur-md hover:border-amber-300/60 hover:text-amber-200 cursor-pointer outline-none transition"
         >
