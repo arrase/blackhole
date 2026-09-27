@@ -230,6 +230,19 @@ vec4 sampleDisk(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount){
   return vec4(emit, alpha);
 }
 
+// Radiacion espectral de cuerpo negro basada en la Ley de Planck (RGB: 650nm, 540nm, 450nm)
+vec3 planckBlackbody(float T){
+  // T en miles de Kelvin (kK). Rango fisico: 1.0 kK (1000 K) a 40.0 kK (40000 K)
+  T = max(T, 0.4);
+  // c2 / lambda para R (0.65 um), G (0.54 um), B (0.45 um):
+  vec3 c2_lambda = vec3(22.13, 26.64, 31.97);
+  vec3 denom = exp(c2_lambda / T) - 1.0;
+  // Factores fotometricos sRGB (1 / lambda^5)
+  vec3 spec = vec3(1.4, 1.0, 1.25) / denom;
+  float maxVal = max(spec.r, max(spec.g, spec.b));
+  return spec / max(maxVal, 0.001);
+}
+
 // Muestreo del disco de acrecion 2D con turbulencia MHD (Modo Media)
 vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount){
   float r = length(p.xz);
@@ -251,7 +264,7 @@ vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount
   vec3 rHat = vec3(p.x, 0.0, p.z) / r;
   vec3 phiHat = vec3(-p.z, 0.0, p.x) / r;
   vec3 vGas;
-  float temp;
+  float tEmit;
 
   if(r >= rIsco){
     // Zona kepleriana estable (Novikov-Thorne / Shakura-Sunyaev)
@@ -259,7 +272,8 @@ vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount
     vGas = vTangential * phiHat;
 
     float x = rIsco / r;
-    temp = pow(x, 0.75) * pow(max(1.0 - sqrt(x) * 0.95, 0.0), 0.25);
+    float tempNorm = pow(x, 0.75) * pow(max(1.0 - sqrt(x) * 0.95, 0.0), 0.25);
+    tEmit = 7.5 * tempNorm;
   } else {
     // Plunging Region: caida libre suave en espiral hacia el horizonte
     float f = max(1.0 - rPlus / r, 0.0);
@@ -269,9 +283,10 @@ vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount
     float vRadial = -sqrt(clamp(1.0 - f * (1.0 + (rIsco * rIsco) / (r * r)), 0.0, 1.0)) * 0.85;
     vGas = vTangential * phiHat + vRadial * rHat;
 
-    temp = 0.48 * pow(max(r - rPlus, 0.0) / max(rIsco - rPlus, 0.001), 0.5);
+    tEmit = 3.6 * pow(max(r - rPlus, 0.0) / max(rIsco - rPlus, 0.001), 0.5);
     aRot += 1.8 * sqrt(rIsco - r);
   }
+  float temp = tEmit / 7.5;
 
   // Turbulencia MHD realista con domain warping y ondas de choque espirales
   float spiral1 = 2.0 * aRot - 1.8 * log(max(r / max(rIsco, 0.1), 0.001));
@@ -317,29 +332,10 @@ vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount
   float boost = pow(shift, 2.3);
   boost = boost / (1.0 + 0.1 * boost);
 
-  // Temperatura local con nucleos incandescentes y colas infrarrojas
-  float localTemp = temp * (0.75 + 0.55 * filament + 0.35 * shock);
-  float tc = localTemp * shift * 1.45;
-
-  vec3 colCrimson = vec3(0.42, 0.02, 0.005);
-  vec3 colAmber = vec3(0.96, 0.32, 0.03);
-  vec3 colGold = vec3(1.0, 0.82, 0.38);
-  vec3 colWhite = vec3(1.0, 0.96, 0.90);
-  vec3 colBlue = vec3(0.65, 0.84, 1.0);
-  vec3 colDeepBlue = vec3(0.42, 0.65, 1.0);
-
-  vec3 col;
-  if(tc < 0.22){
-    col = mix(colCrimson, colAmber, tc / 0.22);
-  } else if(tc < 0.55){
-    col = mix(colAmber, colGold, (tc - 0.22) / 0.33);
-  } else if(tc < 0.95){
-    col = mix(colGold, colWhite, (tc - 0.55) / 0.40);
-  } else if(tc < 1.45){
-    col = mix(colWhite, colBlue, (tc - 0.95) / 0.50);
-  } else {
-    col = mix(colBlue, colDeepBlue, min((tc - 1.45) * 0.6, 1.0));
-  }
+  // Calentamiento turbulento y corrimiento relativista observado (Ley de Planck)
+  float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);
+  float tObs = tLocal * shift;
+  vec3 col = planckBlackbody(tObs);
 
   // Modulacion de fotones en cruces secundarios con intensidad fisica suave
   float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.8) : (1.0 + uGlow * (0.3 / r));
@@ -373,7 +369,7 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
   vec3 rHat = vec3(pos.x, 0.0, pos.z) / r;
   vec3 phiHat = vec3(-pos.z, 0.0, pos.x) / r;
   vec3 vGas;
-  float temp;
+  float tEmit;
 
   if(r >= rIsco){
     // Zona kepleriana estable (Novikov-Thorne / Shakura-Sunyaev)
@@ -381,7 +377,8 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
     vGas = vTangential * phiHat;
 
     float x = rIsco / r;
-    temp = pow(x, 0.75) * pow(max(1.0 - sqrt(x) * 0.95, 0.0), 0.25);
+    float tempNorm = pow(x, 0.75) * pow(max(1.0 - sqrt(x) * 0.95, 0.0), 0.25);
+    tEmit = 7.5 * tempNorm;
   } else {
     // Plunging Region: caida libre suave en espiral hacia el horizonte
     float f = max(1.0 - rPlus / r, 0.0);
@@ -391,9 +388,10 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
     float vRadial = -sqrt(clamp(1.0 - f * (1.0 + (rIsco * rIsco) / (r * r)), 0.0, 1.0)) * 0.85;
     vGas = vTangential * phiHat + vRadial * rHat;
 
-    temp = 0.48 * pow(max(r - rPlus, 0.0) / max(rIsco - rPlus, 0.001), 0.5);
+    tEmit = 3.6 * pow(max(r - rPlus, 0.0) / max(rIsco - rPlus, 0.001), 0.5);
     aRot += 1.8 * sqrt(rIsco - r);
   }
+  float temp = tEmit / 7.5;
 
   // Turbulencia MHD realista con domain warping y ondas de choque espirales
   float spiral1 = 2.0 * aRot - 1.8 * log(max(r / max(rIsco, 0.1), 0.001));
@@ -439,29 +437,10 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
   float boost = pow(shift, 2.3);
   boost = boost / (1.0 + 0.1 * boost);
 
-  // Temperatura local con nucleos incandescentes y colas infrarrojas
-  float localTemp = temp * (0.75 + 0.55 * filament + 0.35 * shock);
-  float tc = localTemp * shift * 1.45;
-
-  vec3 colCrimson = vec3(0.42, 0.02, 0.005);
-  vec3 colAmber = vec3(0.96, 0.32, 0.03);
-  vec3 colGold = vec3(1.0, 0.82, 0.38);
-  vec3 colWhite = vec3(1.0, 0.96, 0.90);
-  vec3 colBlue = vec3(0.65, 0.84, 1.0);
-  vec3 colDeepBlue = vec3(0.42, 0.65, 1.0);
-
-  vec3 col;
-  if(tc < 0.22){
-    col = mix(colCrimson, colAmber, tc / 0.22);
-  } else if(tc < 0.55){
-    col = mix(colAmber, colGold, (tc - 0.22) / 0.33);
-  } else if(tc < 0.95){
-    col = mix(colGold, colWhite, (tc - 0.55) / 0.40);
-  } else if(tc < 1.45){
-    col = mix(colWhite, colBlue, (tc - 0.95) / 0.50);
-  } else {
-    col = mix(colBlue, colDeepBlue, min((tc - 1.45) * 0.6, 1.0));
-  }
+  // Calentamiento turbulento y corrimiento relativista observado (Ley de Planck)
+  float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);
+  float tObs = tLocal * shift;
+  vec3 col = planckBlackbody(tObs);
 
   // Modulacion de fotones en cruces secundarios con intensidad fisica suave
   float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.8) : (1.0 + uGlow * (0.3 / r));

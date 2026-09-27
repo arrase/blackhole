@@ -31,4 +31,18 @@ describe("shaders", () => {
     expect(fragmentShader).toContain("vec3 stepEmit = col * rho * boost * uIntensity * ringBoost * 2.0;");
     expect(fragmentShader).toContain("pos.y * nextPos.y < 0.0 && r < DISK_OUT");
   });
+
+  it("implements Planckian blackbody radiation and physically based relativistic temperature", () => {
+    expect(fragmentShader).toContain("vec3 planckBlackbody(float T)");
+    expect(fragmentShader).toContain("vec3 c2_lambda = vec3(22.13, 26.64, 31.97);");
+    expect(fragmentShader).toContain("tEmit = 7.5 * tempNorm;");
+    expect(fragmentShader).toContain("tEmit = 3.6 * pow(max(r - rPlus, 0.0) / max(rIsco - rPlus, 0.001), 0.5);");
+    expect(fragmentShader).toContain("float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);");
+    expect(fragmentShader).toContain("float tObs = tLocal * shift;");
+    expect(fragmentShader).toContain("vec3 col = planckBlackbody(tObs);");
+    expect(fragmentShader).not.toContain("colCrimson");
+    expect(fragmentShader).not.toContain("colAmber");
+    // Baja mode remains intact
+    expect(fragmentShader).toContain("vec3 cold = vec3(0.72, 0.15, 0.02);");
+  });
 });
