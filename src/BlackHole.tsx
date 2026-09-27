@@ -22,6 +22,7 @@ interface Props {
   settings: SimSettings;
   camera: React.MutableRefObject<CameraState>;
   onFps?: (fps: number) => void;
+  webglUnsupportedMessage: string;
 }
 
 const QUALITY = [
@@ -40,7 +41,7 @@ function compile(gl: WebGLRenderingContext, type: number, src: string) {
   return s;
 }
 
-export default function BlackHole({ settings, camera, onFps }: Props) {
+export default function BlackHole({ settings, camera, onFps, webglUnsupportedMessage }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
@@ -49,7 +50,7 @@ export default function BlackHole({ settings, camera, onFps }: Props) {
     const canvas = canvasRef.current!;
     const gl = canvas.getContext("webgl", { antialias: false, powerPreference: "high-performance" });
     if (!gl) {
-      alert("Tu navegador no soporta WebGL");
+      alert(webglUnsupportedMessage);
       return;
     }
     const prog = gl.createProgram()!;
