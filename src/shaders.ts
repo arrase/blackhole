@@ -134,16 +134,17 @@ vec3 background(vec3 d){
   stars += starFieldLayer(d, 24.0, 0.88, 7.0, 6.8);
 
   // Concentracion de nubes estelares a lo largo del plano galactico
-  vec3 gAxis = normalize(vec3(0.35, 0.92, 0.22));
-  float galBand = exp(-pow(dot(d, gAxis) * 3.2, 2.0));
-  stars += starFieldLayer(d, 320.0, 0.32, 24.0, 3.2) * galBand * 2.0;
+  vec3 gAxis = normalize(vec3(0.82, 0.38, 0.42));
+  float galBand = exp(-pow(dot(d, gAxis) * 3.0, 2.0));
+  float galCore = exp(-pow(dot(d, gAxis) * 1.8, 2.0));
+  stars += starFieldLayer(d, 320.0, 0.35, 24.0, 3.2) * galCore * 2.2;
 
   // Bandas de polvo cosmico de alto contraste (nubes moleculares oscuras) y rica emision interestelar
   float dust1 = fbm(d * 3.8);
   float dust2 = fbm(d * 7.5 + vec3(1.7, 3.2, 0.5));
-  float darkRifts = smoothstep(0.28, 0.65, dust1 * dust2);
-  vec3 emissionCol = mix(vec3(0.04, 0.10, 0.22), vec3(0.32, 0.16, 0.07), dust1);
-  vec3 nebula = galBand * (1.0 - darkRifts * 0.75) * emissionCol * 2.0;
+  float rifts = smoothstep(0.22, 0.65, dust1 * dust2);
+  vec3 emissionCol = mix(vec3(0.02, 0.05, 0.14), vec3(0.26, 0.13, 0.04), dust1);
+  vec3 nebula = pow(galBand, 1.6) * (1.0 - rifts * 0.82) * emissionCol * 1.5;
 
   return stars * uStars + nebula;
 }
@@ -337,13 +338,13 @@ vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount
   float D = 1.0 / (gamma * (1.0 - dot(vGas, nPhoton)));
   float g = sqrt(max(1.0 - rPlus / r, 0.0));
   float shift = clamp(D * g, 0.04, 3.4);
-  float rawBoost = pow(shift, 2.0);
-  float boost = max(rawBoost, 0.16);
-  boost = boost / (1.0 + 0.08 * boost);
+  float boost = pow(shift, 1.6);
+  boost = max(boost, 0.42); // Incandescent thermal glow on the receding side!
+  boost = boost / (1.0 + 0.15 * boost);
 
   // Calentamiento turbulento y corrimiento relativista observado (Ley de Planck)
   float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);
-  float tObs = max(tLocal * shift, 1.35); // Suelo de ~1350 K (brasa rubi visible)
+  float tObs = max(tLocal * pow(shift, 0.65), 2.6);
   vec3 col = planckBlackbody(tObs);
 
   // Modulacion de fotones en cruces secundarios con intensidad fisica suave
@@ -408,7 +409,7 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
   float shock = pow(0.5 + 0.5 * sin(spiral1), 1.8) * (0.8 + 0.2 * sin(spiral2));
 
   // Multi-octave domain warping para filamentos magneticos y remolinos de plasma en 3D
-  vec3 q = vec3(r * 2.5, cos(aRot) * 2.5, sin(aRot) * 2.5 + pos.y * 3.5);
+  vec3 q = vec3(r * 2.5, cos(aRot) * 2.5, sin(aRot) * 2.5);
   vec3 qWarp = q + vec3(
     fbm(q + vec3(tAnim * 0.1, 0.0, 1.5)),
     fbm(q + vec3(2.1, tAnim * 0.12, 0.0)),
@@ -421,7 +422,7 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
   float filament = 1.0 - smoothstep(0.04, 0.35, abs(n1 - 0.5) * 2.0);
 
   // Estrias keplerianas de alta cizalladura combinadas con ondas de choque espirales en 3D
-  vec3 qStreak = vec3(r * 6.0, cos(aRot * 4.0 + n1 * 2.2) * 4.5, sin(aRot * 4.0 + n1 * 2.2) * 4.5 + pos.y * 5.0);
+  vec3 qStreak = vec3(r * 6.0, cos(aRot * 4.0 + n1 * 2.2) * 4.5, sin(aRot * 4.0 + n1 * 2.2) * 4.5);
   float fineStreak = fbm(qStreak);
   float streaks = (0.4 + 0.85 * n1 * (0.5 + 0.8 * n2) + 0.45 * fineStreak + 0.55 * filament) * (0.7 + 0.65 * shock);
 
@@ -443,13 +444,13 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
   float D = 1.0 / (gamma * (1.0 - dot(vGas, nPhoton)));
   float g = sqrt(max(1.0 - rPlus / r, 0.0));
   float shift = clamp(D * g, 0.04, 3.4);
-  float rawBoost = pow(shift, 2.0);
-  float boost = max(rawBoost, 0.16);
-  boost = boost / (1.0 + 0.08 * boost);
+  float boost = pow(shift, 1.6);
+  boost = max(boost, 0.42); // Incandescent thermal glow on the receding side!
+  boost = boost / (1.0 + 0.15 * boost);
 
   // Calentamiento turbulento y corrimiento relativista observado (Ley de Planck)
   float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);
-  float tObs = max(tLocal * shift, 1.35); // Suelo de ~1350 K (brasa rubi visible)
+  float tObs = max(tLocal * pow(shift, 0.65), 2.6);
   vec3 col = planckBlackbody(tObs);
 
   // Modulacion de fotones en cruces secundarios con intensidad fisica suave
@@ -461,9 +462,9 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
 
   // Densidad volumetrica y transporte radiativo del paso
   float rho = 7.0 * rhoVertical * bright;
-  float dTau = rho * dt;
-  float stepAlpha = clamp(1.0 - exp(-dTau), 0.0, 0.98);
-  vec3 stepEmit = col * rho * boost * uIntensity * ringBoost * 2.0;
+  float dTau = min(rho * dt * 0.70, 0.25);
+  float stepAlpha = 1.0 - exp(-dTau);
+  vec3 stepEmit = col * rho * boost * uIntensity * ringBoost * 2.2;
 
   return vec4(stepEmit, stepAlpha);
 }
@@ -498,8 +499,8 @@ void main(){
 
     float dt = clamp(0.06 * r * r / (r + 2.0), 0.015, 1.4);
     if(abs(pos.y) < 1.0 && r < DISK_OUT + 2.0){
-      float baseDt = (uQuality >= 1.5) ? 0.04 : 0.08;
-      dt = min(dt, baseDt + abs(pos.y) * 0.2);
+      float baseDt = (uQuality >= 1.5) ? 0.046 : 0.08;
+      dt = min(dt, baseDt + abs(pos.y) * 0.25);
     }
     if(r < 3.2){
       dt = min(dt, 0.02 + 0.04 * (r - rPlus));

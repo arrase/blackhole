@@ -27,9 +27,9 @@ interface Props {
 }
 
 const QUALITY = [
-  { scale: 0.7, steps: 350 },  // Baja (antiguo Media)
-  { scale: 1.0, steps: 600 },  // Media (turbulencia MHD 2D)
-  { scale: 1.0, steps: 1000 }, // Alta (volumetrico 3D)
+  { scale: 0.7, steps: 350 },  // Baja
+  { scale: 1.0, steps: 550 },  // Media
+  { scale: 1.0, steps: 800 },  // Alta (optimizado a 800 para 60 FPS estables)
 ];
 
 function compile(gl: WebGLRenderingContext, type: number, src: string) {
