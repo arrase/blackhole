@@ -95,7 +95,7 @@ vec3 starFieldLayer(vec3 d, float scale, float threshold, float expFactor, float
 
   vec3 off = (hash3(id) - 0.5) * 0.65;
   float dist = length(f - off);
-  float star = pow(max(0.0, 1.0 - dist * 3.8), expFactor);
+  float star = pow(max(0.0, 1.0 - dist * 2.8), expFactor);
   if(star <= 0.0001) return vec3(0.0);
 
   float temp = hash(id + 5.5);
@@ -118,24 +118,32 @@ vec3 starFieldLayer(vec3 d, float scale, float threshold, float expFactor, float
 vec3 background(vec3 d){
   vec3 stars = vec3(0.0);
 
-  // Miriadas de estrellas tenues de fondo (polvo estelar lejana)
-  stars += starFieldLayer(d, 260.0, 0.65, 22.0, 2.0);
+  // Micro-campo estelar ultra denso (polvo estelar de fondo)
+  stars += starFieldLayer(d, 380.0, 0.38, 28.0, 2.2);
 
-  // Estrellas de densidad media
-  stars += starFieldLayer(d, 140.0, 0.76, 16.0, 2.6);
+  // Estrellas tenues densas
+  stars += starFieldLayer(d, 220.0, 0.48, 20.0, 2.8);
+
+  // Estrellas medias
+  stars += starFieldLayer(d, 120.0, 0.62, 14.0, 3.5);
 
   // Estrellas brillantes de primera magnitud
-  stars += starFieldLayer(d, 65.0, 0.86, 12.0, 3.8);
+  stars += starFieldLayer(d, 55.0, 0.78, 10.0, 5.0);
 
   // Estrellas gigantes con halo luminoso sutil
-  stars += starFieldLayer(d, 28.0, 0.93, 8.0, 5.2);
+  stars += starFieldLayer(d, 24.0, 0.88, 7.0, 6.8);
 
-  // Plano galactico profundo y calido (contraste oscuro, sin niebla blanquecina)
+  // Concentracion de nubes estelares a lo largo del plano galactico
   vec3 gAxis = normalize(vec3(0.35, 0.92, 0.22));
-  float galBand = exp(-pow(dot(d, gAxis) * 3.8, 2.0));
-  float dust = fbm(d * 3.2) * fbm(d * 6.5 + 2.0);
-  vec3 dustCol = mix(vec3(0.04, 0.06, 0.11), vec3(0.14, 0.11, 0.08), fbm(d * 2.0));
-  vec3 nebula = galBand * dust * dustCol * 1.5;
+  float galBand = exp(-pow(dot(d, gAxis) * 3.2, 2.0));
+  stars += starFieldLayer(d, 320.0, 0.32, 24.0, 3.2) * galBand * 2.0;
+
+  // Bandas de polvo cosmico de alto contraste (nubes moleculares oscuras) y rica emision interestelar
+  float dust1 = fbm(d * 3.8);
+  float dust2 = fbm(d * 7.5 + vec3(1.7, 3.2, 0.5));
+  float darkRifts = smoothstep(0.28, 0.65, dust1 * dust2);
+  vec3 emissionCol = mix(vec3(0.04, 0.10, 0.22), vec3(0.32, 0.16, 0.07), dust1);
+  vec3 nebula = galBand * (1.0 - darkRifts * 0.75) * emissionCol * 2.0;
 
   return stars * uStars + nebula;
 }
@@ -329,12 +337,13 @@ vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount
   float D = 1.0 / (gamma * (1.0 - dot(vGas, nPhoton)));
   float g = sqrt(max(1.0 - rPlus / r, 0.0));
   float shift = clamp(D * g, 0.04, 3.4);
-  float boost = pow(shift, 2.3);
-  boost = boost / (1.0 + 0.1 * boost);
+  float rawBoost = pow(shift, 2.0);
+  float boost = max(rawBoost, 0.16);
+  boost = boost / (1.0 + 0.08 * boost);
 
   // Calentamiento turbulento y corrimiento relativista observado (Ley de Planck)
   float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);
-  float tObs = tLocal * shift;
+  float tObs = max(tLocal * shift, 1.35); // Suelo de ~1350 K (brasa rubi visible)
   vec3 col = planckBlackbody(tObs);
 
   // Modulacion de fotones en cruces secundarios con intensidad fisica suave
@@ -434,12 +443,13 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
   float D = 1.0 / (gamma * (1.0 - dot(vGas, nPhoton)));
   float g = sqrt(max(1.0 - rPlus / r, 0.0));
   float shift = clamp(D * g, 0.04, 3.4);
-  float boost = pow(shift, 2.3);
-  boost = boost / (1.0 + 0.1 * boost);
+  float rawBoost = pow(shift, 2.0);
+  float boost = max(rawBoost, 0.16);
+  boost = boost / (1.0 + 0.08 * boost);
 
   // Calentamiento turbulento y corrimiento relativista observado (Ley de Planck)
   float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);
-  float tObs = tLocal * shift;
+  float tObs = max(tLocal * shift, 1.35); // Suelo de ~1350 K (brasa rubi visible)
   vec3 col = planckBlackbody(tObs);
 
   // Modulacion de fotones en cruces secundarios con intensidad fisica suave
