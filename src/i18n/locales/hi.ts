@@ -28,6 +28,7 @@ export const hi: Translation = {
     "spin": "घूर्णन (केर स्पिन)",
     "intensity": "डिस्क चमक",
     "diskSpeed": "डिस्क गति",
+    "diskTemp": "डिस्क तापमान",
     "glow": "फोटॉन रिंग",
     "stars": "तारे",
     "fov": "लेंस ज़ूम",

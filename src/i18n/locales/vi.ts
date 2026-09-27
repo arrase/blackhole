@@ -28,6 +28,7 @@ export const vi: Translation = {
     "spin": "Độ xoay (Spin Kerr)",
     "intensity": "Độ sáng đĩa bồi tụ",
     "diskSpeed": "Tốc độ đĩa",
+    "diskTemp": "Nhiệt độ đĩa",
     "glow": "Vòng photon",
     "stars": "Các vì sao",
     "fov": "Tiêu cự ống kính",

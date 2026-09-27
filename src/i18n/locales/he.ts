@@ -28,6 +28,7 @@ export const he: Translation = {
     "spin": "סיבוב (ספין קר)",
     "intensity": "בהירות הדיסקה",
     "diskSpeed": "מהירות הדיסקה",
+    "diskTemp": "טמפרטורת הדיסקה",
     "glow": "טבעת פוטונים",
     "stars": "כוכבים",
     "fov": "זום עדשה",

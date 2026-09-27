@@ -45,6 +45,7 @@ describe("i18n system", () => {
       expect(t.controls.spin).toBeTruthy();
       expect(t.controls.intensity).toBeTruthy();
       expect(t.controls.diskSpeed).toBeTruthy();
+      expect(t.controls.diskTemp).toBeTruthy();
       expect(t.controls.glow).toBeTruthy();
       expect(t.controls.stars).toBeTruthy();
       expect(t.controls.fov).toBeTruthy();

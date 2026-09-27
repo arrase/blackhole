@@ -28,6 +28,7 @@ export const el: Translation = {
     "spin": "Περιστροφή (Spin Kerr)",
     "intensity": "Φωτεινότητα δίσκου",
     "diskSpeed": "Ταχύτητα δίσκου",
+    "diskTemp": "Θερμοκρασία δίσκου",
     "glow": "Δακτύλιος φωτονίων",
     "stars": "Άστρα",
     "fov": "Ζουμ φακού",

@@ -28,6 +28,7 @@ export const da: Translation = {
     "spin": "Rotation (Kerr-spin)",
     "intensity": "Diskens lysstyrke",
     "diskSpeed": "Diskhastighed",
+    "diskTemp": "Disktemperatur",
     "glow": "Fotonring",
     "stars": "Stjerner",
     "fov": "Kamerazoom",

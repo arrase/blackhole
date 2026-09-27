@@ -28,6 +28,7 @@ export const hu: Translation = {
     "spin": "Forgás (Kerr-spin)",
     "intensity": "Korong fényessége",
     "diskSpeed": "Korong sebessége",
+    "diskTemp": "Korong hőmérséklete",
     "glow": "Fotongyűrű",
     "stars": "Csillagok",
     "fov": "Lencse zoom",

@@ -28,6 +28,7 @@ export const ar: Translation = {
     "spin": "الدوران (غزل كير)",
     "intensity": "سطوع القرص",
     "diskSpeed": "سرعة القرص",
+    "diskTemp": "درجة حرارة القرص",
     "glow": "حلقة الفوتونات",
     "stars": "النجوم",
     "fov": "تقريب العدسة",

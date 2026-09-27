@@ -28,6 +28,7 @@ export const sw: Translation = {
     "spin": "Mzunguko (Spin ya Kerr)",
     "intensity": "Mwangaza wa Diski",
     "diskSpeed": "Kasi ya Diski",
+    "diskTemp": "Joto la Diski",
     "glow": "Pete ya Fotoni",
     "stars": "Nyota",
     "fov": "Ukuaji wa Lenzi",

@@ -28,6 +28,7 @@ export const ro: Translation = {
     "spin": "Rotație (Spin Kerr)",
     "intensity": "Luminozitate disc",
     "diskSpeed": "Viteză disc",
+    "diskTemp": "Temperatură disc",
     "glow": "Inel de fotoni",
     "stars": "Stele",
     "fov": "Zoom lentilă",

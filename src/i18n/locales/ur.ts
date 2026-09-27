@@ -28,6 +28,7 @@ export const ur: Translation = {
     "spin": "گردش (کیر اسپن)",
     "intensity": "ڈسک کی چمک",
     "diskSpeed": "ڈسک کی رفتار",
+    "diskTemp": "ڈسک کا درجہ حرارت",
     "glow": "فوٹون رنگ",
     "stars": "ستارے",
     "fov": "لینس زوم",

@@ -28,6 +28,7 @@ export const ms: Translation = {
     "spin": "Putaran (Putaran Kerr)",
     "intensity": "Kecerahan Cakera",
     "diskSpeed": "Kelajuan Cakera",
+    "diskTemp": "Suhu Cakera",
     "glow": "Cincin Foton",
     "stars": "Bintang",
     "fov": "Zum Kanta",

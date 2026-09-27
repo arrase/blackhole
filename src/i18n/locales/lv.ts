@@ -28,6 +28,7 @@ export const lv: Translation = {
     "spin": "Rotācija (Kerra spins)",
     "intensity": "Diska spilgtums",
     "diskSpeed": "Diska ātrums",
+    "diskTemp": "Diska temperatūra",
     "glow": "Fotonu gredzens",
     "stars": "Zvaigznes",
     "fov": "Kameras tālummaiņa",

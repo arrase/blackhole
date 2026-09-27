@@ -28,6 +28,7 @@ export const ca: Translation = {
     "spin": "Rotació (Spin Kerr)",
     "intensity": "Brillantor del disc",
     "diskSpeed": "Velocitat del disc",
+    "diskTemp": "Temperatura del disc",
     "glow": "Anell de fotons",
     "stars": "Estrelles",
     "fov": "Zoom de lent",

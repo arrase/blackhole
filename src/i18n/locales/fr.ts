@@ -28,6 +28,7 @@ export const fr: Translation = {
     "spin": "Rotation (Spin de Kerr)",
     "intensity": "Luminosité du disque",
     "diskSpeed": "Vitesse du disque",
+    "diskTemp": "Température du disque",
     "glow": "Anneau de photons",
     "stars": "Étoiles",
     "fov": "Zoom de l'objectif",

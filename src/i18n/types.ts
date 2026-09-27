@@ -71,6 +71,7 @@ export interface Translation {
     spin: string;
     intensity: string;
     diskSpeed: string;
+    diskTemp: string;
     glow: string;
     stars: string;
     fov: string;

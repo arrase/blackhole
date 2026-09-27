@@ -28,6 +28,7 @@ export const eu: Translation = {
     "spin": "Errotazioa (Kerr Spina)",
     "intensity": "Diskoaren distira",
     "diskSpeed": "Diskoaren abiadura",
+    "diskTemp": "Diskoaren tenperatura",
     "glow": "Fotoi-eraztuna",
     "stars": "Izarrak",
     "fov": "Lentearen zooma",

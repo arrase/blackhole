@@ -28,6 +28,7 @@ export const ru: Translation = {
     "spin": "Вращение (Спин Керра)",
     "intensity": "Яркость диска",
     "diskSpeed": "Скорость диска",
+    "diskTemp": "Температура диска",
     "glow": "Фотонное кольцо",
     "stars": "Звезды",
     "fov": "Угол обзора (FOV)",

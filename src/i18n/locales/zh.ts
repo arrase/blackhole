@@ -28,6 +28,7 @@ export const zh: Translation = {
     "spin": "自旋 (克尔自旋)",
     "intensity": "吸积盘亮度",
     "diskSpeed": "吸积盘转速",
+    "diskTemp": "吸积盘温度",
     "glow": "光子环",
     "stars": "背景恒星",
     "fov": "镜头视角 (FOV)",

@@ -28,6 +28,7 @@ export const de: Translation = {
     "spin": "Rotation (Kerr-Spin)",
     "intensity": "Scheibenhelligkeit",
     "diskSpeed": "Scheibengeschwindigkeit",
+    "diskTemp": "Scheibentemperatur",
     "glow": "Photonenring",
     "stars": "Sterne",
     "fov": "Kamerazoom",

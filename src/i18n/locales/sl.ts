@@ -28,6 +28,7 @@ export const sl: Translation = {
     "spin": "Vrtenje (Kerrov spin)",
     "intensity": "Svetlost diska",
     "diskSpeed": "Hitrost diska",
+    "diskTemp": "Temperatura diska",
     "glow": "Fotonski obroč",
     "stars": "Zvezde",
     "fov": "Povečava objektiva",

@@ -28,6 +28,7 @@ export const nl: Translation = {
     "spin": "Rotatie (Kerr-spin)",
     "intensity": "Schijfhelderheid",
     "diskSpeed": "Schijfsnelheid",
+    "diskTemp": "Schijftemperatuur",
     "glow": "Fotonenring",
     "stars": "Sterren",
     "fov": "Lenszoom",

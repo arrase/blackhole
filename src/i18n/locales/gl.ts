@@ -28,6 +28,7 @@ export const gl: Translation = {
     "spin": "Rotación (Spin Kerr)",
     "intensity": "Brillo do disco",
     "diskSpeed": "Velocidade do disco",
+    "diskTemp": "Temperatura do disco",
     "glow": "Anel de fotóns",
     "stars": "Estrelas",
     "fov": "Zoom de lente",

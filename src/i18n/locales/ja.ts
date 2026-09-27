@@ -28,6 +28,7 @@ export const ja: Translation = {
     "spin": "回転 (カー・スピン)",
     "intensity": "円盤の輝度",
     "diskSpeed": "円盤の速度",
+    "diskTemp": "円盤の温度",
     "glow": "光子リング",
     "stars": "恒星",
     "fov": "レンズ画角 (FOV)",

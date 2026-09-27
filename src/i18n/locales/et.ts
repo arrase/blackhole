@@ -28,6 +28,7 @@ export const et: Translation = {
     "spin": "Pöörlemine (Kerri spinn)",
     "intensity": "Ketta heledus",
     "diskSpeed": "Ketta kiirus",
+    "diskTemp": "Ketta temperatuur",
     "glow": "Footonirõngas",
     "stars": "Tähed",
     "fov": "Kaamera suum",

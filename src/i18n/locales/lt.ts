@@ -28,6 +28,7 @@ export const lt: Translation = {
     "spin": "Sukimasis (Kero spinas)",
     "intensity": "Disko ryškumas",
     "diskSpeed": "Disko greitis",
+    "diskTemp": "Disko temperatūra",
     "glow": "Fotonų žiedas",
     "stars": "Žvaigždės",
     "fov": "Objektyvo artinimas",

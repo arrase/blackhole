@@ -28,6 +28,7 @@ export const no: Translation = {
     "spin": "Rotasjon (Kerr-spinn)",
     "intensity": "Skivens lysstyrke",
     "diskSpeed": "Skivehastighet",
+    "diskTemp": "Skivetemperatur",
     "glow": "Fotonring",
     "stars": "Stjerner",
     "fov": "Kamerazoom",

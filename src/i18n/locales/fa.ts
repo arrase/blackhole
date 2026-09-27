@@ -28,6 +28,7 @@ export const fa: Translation = {
     "spin": "چرخش (اسپین کر)",
     "intensity": "روشنایی قرص",
     "diskSpeed": "سرعت قرص",
+    "diskTemp": "دمای قرص",
     "glow": "حلقه فوتونی",
     "stars": "ستاره‌ها",
     "fov": "بزرگ‌نمایی لنز",

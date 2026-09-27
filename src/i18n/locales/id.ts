@@ -28,6 +28,7 @@ export const id: Translation = {
     "spin": "Rotasi (Spin Kerr)",
     "intensity": "Kecerahan Piringan",
     "diskSpeed": "Kecepatan Piringan",
+    "diskTemp": "Suhu Piringan",
     "glow": "Cincin Foton",
     "stars": "Bintang-bintang",
     "fov": "Zoom Lensa",

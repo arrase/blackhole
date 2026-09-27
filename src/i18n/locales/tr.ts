@@ -28,6 +28,7 @@ export const tr: Translation = {
     "spin": "Dönüş (Kerr Spini)",
     "intensity": "Disk Parlaklığı",
     "diskSpeed": "Disk Hızı",
+    "diskTemp": "Disk Sıcaklığı",
     "glow": "Foton Halkası",
     "stars": "Yıldızlar",
     "fov": "Görüş Alanı (FOV)",

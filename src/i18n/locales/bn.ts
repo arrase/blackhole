@@ -28,6 +28,7 @@ export const bn: Translation = {
     "spin": "ঘূর্ণন (কার স্পিন)",
     "intensity": "ডিস্কের উজ্জ্বলতা",
     "diskSpeed": "ডিস্কের গতি",
+    "diskTemp": "ডিস্কের তাপমাত্রা",
     "glow": "ফোটন রিং",
     "stars": "তারা",
     "fov": "লেন্স জুম",

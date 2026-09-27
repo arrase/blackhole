@@ -28,6 +28,7 @@ export const fil: Translation = {
     "spin": "Pag-ikot (Kerr Spin)",
     "intensity": "Liwanag ng Disk",
     "diskSpeed": "Bilis ng Disk",
+    "diskTemp": "Temperatura ng Disk",
     "glow": "Singsing ng Photon",
     "stars": "Mga Bituin",
     "fov": "Zoom ng Lens",

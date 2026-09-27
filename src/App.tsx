@@ -67,6 +67,7 @@ export default function App() {
   const [settings, setSettings] = useState<SimSettings>({
     intensity: 0.35,
     diskSpeed: 1.5,
+    diskTemp: 1.0,
     quality: 1,
     stars: 1,
     glow: 0.6,
@@ -223,6 +224,7 @@ export default function App() {
           <Slider label={t.controls.spin} value={settings.spin} min={0} max={0.95} step={0.01} onChange={(v) => set("spin", v)} />
           <Slider label={t.controls.intensity} value={settings.intensity} min={0.2} max={2.5} step={0.01} onChange={(v) => set("intensity", v)} />
           <Slider label={t.controls.diskSpeed} value={settings.diskSpeed} min={0} max={6} step={0.01} onChange={(v) => set("diskSpeed", v)} />
+          <Slider label={t.controls.diskTemp} value={settings.diskTemp} min={0.3} max={3} step={0.01} onChange={(v) => set("diskTemp", v)} />
           <Slider label={t.controls.glow} value={settings.glow} min={0} max={2} step={0.01} onChange={(v) => set("glow", v)} />
           <Slider label={t.controls.stars} value={settings.stars} min={0} max={2} step={0.01} onChange={(v) => set("stars", v)} />
           <Slider label={t.controls.fov} value={settings.fov} min={0.8} max={3.5} step={0.01} onChange={(v) => set("fov", v)} />

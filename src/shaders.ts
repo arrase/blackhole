@@ -20,6 +20,7 @@ uniform float uStars;
 uniform float uGlow;
 uniform float uSpin;
 uniform float uQuality;
+uniform float uDiskTemp;
 
 const int MAX_STEPS = 1100;
 const float DISK_OUT = 13.0;
@@ -215,6 +216,7 @@ vec4 sampleDisk(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount){
   float boost = pow(shift, 2.6);
 
   float tc = temp * shift * 1.45;
+  tc *= uDiskTemp;
   vec3 cold = vec3(0.72, 0.15, 0.02);
   vec3 warm = vec3(1.0, 0.58, 0.18);
   vec3 hot = vec3(1.0, 0.95, 0.88);
@@ -249,7 +251,7 @@ vec3 planckBlackbody(float T){
   // Factores fotometricos sRGB (1 / lambda^5)
   vec3 spec = vec3(1.4, 1.0, 1.25) / denom;
   float maxVal = max(spec.r, max(spec.g, spec.b));
-  return spec / max(maxVal, 0.001);
+  return spec / max(maxVal, 0.00001);
 }
 
 // Muestreo del disco de acrecion 2D con turbulencia MHD (Modo Media)
@@ -345,7 +347,11 @@ vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount
   // Calentamiento turbulento y corrimiento relativista observado (Ley de Planck)
   float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);
   float tObs = max(tLocal * pow(shift, 0.65), 2.6);
+  tObs *= uDiskTemp;
   vec3 col = planckBlackbody(tObs);
+  if(tObs > 10.0){
+    col = mix(col, vec3(0.85, 0.92, 1.0), min((tObs - 10.0) / 25.0, 0.65));
+  }
 
   // Modulacion de fotones en cruces secundarios con intensidad fisica suave
   float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.8) : (1.0 + uGlow * (0.3 / r));
@@ -451,7 +457,11 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
   // Calentamiento turbulento y corrimiento relativista observado (Ley de Planck)
   float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);
   float tObs = max(tLocal * pow(shift, 0.65), 2.6);
+  tObs *= uDiskTemp;
   vec3 col = planckBlackbody(tObs);
+  if(tObs > 10.0){
+    col = mix(col, vec3(0.85, 0.92, 1.0), min((tObs - 10.0) / 25.0, 0.65));
+  }
 
   // Modulacion de fotones en cruces secundarios con intensidad fisica suave
   float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.8) : (1.0 + uGlow * (0.3 / r));

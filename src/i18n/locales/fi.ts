@@ -28,6 +28,7 @@ export const fi: Translation = {
     "spin": "Pyöriminen (Kerr-spin)",
     "intensity": "Kiekon kirkkaus",
     "diskSpeed": "Kiekon nopeus",
+    "diskTemp": "Kiekon lämpötila",
     "glow": "Fotonirengas",
     "stars": "Tähdet",
     "fov": "Linssin zoom",

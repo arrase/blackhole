@@ -28,6 +28,7 @@ export const sk: Translation = {
     "spin": "Rotácia (Kerrov spin)",
     "intensity": "Jas disku",
     "diskSpeed": "Rýchlosť disku",
+    "diskTemp": "Teplota disku",
     "glow": "Fotónový prstenec",
     "stars": "Hviezdy",
     "fov": "Zoom objektívu",

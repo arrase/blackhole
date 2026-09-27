@@ -42,7 +42,8 @@ describe("shaders", () => {
     expect(fragmentShader).toContain("boost = max(boost, 0.42);");
     expect(fragmentShader).toContain("vec3 col = planckBlackbody(tObs);");
     expect(fragmentShader).not.toContain("colCrimson");
-    expect(fragmentShader).not.toContain("colAmber");
+    expect(fragmentShader).toContain("uniform float uDiskTemp;");
+    expect(fragmentShader).toContain("tObs *= uDiskTemp;");
     // Baja mode remains intact
     expect(fragmentShader).toContain("vec3 cold = vec3(0.72, 0.15, 0.02);");
   });

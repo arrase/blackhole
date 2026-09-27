@@ -28,6 +28,7 @@ export const sr: Translation = {
     "spin": "Ротација (Керов спин)",
     "intensity": "Сјај диска",
     "diskSpeed": "Брзина диска",
+    "diskTemp": "Температура диска",
     "glow": "Фотонски прстен",
     "stars": "Звезде",
     "fov": "Зум објектива",

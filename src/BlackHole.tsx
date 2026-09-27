@@ -5,6 +5,7 @@ import { fragmentShader, vertexShader } from "./shaders";
 export interface SimSettings {
   readonly intensity: number;
   readonly diskSpeed: number;
+  readonly diskTemp: number;
   readonly quality: number; // 0 baja, 1 media, 2 alta
   readonly stars: number;
   readonly glow: number;
@@ -74,6 +75,7 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
       right: u("uCamRight"), up: u("uCamUp"), fov: u("uFov"),
       intensity: u("uIntensity"), speed: u("uDiskSpeed"), steps: u("uSteps"),
       stars: u("uStars"), glow: u("uGlow"), spin: u("uSpin"), quality: u("uQuality"),
+      diskTemp: u("uDiskTemp"),
     };
 
     let raf = 0;
@@ -124,6 +126,7 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
       gl.uniform1f(U.fov, s.fov);
       gl.uniform1f(U.intensity, s.intensity);
       gl.uniform1f(U.speed, s.diskSpeed);
+      gl.uniform1f(U.diskTemp, s.diskTemp);
       gl.uniform1f(U.steps, q.steps);
       gl.uniform1f(U.stars, s.stars);
       gl.uniform1f(U.glow, s.glow);

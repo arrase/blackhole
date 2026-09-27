@@ -28,6 +28,7 @@ export const ko: Translation = {
     "spin": "회전 (커 스핀)",
     "intensity": "강착원반 밝기",
     "diskSpeed": "원반 속도",
+    "diskTemp": "원반 온도",
     "glow": "광자 고리",
     "stars": "배경 별빛",
     "fov": "렌즈 화각",
