@@ -75,7 +75,6 @@ describe("i18n system", () => {
 
   describe("detectLanguage", () => {
     let storage: Record<string, string> = {};
-    const originalLanguageDescriptor = Object.getOwnPropertyDescriptor(globalThis.navigator, "language");
 
     beforeEach(() => {
       storage = {};
@@ -92,29 +91,17 @@ describe("i18n system", () => {
         },
       } as Storage;
 
-      Object.defineProperty(globalThis, "window", {
-        value: globalThis,
-        writable: true,
-        configurable: true,
-      });
-
-      Object.defineProperty(globalThis, "localStorage", {
-        value: mockLocalStorage,
-        writable: true,
-        configurable: true,
-      });
+      vi.stubGlobal("window", globalThis);
+      vi.stubGlobal("localStorage", mockLocalStorage);
+      vi.stubGlobal("navigator", { language: "en-US" });
     });
 
     afterEach(() => {
-      if (originalLanguageDescriptor) {
-        Object.defineProperty(globalThis.navigator, "language", originalLanguageDescriptor);
-      }
-      vi.restoreAllMocks();
+      vi.unstubAllGlobals();
     });
 
     it("returns defaultCode when window is undefined", () => {
-      // @ts-expect-error test non-window env
-      delete globalThis.window;
+      vi.stubGlobal("window", undefined);
       expect(detectLanguage(codes, "es")).toBe("es");
     });
 
@@ -124,18 +111,12 @@ describe("i18n system", () => {
     });
 
     it("detects browser language when localStorage is empty", () => {
-      Object.defineProperty(globalThis.navigator, "language", {
-        value: "fr-FR",
-        configurable: true,
-      });
+      vi.stubGlobal("navigator", { language: "fr-FR" });
       expect(detectLanguage(codes)).toBe("fr");
     });
 
     it("falls back to default code when neither saved nor browser language matches", () => {
-      Object.defineProperty(globalThis.navigator, "language", {
-        value: "xx-YY",
-        configurable: true,
-      });
+      vi.stubGlobal("navigator", { language: "xx-YY" });
       expect(detectLanguage(codes, "es")).toBe("es");
     });
   });
