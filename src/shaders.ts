@@ -410,28 +410,32 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
   }
   float temp = tEmit / 7.5;
 
+  // Altura vertical normalizada dentro del disco
+  float yNorm = pos.y / H;
+
   // Turbulencia MHD realista con domain warping y ondas de choque espirales
   float spiral1 = 2.0 * aRot - 1.8 * log(max(r / max(rIsco, 0.1), 0.001));
   float spiral2 = 4.0 * aRot - 2.6 * log(max(r / max(rIsco, 0.1), 0.001));
   float shock = pow(0.5 + 0.5 * sin(spiral1), 1.8) * (0.8 + 0.2 * sin(spiral2));
 
-  // Multi-octave domain warping para filamentos magneticos y remolinos de plasma en 3D
-  vec3 q = vec3(r * 2.5, cos(aRot) * 2.5, sin(aRot) * 2.5);
+  // Torsion vertical 3D acoplada a la altura normalizada para romper la extrusion 2D
+  float verticalTwist = yNorm * 0.75;
+  vec3 q = vec3(r * 2.8, cos(aRot + verticalTwist) * 2.8, sin(aRot + verticalTwist) * 2.8);
   vec3 qWarp = q + vec3(
-    fbm(q + vec3(tAnim * 0.1, 0.0, 1.5)),
-    fbm(q + vec3(2.1, tAnim * 0.12, 0.0)),
-    fbm(q + vec3(0.0, 3.4, -tAnim * 0.08))
+    fbm(q + vec3(tAnim * 0.1, yNorm * 2.2, 1.5)),
+    fbm(q + vec3(2.1, tAnim * 0.12, yNorm * 1.8)),
+    fbm(q + vec3(yNorm * 1.5, 3.4, -tAnim * 0.08))
   ) * 1.4;
   float n1 = fbm(qWarp);
-  float n2 = fbm(qWarp * 2.2 + vec3(r * 1.6, 0.0, tAnim * 0.15));
+  float n2 = fbm(qWarp * 2.2 + vec3(r * 1.6, yNorm * 2.5, tAnim * 0.15));
 
-  // Filamentos finos con gradientes pronunciados
-  float filament = 1.0 - smoothstep(0.04, 0.35, abs(n1 - 0.5) * 2.0);
+  // Filamentos finos con gradientes pronunciados de alto contraste (Ridge Noise)
+  float filament = pow(1.0 - smoothstep(0.02, 0.30, abs(n1 - 0.5) * 2.0), 1.5);
 
   // Estrias keplerianas de alta cizalladura combinadas con ondas de choque espirales en 3D
-  vec3 qStreak = vec3(r * 6.0, cos(aRot * 4.0 + n1 * 2.2) * 4.5, sin(aRot * 4.0 + n1 * 2.2) * 4.5);
-  float fineStreak = fbm(qStreak);
-  float streaks = (0.4 + 0.85 * n1 * (0.5 + 0.8 * n2) + 0.45 * fineStreak + 0.55 * filament) * (0.7 + 0.65 * shock);
+  vec3 qStreak = vec3(r * 6.8, cos(aRot * 4.2 + n1 * 2.4 + verticalTwist) * 4.8, sin(aRot * 4.2 + n1 * 2.4 + verticalTwist) * 4.8);
+  float fineStreak = pow(fbm(qStreak), 1.3);
+  float streaks = (0.35 + 0.85 * n1 * (0.45 + 0.8 * n2) + 0.55 * fineStreak + 0.75 * filament) * (0.65 + 0.75 * shock);
 
   // Anillos concentricos y modulacion de ondas de densidad
   float rings = (0.8 + 0.2 * sin(r * 6.2 + n1 * 2.0 + sin(spiral1) * 0.6)) * (0.88 + 0.12 * cos(r * 12.5 + n2 * 1.5));
@@ -467,15 +471,14 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
   // Modulacion de fotones en cruces secundarios con intensidad fisica suave
   float ringBoost = (crossingCount > 1) ? (1.0 + uGlow * 1.8) : (1.0 + uGlow * (0.3 / r));
 
-  // Perfil vertical gaussiano de densidad
-  float yNorm = pos.y / H;
-  float rhoVertical = exp(-2.5 * yNorm * yNorm);
+  // Perfil vertical gaussiano de densidad concentrado en el plano medio
+  float rhoVertical = exp(-5.0 * yNorm * yNorm);
 
   // Densidad volumetrica y transporte radiativo del paso
-  float rho = 7.0 * rhoVertical * bright;
-  float dTau = min(rho * dt * 0.70, 0.25);
+  float rho = 8.5 * rhoVertical * (0.3 + 0.7 * bright);
+  float dTau = min(rho * dt * 1.8, 1.2);
   float stepAlpha = 1.0 - exp(-dTau);
-  vec3 stepEmit = col * rho * boost * uIntensity * ringBoost * 2.2;
+  vec3 stepEmit = col * bright * boost * uIntensity * ringBoost * 2.2;
 
   return vec4(stepEmit, stepAlpha);
 }
@@ -491,6 +494,10 @@ void main(){
 
   vec3 pos = uCamPos;
   vec3 vel = dir;
+  if(uQuality >= 1.5){
+    float dither = hash(vec3(gl_FragCoord.xy, 19.17));
+    pos += vel * (dither * 0.025);
+  }
 
   float rPlus = getRPlus(uSpin);
   float rIsco = getIsco(uSpin);
@@ -510,7 +517,10 @@ void main(){
 
     float dt = clamp(0.06 * r * r / (r + 2.0), 0.015, 1.4);
     if(abs(pos.y) < 1.0 && r < DISK_OUT + 2.0){
-      float baseDt = (uQuality >= 1.5) ? 0.046 : 0.08;
+      float rDisk = length(pos.xz);
+      float H = diskHeight(rDisk, rPlus);
+      float inDisk = (abs(pos.y) < H && rDisk > rPlus) ? 0.022 : 0.046;
+      float baseDt = (uQuality >= 1.5) ? inDisk : 0.08;
       dt = min(dt, baseDt + abs(pos.y) * 0.25);
     }
     if(r < 3.2){

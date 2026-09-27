@@ -23,12 +23,12 @@ describe("shaders", () => {
     expect(fragmentShader).toContain("vec4 sampleDiskVolume(");
     expect(fragmentShader).toContain("vec4 sampleDiskMHD(");
     expect(fragmentShader).toContain("vec4 sampleDisk(");
-    expect(fragmentShader).toContain("exp(-2.5 * yNorm * yNorm)");
+    expect(fragmentShader).toContain("exp(-5.0 * yNorm * yNorm)");
     expect(fragmentShader).not.toContain("pos.y * 3.5");
     expect(fragmentShader).not.toContain("pos.y * 5.0");
-    expect(fragmentShader).toContain("float rho = 7.0 * rhoVertical * bright;");
-    expect(fragmentShader).toContain("float dTau = min(rho * dt * 0.70, 0.25);");
-    expect(fragmentShader).toContain("vec3 stepEmit = col * rho * boost * uIntensity * ringBoost * 2.2;");
+    expect(fragmentShader).toContain("float rho = 8.5 * rhoVertical * (0.3 + 0.7 * bright);");
+    expect(fragmentShader).toContain("float dTau = min(rho * dt * 1.8, 1.2);");
+    expect(fragmentShader).toContain("vec3 stepEmit = col * bright * boost * uIntensity * ringBoost * 2.2;");
     expect(fragmentShader).toContain("pos.y * nextPos.y < 0.0 && r < DISK_OUT");
     expect(fragmentShader).toContain("uniform float uAccretionDisk;");
     expect(fragmentShader).toContain("uAccretionDisk > 0.5");
