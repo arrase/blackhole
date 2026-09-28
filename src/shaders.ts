@@ -43,7 +43,7 @@ float getIsco(float spin){
 
 // Semiespesor del disco. 0.0289 deja el espesor completo en h/r ~ 0.044-0.056, es
 // decir H/r ~ 0.022-0.028: un disco de Shakura-Sunyaev delgado y canonico (alpha
-// ~ 0.02-0.03), el mismo orden que usan los ajustes de M87*. Los 0.065 iniciais
+// ~ 0.02-0.03), el mismo orden que usan los ajustes de M87*. Los 0.065 iniciales
 // (h/r ~ 0.10-0.13) eran de slim disk y se veian gruesos de canto.
 float diskHeight(float r, float rPlus){
   if(r <= rPlus || r >= DISK_OUT) return 0.0;
