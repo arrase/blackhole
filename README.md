@@ -1,4 +1,4 @@
-# Gargantua · Black Hole Simulation
+# Black Hole Simulation
 
 Real-time relativistic simulation of a spinning supermassive black hole (Kerr metric) directly in the web browser using WebGL and GLSL shaders.
 
