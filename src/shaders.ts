@@ -41,9 +41,13 @@ float getIsco(float spin){
   return 0.5 * (3.0 + z2 - sqrt(max(0.0, (3.0 - z1) * (3.0 + z1 + 2.0 * z2))));
 }
 
+// Semiespesor del disco. 0.0289 deja el espesor completo en h/r ~ 0.044-0.056, es
+// decir H/r ~ 0.022-0.028: un disco de Shakura-Sunyaev delgado y canonico (alpha
+// ~ 0.02-0.03), el mismo orden que usan los ajustes de M87*. Los 0.065 iniciais
+// (h/r ~ 0.10-0.13) eran de slim disk y se veian gruesos de canto.
 float diskHeight(float r, float rPlus){
   if(r <= rPlus || r >= DISK_OUT) return 0.0;
-  return 0.065 * r * sqrt(max(0.0, (r - rPlus) / r));
+  return 0.0289 * r * sqrt(max(0.0, (r - rPlus) / r));
 }
 
 // Aceleracion geodesica para rayos nulos en metrica de Kerr:
@@ -406,7 +410,11 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
     vGas = vTangential * phiHat + vRadial * rHat;
 
     tEmit = 3.6 * pow(max(r - rPlus, 0.0) / max(rIsco - rPlus, 0.001), 0.5);
-    aRot += 1.8 * sqrt(rIsco - r);
+    // Espiral de plunging con perfil suave: 1.8*sqrt(rIsco - r) tiene derivada
+    // infinita justo en el ISCO, de modo que el ruido gira a velocidad ilimitada
+    // ahi y el disco se llena de escamas. smoothstep anula esa derivada.
+    float uPlunge = clamp((rIsco - r) / 0.9, 0.0, 1.0);
+    aRot += 1.8 * uPlunge * uPlunge * (3.0 - 2.0 * uPlunge);
   }
   float temp = tEmit / 7.5;
 
@@ -429,22 +437,31 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
   float n1 = fbm(qWarp);
   float n2 = fbm(qWarp * 2.2 + vec3(r * 1.6, yNorm * 2.5, tAnim * 0.15));
 
-  // Filamentos finos con gradientes pronunciados de alto contraste (Ridge Noise)
-  float filament = pow(1.0 - smoothstep(0.02, 0.30, abs(n1 - 0.5) * 2.0), 1.5);
+  // Filamentos finos con gradientes pronunciados (Ridge Noise): umbral estrecho para
+  // que las crestas sean nitidas y el hueco entre ellas caiga a casi cero, que es lo
+  // que da definicion al plasma en vez de un brillo uniforme y blando
+  float filament = pow(1.0 - smoothstep(0.015, 0.155, abs(n1 - 0.5) * 2.0), 1.5);
 
   // Estrias keplerianas de alta cizalladura combinadas con ondas de choque espirales en 3D
-  vec3 qStreak = vec3(r * 6.8, cos(aRot * 4.2 + n1 * 2.4 + verticalTwist) * 4.8, sin(aRot * 4.2 + n1 * 2.4 + verticalTwist) * 4.8);
+  // La frecuencia angular se modera hacia dentro: la longitud de arco fisica escala
+  // con r, de modo que con el mismo factor el detalle angular cae por debajo del paso
+  // del rayo cerca del ISCO y se muarea (el aspecto de "tejido" de escamas junto a la
+  // sombra). Fuera, donde el rayo si muestrea el detalle, se mantiene intacto.
+  float kAng = 4.2 * clamp(r * 0.16, 0.40, 1.0);
+  vec3 qStreak = vec3(r * 6.8, cos(aRot * kAng + n1 * 2.4 + verticalTwist) * 4.8, sin(aRot * kAng + n1 * 2.4 + verticalTwist) * 4.8);
   float fineStreak = pow(fbm(qStreak), 1.3);
-  float streaks = (0.35 + 0.85 * n1 * (0.45 + 0.8 * n2) + 0.55 * fineStreak + 0.75 * filament) * (0.65 + 0.75 * shock);
+  float streaks = (0.35 + 0.85 * n1 * (0.45 + 0.8 * n2) + 0.55 * fineStreak + 1.15 * filament) * (0.65 + 0.75 * shock);
 
   // Anillos concentricos y modulacion de ondas de densidad
   float rings = (0.8 + 0.2 * sin(r * 6.2 + n1 * 2.0 + sin(spiral1) * 0.6)) * (0.88 + 0.12 * cos(r * 12.5 + n2 * 1.5));
 
   float bright = temp * rings * streaks * 2.8;
 
-  // Transicion suave hacia el borde exterior
+  // Transicion hacia el borde exterior. La caida se concentra mas cerca del radio de
+  // truncado: repartirla desde el 80% de DISK_OUT producia un limbo largo y sin forma,
+  // con el disco manteniendo todo su espesor hasta apagarse de golpe.
   float edgeIn = smoothstep(rPlus * 1.01, rPlus * 1.15, r);
-  float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.80, r);
+  float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.885, r);
   bright *= edgeIn * edgeOut;
   if(bright <= 0.0001) return vec4(0.0);
 
@@ -519,7 +536,10 @@ void main(){
     if(abs(pos.y) < 1.0 && r < DISK_OUT + 2.0){
       float rDisk = length(pos.xz);
       float H = diskHeight(rDisk, rPlus);
-      float inDisk = (abs(pos.y) < H && rDisk > rPlus) ? 0.022 : 0.046;
+      // Paso dentro del disco proporcional a su semiespesor: con el disco mas fino
+      // un paso fijo dejaria de muestrear la losa de canto (solo ~4 muestras) y
+      // apareceria bandeado. Asi se mantienen ~8 muestras sea cual sea el grosor.
+      float inDisk = (abs(pos.y) < H && rDisk > rPlus) ? min(0.022, max(0.004, H * 0.22)) : 0.046;
       float baseDt = (uQuality >= 1.5) ? inDisk : 0.08;
       dt = min(dt, baseDt + abs(pos.y) * 0.25);
     }
