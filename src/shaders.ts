@@ -204,7 +204,7 @@ vec4 sampleDisk(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount){
   float bright = temp * rings * streaks * 2.8;
 
   float edgeIn = smoothstep(rPlus * 1.01, rPlus * 1.15, r);
-  float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.45, r);
+  float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.80, r);
   bright *= edgeIn * edgeOut;
   if(bright <= 0.0001) return vec4(0.0);
 
@@ -330,7 +330,7 @@ vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount
 
   // Transicion suave hacia el borde exterior
   float edgeIn = smoothstep(rPlus * 1.01, rPlus * 1.15, r);
-  float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.45, r);
+  float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.80, r);
   bright *= edgeIn * edgeOut;
   if(bright <= 0.0001) return vec4(0.0);
 
@@ -347,7 +347,7 @@ vec4 sampleDiskMHD(vec3 p, vec3 vel, float rPlus, float rIsco, int crossingCount
 
   // Calentamiento turbulento y corrimiento relativista observado (Ley de Planck)
   float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);
-  float tObs = max(tLocal * pow(shift, 0.65), 2.6);
+  float tObs = max(tLocal * pow(shift, 0.65), 1.35);
   tObs *= uDiskTemp;
   vec3 col = planckBlackbody(tObs);
   if(tObs > 10.0){
@@ -444,7 +444,7 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
 
   // Transicion suave hacia el borde exterior
   float edgeIn = smoothstep(rPlus * 1.01, rPlus * 1.15, r);
-  float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.45, r);
+  float edgeOut = smoothstep(DISK_OUT, DISK_OUT * 0.80, r);
   bright *= edgeIn * edgeOut;
   if(bright <= 0.0001) return vec4(0.0);
 
@@ -461,7 +461,7 @@ vec4 sampleDiskVolume(vec3 pos, vec3 vel, float dt, float rPlus, float rIsco, in
 
   // Calentamiento turbulento y corrimiento relativista observado (Ley de Planck)
   float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);
-  float tObs = max(tLocal * pow(shift, 0.65), 2.6);
+  float tObs = max(tLocal * pow(shift, 0.65), 1.35);
   tObs *= uDiskTemp;
   vec3 col = planckBlackbody(tObs);
   if(tObs > 10.0){

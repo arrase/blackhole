@@ -40,7 +40,7 @@ describe("shaders", () => {
     expect(fragmentShader).toContain("tEmit = 7.5 * tempNorm;");
     expect(fragmentShader).toContain("tEmit = 3.6 * pow(max(r - rPlus, 0.0) / max(rIsco - rPlus, 0.001), 0.5);");
     expect(fragmentShader).toContain("float tLocal = tEmit * (0.8 + 0.45 * filament + 0.3 * shock);");
-    expect(fragmentShader).toContain("float tObs = max(tLocal * pow(shift, 0.65), 2.6);");
+    expect(fragmentShader).toContain("float tObs = max(tLocal * pow(shift, 0.65), 1.35);");
     expect(fragmentShader).toContain("boost = max(boost, 0.42);");
     expect(fragmentShader).toContain("vec3 col = planckBlackbody(tObs);");
     expect(fragmentShader).not.toContain("colCrimson");

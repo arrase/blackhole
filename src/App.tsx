@@ -67,7 +67,7 @@ export default function App() {
   const [settings, setSettings] = useState<SimSettings>({
     intensity: 0.35,
     diskSpeed: 1.5,
-    diskTemp: 1.0,
+    diskTemp: 1.75,
     quality: 1,
     stars: 1,
     glow: 0.6,
