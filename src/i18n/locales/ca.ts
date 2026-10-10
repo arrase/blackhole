@@ -19,17 +19,11 @@ export const ca: Translation = {
     "close": "Tancar"
   },
   "controls": {
-    "quality": "Qualitat",
-    "qualityLevels": [
-      "Baixa",
-      "Mitjana",
-      "Alta"
-    ],
     "spin": "Rotació (Spin Kerr)",
     "intensity": "Brillantor del disc",
     "diskSpeed": "Velocitat del disc",
     "diskTemp": "Temperatura del disc",
-    "glow": "Anell de fotons",
+    "glow": "Resplendor òptic",
     "stars": "Estrelles",
     "fov": "Zoom de lent",
     "autoRotate": "Rotació automàtica",
@@ -42,10 +36,10 @@ export const ca: Translation = {
     "horizonTitle": "Horitzó i Ergosfera: ",
     "horizonDesc": "l'horitzó d'esdeveniments es contrau amb l'espín segons r+ = M + √(M²-a²). A l'exterior sorgeix l'ergosfera, on l'arrossegament obliga tota la matèria a orbitar a favor del gir.",
     "iscoTitle": "Òrbita circular estable (ISCO): ",
-    "iscoDesc": "calculada amb la fórmula de Bardeen-Press-Teukolsky. En augmentar l'espín a 0.95, la vora interior del disc passa de 3.0 a 0.95, permetent al gas penetrar molt més a fons i alliberar una enorme energia gravitatòria.",
+    "iscoDesc": "calculada amb la fórmula de Bardeen-Press-Teukolsky. En augmentar l'espín a 0.95, la vora interior del disc passa de 3.0 a 0.97, permetent al gas penetrar molt més a fons i alliberar una enorme energia gravitatòria.",
     "lensingTitle": "Lent gravitatòria i Anell de fotons: ",
-    "lensingDesc": "cada raig segueix geodèsiques nul·les integrades amb Verlet simplèctic de 2n ordre considerant l'acceleració gravitomagnètica.",
+    "lensingDesc": "cada raig es traça cap enrere per una geodèsica nul·la exacta de Kerr (coordenades de Kerr-Schild): el disc apareix per sobre i per sota de l'ombra, i les seves imatges d'ordre superior formen el fi anell de fotons.",
     "dopplerTitle": "Efecte Doppler i Beaming: ",
-    "dopplerDesc": "el gas prògrad que viatja cap a l'observador pateix un intens desplaçament cap al blau i una amplificació lluminosa quàrtica (δ⁴)."
+    "dopplerDesc": "la llum que veiem és la d'un cos negre a g·T, on g combina l'efecte Doppler i el desplaçament gravitatori cap al vermell (intensitat bolomètrica ∝ g⁴): el costat que s'acosta es veu més brillant i blanc, i el que s'allunya més tènue i vermellós."
   }
 };

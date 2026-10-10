@@ -19,17 +19,11 @@ export const da: Translation = {
     "close": "Luk"
   },
   "controls": {
-    "quality": "Kvalitet",
-    "qualityLevels": [
-      "Lav",
-      "Mellem",
-      "Høj"
-    ],
     "spin": "Rotation (Kerr-spin)",
     "intensity": "Diskens lysstyrke",
     "diskSpeed": "Diskhastighed",
     "diskTemp": "Disktemperatur",
-    "glow": "Fotonring",
+    "glow": "Linseglød",
     "stars": "Stjerner",
     "fov": "Kamerazoom",
     "autoRotate": "Automatisk rotation",
@@ -42,10 +36,10 @@ export const da: Translation = {
     "horizonTitle": "Begivenhedshorisont og Ergosfære: ",
     "horizonDesc": "begivenhedshorisonten trækker sig sammen med spin ifølge r+ = M + √(M²-a²). Udenfor opstår ergosfæren, hvor rumtrækket tvinger alt stof til at kredse i rotationsretningen.",
     "iscoTitle": "Inderste stabile cirkulære bane (ISCO): ",
-    "iscoDesc": "beregnet med Bardeen-Press-Teukolsky-formlen. Når spin øges til 0,95, flytter diskens indre kant fra 3,0 ned til 0,95, så gas kan trænge langt dybere ind og frigøre enorm tyngdeenergi.",
+    "iscoDesc": "beregnet med Bardeen-Press-Teukolsky-formlen. Når spin øges til 0,95, flytter diskens indre kant fra 3,0 ned til 0,97, så gas kan trænge langt dybere ind og frigøre enorm tyngdeenergi.",
     "lensingTitle": "Gravitationslinse og Fotonring: ",
-    "lensingDesc": "hver lysstråle følger nul-geodæter integreret med 2. ordens symplektisk Verlet under hensyntagen til gravitomagnetisk acceleration.",
+    "lensingDesc": "hver lysstråle spores baglæns langs en eksakt nul-geodæt i Kerr-metrikken (Kerr-Schild-koordinater): skiven ses over og under skyggen, og dens billeder af højere orden danner den tynde fotonring.",
     "dopplerTitle": "Doppler-effekt og Relativistisk beaming: ",
-    "dopplerDesc": "gas, der bevæger sig mod observatøren, udsættes for et kraftigt blåskift og en fjerdepotens relativistisk strålingsforstærkning (δ⁴)."
+    "dopplerDesc": "lyset, vi ser, er et sort legeme ved g·T, hvor g samler dopplerforskydning og gravitationel rødforskydning (bolometrisk intensitet ∝ g⁴): siden, der bevæger sig mod os, ser lysere og hvidere ud, den bortgående side svagere og rødere."
   }
 };

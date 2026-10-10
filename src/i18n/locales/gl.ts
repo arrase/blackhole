@@ -19,17 +19,11 @@ export const gl: Translation = {
     "close": "Pechar"
   },
   "controls": {
-    "quality": "Calidade",
-    "qualityLevels": [
-      "Baixa",
-      "Media",
-      "Alta"
-    ],
     "spin": "Rotación (Spin Kerr)",
     "intensity": "Brillo do disco",
     "diskSpeed": "Velocidade do disco",
     "diskTemp": "Temperatura do disco",
-    "glow": "Anel de fotóns",
+    "glow": "Resplandor óptico",
     "stars": "Estrelas",
     "fov": "Zoom de lente",
     "autoRotate": "Rotación automática",
@@ -42,10 +36,10 @@ export const gl: Translation = {
     "horizonTitle": "Horizonte e Ergosfera: ",
     "horizonDesc": "o horizonte de sucesos contráese co spin segundo r+ = M + √(M²-a²). Por fóra xorde a ergosfera, onde o arrastre obriga a toda a materia a orbitar a prol do xiro.",
     "iscoTitle": "Órbita circular estable (ISCO): ",
-    "iscoDesc": "calculada coa fórmula de Bardeen-Press-Teukolsky. Ao aumentar o spin a 0.95, o bordo interior do disco pasa de 3.0 a 0.95, permitindo ao gas penetrar moito máis fondo e liberar unha enorme enerxía gravitatoria.",
+    "iscoDesc": "calculada coa fórmula de Bardeen-Press-Teukolsky. Ao aumentar o spin a 0.95, o bordo interior do disco pasa de 3.0 a 0.97, permitindo ao gas penetrar moito máis fondo e liberar unha enorme enerxía gravitatoria.",
     "lensingTitle": "Lente gravitatoria e Anel de fotóns: ",
-    "lensingDesc": "cada raio segue xeodésicas nulas integradas con Verlet simpléctico de 2º orde considerando a aceleración gravitomagnética.",
+    "lensingDesc": "cada raio trázase cara atrás por unha xeodésica nula exacta de Kerr (coordenadas de Kerr-Schild): o disco asoma por riba e por baixo da sombra, e as súas imaxes de orde superior forman o fino anel de fotóns.",
     "dopplerTitle": "Efecto Doppler e Beaming: ",
-    "dopplerDesc": "o gas prógrado que viaxa cara ao observador sofre un intenso desprazamento cara ao azul e amplificación luminosa cuántica (δ⁴)."
+    "dopplerDesc": "a luz que vemos é a dun corpo negro a g·T, onde g combina o efecto Doppler e o desprazamento gravitacional cara ao vermello (intensidade bolométrica ∝ g⁴): o lado que se achega vese máis brillante e branco, e o que se afasta máis tenue e avermellado."
   }
 };

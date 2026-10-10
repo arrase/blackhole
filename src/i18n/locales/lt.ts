@@ -19,17 +19,11 @@ export const lt: Translation = {
     "close": "Uždaryti"
   },
   "controls": {
-    "quality": "Kokybė",
-    "qualityLevels": [
-      "Žema",
-      "Vidutinė",
-      "Aukšta"
-    ],
     "spin": "Sukimasis (Kero spinas)",
     "intensity": "Disko ryškumas",
     "diskSpeed": "Disko greitis",
     "diskTemp": "Disko temperatūra",
-    "glow": "Fotonų žiedas",
+    "glow": "Objektyvo švytėjimas",
     "stars": "Žvaigždės",
     "fov": "Objektyvo artinimas",
     "autoRotate": "Automatinis sukimasis",
@@ -42,10 +36,10 @@ export const lt: Translation = {
     "horizonTitle": "Įvykių horizontas ir Ergosfera: ",
     "horizonDesc": "įvykių horizontas traukiasi didėjant spinui pagal r+ = M + √(M²-a²). Išorėje susidaro ergosfera, kurioje erdvės vilkimas priverčia visą materiją skrieti sukimosi kryptimi.",
     "iscoTitle": "Giliausia stabili apskritiminė orbita (ISCO): ",
-    "iscoDesc": "apskaičiuota pagal Bardeen-Press-Teukolsky formulę. Spinui padidėjus iki 0.95, vidinis disko kraštas sumažėja nuo 3.0 iki 0.95, todėl dujos prasiskverbia kur kas giliau ir atpalaiduoja milžinišką energiją.",
+    "iscoDesc": "apskaičiuota pagal Bardeen-Press-Teukolsky formulę. Spinui padidėjus iki 0.95, vidinis disko kraštas sumažėja nuo 3.0 iki 0.97, todėl dujos prasiskverbia kur kas giliau ir atpalaiduoja milžinišką energiją.",
     "lensingTitle": "Gravitacinis lęšis ir Fotonų žiedas: ",
-    "lensingDesc": "kiekvienas šviesos spindulys seka nulines geodezines linijas, integruotas 2-os eilės simplektiniu Verlet metodu, atsižvelgiant į gravitomagnetinį pagreitį.",
+    "lensingDesc": "kiekvienas spindulys sekamas atgal tikslia Kero metrikos nuline geodezine (Kero-Šildo koordinatės): diskas matomas virš ir po šešėliu, o jo aukštesnės eilės atvaizdai sudaro ploną fotonų žiedą.",
     "dopplerTitle": "Doplerio efektas ir Reliatyvistinis spinduliavimas: ",
-    "dopplerDesc": "į stebėtoją judančios dujos patiria stiprų mėlynąjį poslinkį ir ketvirtojo laipsnio šviesio sustiprinimą (δ⁴)."
+    "dopplerDesc": "matoma šviesa yra absoliučiai juodo kūno spinduliuotė esant g·T, kur g sujungia Doplerio poslinkį ir gravitacinį raudonąjį poslinkį (bolometrinis intensyvumas ∝ g⁴): artėjanti pusė atrodo ryškesnė ir baltesnė, tolstanti – blankesnė ir raudonesnė."
   }
 };

@@ -19,17 +19,11 @@ export const ro: Translation = {
     "close": "Închide"
   },
   "controls": {
-    "quality": "Calitate",
-    "qualityLevels": [
-      "Scăzută",
-      "Medie",
-      "Ridicată"
-    ],
     "spin": "Rotație (Spin Kerr)",
     "intensity": "Luminozitate disc",
     "diskSpeed": "Viteză disc",
     "diskTemp": "Temperatură disc",
-    "glow": "Inel de fotoni",
+    "glow": "Strălucire optică",
     "stars": "Stele",
     "fov": "Zoom lentilă",
     "autoRotate": "Rotație automată",
@@ -42,10 +36,10 @@ export const ro: Translation = {
     "horizonTitle": "Orizontul evenimentelor și Ergosfera: ",
     "horizonDesc": "orizontul se contractă odată cu spinul conform r+ = M + √(M²-a²). În exterior se formează ergosfera, unde antrenarea spațiului obligă toată materia să orbiteze în direcția rotației.",
     "iscoTitle": "Cea mai interioară orbită circulară stabilă (ISCO): ",
-    "iscoDesc": "calculată cu formula Bardeen-Press-Teukolsky. La creșterea spinului la 0.95, marginea interioară a discului coboară de la 3.0 la 0.95, permițând gazului să pătrundă mult mai adânc și să elibereze o uriașă energie gravitațională.",
+    "iscoDesc": "calculată cu formula Bardeen-Press-Teukolsky. La creșterea spinului la 0.95, marginea interioară a discului coboară de la 3.0 la 0.97, permițând gazului să pătrundă mult mai adânc și să elibereze o uriașă energie gravitațională.",
     "lensingTitle": "Lentilă gravitațională și Inel de fotoni: ",
-    "lensingDesc": "fiecare rază luminoasă urmează geodezice nule integrate cu Verlet simplectic de ordinul 2 luând în considerare accelerația gravitomagnetică.",
+    "lensingDesc": "fiecare rază este urmărită înapoi de-a lungul unei geodezice nule exacte Kerr (coordonate Kerr-Schild): discul apare deasupra și dedesubtul umbrei, iar imaginile sale de ordin superior formează inelul subțire de fotoni.",
     "dopplerTitle": "Efect Doppler și Beaming relativist: ",
-    "dopplerDesc": "gazul prograd care călătorește spre observator suferă o deplasare intensă spre albastru și o amplificare luminoasă la puterea a patra (δ⁴)."
+    "dopplerDesc": "lumina pe care o vedem este a unui corp negru la g·T, unde g combină deplasarea Doppler și deplasarea gravitațională spre roșu (intensitate bolometrică ∝ g⁴): partea care se apropie pare mai strălucitoare și mai albă, iar cea care se depărtează mai slabă și mai roșiatică."
   }
 };

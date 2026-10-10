@@ -19,17 +19,11 @@ export const nl: Translation = {
     "close": "Sluiten"
   },
   "controls": {
-    "quality": "Kwaliteit",
-    "qualityLevels": [
-      "Laag",
-      "Gemiddeld",
-      "Hoog"
-    ],
     "spin": "Rotatie (Kerr-spin)",
     "intensity": "Schijfhelderheid",
     "diskSpeed": "Schijfsnelheid",
     "diskTemp": "Schijftemperatuur",
-    "glow": "Fotonenring",
+    "glow": "Lensgloed",
     "stars": "Sterren",
     "fov": "Lenszoom",
     "autoRotate": "Automatisch draaien",
@@ -42,10 +36,10 @@ export const nl: Translation = {
     "horizonTitle": "Gebeurtenishorizon en Ergosfeer: ",
     "horizonDesc": "de waarnemingshorizon krimpt met de spin volgens r+ = M + √(M²-a²). Aan de buitenzijde ontstaat de ergosfeer, waar frame dragging alle materie dwingt in de rotatierichting te bewegen.",
     "iscoTitle": "Binnenste stabiele cirkelbaan (ISCO): ",
-    "iscoDesc": "berekend met de Bardeen-Press-Teukolsky-formule. Bij een spin van 0,95 schuift de binnenrand van de schijf op van 3,0 naar 0,95, waardoor gas dieper kan vallen en enorme zwaartekrachtenergie vrijmaakt.",
+    "iscoDesc": "berekend met de Bardeen-Press-Teukolsky-formule. Bij een spin van 0,95 schuift de binnenrand van de schijf op van 3,0 naar 0,97, waardoor gas dieper kan vallen en enorme zwaartekrachtenergie vrijmaakt.",
     "lensingTitle": "Zwaartekrachtlens & Fotonenring: ",
-    "lensingDesc": "elke lichtstraal volgt nul-geodeten geïntegreerd met 2e-orde symplectische Verlet rekening houdend met gravitomagnetische versnelling.",
+    "lensingDesc": "elke lichtstraal wordt achterwaarts gevolgd langs een exacte nulgeodeet van de Kerr-metriek (Kerr-Schild-coördinaten): de schijf verschijnt boven en onder de schaduw, en haar beelden van hogere orde vormen de dunne fotonenring.",
     "dopplerTitle": "Doppler-effect en Beaming: ",
-    "dopplerDesc": "het prograderende gas dat naar de waarnemer toe beweegt ervaart sterke blauwverschuiving en quartische relativistische stralingsbundeling (δ⁴)."
+    "dopplerDesc": "het licht dat we zien is dat van een zwart lichaam bij g·T, waarbij g de dopplerverschuiving en de gravitationele roodverschuiving combineert (bolometrische intensiteit ∝ g⁴): de kant die naar ons toe beweegt ziet er helderder en witter uit, de kant die zich verwijdert zwakker en roder."
   }
 };

@@ -19,17 +19,11 @@ export const sv: Translation = {
     "close": "Stäng"
   },
   "controls": {
-    "quality": "Kvalitet",
-    "qualityLevels": [
-      "Låg",
-      "Medel",
-      "Hög"
-    ],
     "spin": "Rotation (Kerr-spinn)",
     "intensity": "Diskens ljusstyrka",
     "diskSpeed": "Diskhastighet",
     "diskTemp": "Disktemperatur",
-    "glow": "Fotonring",
+    "glow": "Linsglöd",
     "stars": "Stjärnor",
     "fov": "Kameralinszoom",
     "autoRotate": "Automatisk rotation",
@@ -42,10 +36,10 @@ export const sv: Translation = {
     "horizonTitle": "Händelsehorisont och Ergosfär: ",
     "horizonDesc": "händelsehorisonten drar ihop sig med spinnet enligt r+ = M + √(M²-a²). Utanför bildas ergosfären, där rumsdragningen tvingar all materia att kretsa i rotationsriktningen.",
     "iscoTitle": "Innersta stabila cirkulära banan (ISCO): ",
-    "iscoDesc": "beräknad med Bardeen-Press-Teukolsky-formeln. När spinnet ökar till 0,95 förskjuts diskens innerkant från 3,0 ner till 0,95, vilket gör att gasen störtar djupare och frigör enorm gravitationell energi.",
+    "iscoDesc": "beräknad med Bardeen-Press-Teukolsky-formeln. När spinnet ökar till 0,95 förskjuts diskens innerkant från 3,0 ner till 0,97, vilket gör att gasen störtar djupare och frigör enorm gravitationell energi.",
     "lensingTitle": "Gravitationslins och Fotonring: ",
-    "lensingDesc": "varje ljusstråle följer noll-geodeter integrerade med 2:a ordningens symplektisk Verlet som beaktar gravitomagnetisk acceleration.",
+    "lensingDesc": "varje stråle spåras bakåt längs en exakt nollgeodet i Kerr-metriken (Kerr–Schild-koordinater): skivan syns ovanför och under skuggan, och dess bilder av högre ordning bildar den tunna fotonringen.",
     "dopplerTitle": "Dopplereffekt och Relativistisk beaming: ",
-    "dopplerDesc": "prograd gas som rör sig mot observatören genomgår en kraftig blåförskjutning och en kvartisk ljusförstärkning (δ⁴)."
+    "dopplerDesc": "ljuset vi ser är en svartkropp vid g·T, där g förenar dopplerförskjutning och gravitationell rödförskjutning (bolometrisk intensitet ∝ g⁴): sidan som rör sig mot oss ser ljusare och vitare ut, den som avlägsnar sig svagare och rödare."
   }
 };

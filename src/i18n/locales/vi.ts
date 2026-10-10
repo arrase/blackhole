@@ -19,17 +19,11 @@ export const vi: Translation = {
     "close": "Đóng"
   },
   "controls": {
-    "quality": "Chất lượng",
-    "qualityLevels": [
-      "Thấp",
-      "Trung bình",
-      "Cao"
-    ],
     "spin": "Độ xoay (Spin Kerr)",
     "intensity": "Độ sáng đĩa bồi tụ",
     "diskSpeed": "Tốc độ đĩa",
     "diskTemp": "Nhiệt độ đĩa",
-    "glow": "Vòng photon",
+    "glow": "Quầng sáng ống kính",
     "stars": "Các vì sao",
     "fov": "Tiêu cự ống kính",
     "autoRotate": "Tự động quay",
@@ -42,10 +36,10 @@ export const vi: Translation = {
     "horizonTitle": "Chân trời sự kiện và Vùng công thái học (Ergosphere): ",
     "horizonDesc": "chân trời sự kiện co lại theo độ xoay theo công thức r+ = M + √(M²-a²). Phía ngoài xuất hiện ergosphere, nơi sự kéo theo buộc mọi vật chất phải quay theo hướng tự quay.",
     "iscoTitle": "Quỹ đạo tròn ổn định trong cùng (ISCO): ",
-    "iscoDesc": "tính theo công thức Bardeen-Press-Teukolsky. Khi độ xoay đạt 0.95, mép trong của đĩa dịch chuyển từ 3.0 xuống 0.95, cho phép khí lao sâu hơn nhiều và giải phóng năng lượng hấp dẫn khổng lồ.",
+    "iscoDesc": "tính theo công thức Bardeen-Press-Teukolsky. Khi độ xoay đạt 0.95, mép trong của đĩa dịch chuyển từ 3.0 xuống 0.97, cho phép khí lao sâu hơn nhiều và giải phóng năng lượng hấp dẫn khổng lồ.",
     "lensingTitle": "Thấu kính hấp dẫn & Vòng photon: ",
-    "lensingDesc": "mỗi tia sáng đi theo đường trắc địa không được tích phân bằng phương pháp Verlet symplectic bậc 2 có tính đến gia tốc từ trường hấp dẫn.",
+    "lensingDesc": "mỗi tia sáng được dò ngược dọc theo đường trắc địa null chính xác của metric Kerr (tọa độ Kerr-Schild): đĩa hiện ra phía trên và phía dưới bóng tối, và các ảnh bậc cao của nó tạo thành vòng photon mảnh.",
     "dopplerTitle": "Hiệu ứng Doppler và Bức xạ định hướng tương đối tính: ",
-    "dopplerDesc": "khí chuyển động thuận hướng về phía người quan sát trải qua hiện tượng dịch chuyển xanh mạnh mẽ và độ sáng khuếch đại theo lũy thừa bậc bốn (δ⁴)."
+    "dopplerDesc": "ánh sáng ta thấy là bức xạ vật đen ở g·T, trong đó g kết hợp dịch chuyển Doppler và dịch chuyển đỏ hấp dẫn (cường độ toàn phần ∝ g⁴): phía đang tiến lại gần ta trông sáng và trắng hơn, phía đang lùi xa mờ và đỏ hơn."
   }
 };

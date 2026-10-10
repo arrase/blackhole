@@ -19,17 +19,11 @@ export const fil: Translation = {
     "close": "Isara"
   },
   "controls": {
-    "quality": "Kalidad",
-    "qualityLevels": [
-      "Mababa",
-      "Katamtaman",
-      "Mataas"
-    ],
     "spin": "Pag-ikot (Kerr Spin)",
     "intensity": "Liwanag ng Disk",
     "diskSpeed": "Bilis ng Disk",
     "diskTemp": "Temperatura ng Disk",
-    "glow": "Singsing ng Photon",
+    "glow": "Liwanag ng Lente",
     "stars": "Mga Bituin",
     "fov": "Zoom ng Lens",
     "autoRotate": "Awtomatikong Pag-ikot",
@@ -42,10 +36,10 @@ export const fil: Translation = {
     "horizonTitle": "Event Horizon at Ergosphere: ",
     "horizonDesc": "lumiliit ang event horizon habang tumataas ang spin ayon sa r+ = M + √(M²-a²). Sa labas ay nabubuo ang ergosphere, kung saan pinipilit ng paghila ang lahat ng materya na umikot sa direksyon ng spin.",
     "iscoTitle": "Pinakaloob na Matatag na Paikot na Orbit (ISCO): ",
-    "iscoDesc": "kinakalkula gamit ang pormulang Bardeen-Press-Teukolsky. Kapag tumaas ang spin sa 0.95, ang panloob na gilid ng disk ay bumababa mula 3.0 tungong 0.95, na nagpapahintulot sa gas na lumubog nang mas malalim at maglabas ng napakalaking enerhiyang gravitational.",
+    "iscoDesc": "kinakalkula gamit ang pormulang Bardeen-Press-Teukolsky. Kapag tumaas ang spin sa 0.95, ang panloob na gilid ng disk ay bumababa mula 3.0 tungong 0.97, na nagpapahintulot sa gas na lumubog nang mas malalim at maglabas ng napakalaking enerhiyang gravitational.",
     "lensingTitle": "Gravitational Lensing at Singsing ng Photon: ",
-    "lensingDesc": "bawat sinag ng liwanag ay sumusunod sa mga null geodesic na isinama sa 2nd-order symplectic Verlet na isinasaalang-alang ang gravitomagnetic acceleration.",
+    "lensingDesc": "bawat sinag ay sinusundan pabalik sa isang eksaktong null geodesic ng Kerr (mga coordinate ng Kerr-Schild): lumilitaw ang disk sa itaas at ibaba ng anino, at ang mga larawan nitong mas mataas na order ang bumubuo sa manipis na singsing ng photon.",
     "dopplerTitle": "Doppler Effect at Relatibistikong Beaming: ",
-    "dopplerDesc": "ang prograde na gas na patungo sa tagamasid ay nakakaranas ng matinding blueshift at pagpapalakas ng liwanag sa ikaapat na kapangyarihan (δ⁴)."
+    "dopplerDesc": "ang liwanag na nakikita natin ay mula sa isang blackbody sa g·T, kung saan pinagsasama ng g ang Doppler shift at gravitational redshift (bolometric intensity ∝ g⁴): mas maliwanag at mas puti ang panig na papalapit sa atin, at mas malamlam at mas mapula ang papalayo."
   }
 };

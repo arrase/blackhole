@@ -19,17 +19,11 @@ export const et: Translation = {
     "close": "Sulge"
   },
   "controls": {
-    "quality": "Kvaliteet",
-    "qualityLevels": [
-      "Madal",
-      "Keskmine",
-      "Kõrge"
-    ],
     "spin": "Pöörlemine (Kerri spinn)",
     "intensity": "Ketta heledus",
     "diskSpeed": "Ketta kiirus",
     "diskTemp": "Ketta temperatuur",
-    "glow": "Footonirõngas",
+    "glow": "Objektiivi kuma",
     "stars": "Tähed",
     "fov": "Kaamera suum",
     "autoRotate": "Automaatne pöörlemine",
@@ -42,10 +36,10 @@ export const et: Translation = {
     "horizonTitle": "Sündmuste horisont ja Ergosfäär: ",
     "horizonDesc": "sündmuste horisont tõmbub spinni kasvades kokku vastavalt valemile r+ = M + √(M²-a²). Väljaspool tekib ergosfäär, kus aegruumi kaasahaaramine sunnib kogu ainet pöörlemissuunas tiirlema.",
     "iscoTitle": "Sisemine stabiilne ringorbiit (ISCO): ",
-    "iscoDesc": "arvutatud Bardeen-Press-Teukolsky valemiga. Kui spinn tõuseb väärtuseni 0.95, nihkub ketta siseserv 3.0-lt 0.95-le, võimaldades gaasil langeda palju sügavamale ja vabastada tohutut energiat.",
+    "iscoDesc": "arvutatud Bardeen-Press-Teukolsky valemiga. Kui spinn tõuseb väärtuseni 0.95, nihkub ketta siseserv 3.0-lt 0.97-le, võimaldades gaasil langeda palju sügavamale ja vabastada tohutut energiat.",
     "lensingTitle": "Gravitatsioonilääts ja Footonirõngas: ",
-    "lensingDesc": "iga valguskiir järgib nullgeodeetikuid, mida integreeritakse 2. järku sümplektilise Verleti meetodiga, arvestades gravitomagnetilist kiirendust.",
+    "lensingDesc": "iga kiirt jälitatakse tagurpidi mööda Kerri meetrika täpset nullgeodeetilist joont (Kerri-Schildi koordinaadid): ketas paistab varju kohal ja all ning selle kõrgemat järku kujutised moodustavad õhukese footonirõnga.",
     "dopplerTitle": "Doppleri efekt ja Relativistlik suunatus: ",
-    "dopplerDesc": "vaatleja poole liikuv gaas kogeb tugevat nihkumist sinisesse ja neljanda astme kiirgusvõimendust (δ⁴)."
+    "dopplerDesc": "nähtav valgus on absoluutselt musta keha kiirgus temperatuuril g·T, kus g ühendab Doppleri nihke ja gravitatsioonilise punanihke (bolomeetriline intensiivsus ∝ g⁴): meie poole liikuv külg paistab heledam ja valgem, eemalduv külg tuhmim ja punasem."
   }
 };

@@ -19,17 +19,11 @@ export const cs: Translation = {
     "close": "Zavřít"
   },
   "controls": {
-    "quality": "Kvalita",
-    "qualityLevels": [
-      "Nízká",
-      "Střední",
-      "Vysoká"
-    ],
     "spin": "Rotace (Kerrův spin)",
     "intensity": "Jas disku",
     "diskSpeed": "Rychlost disku",
     "diskTemp": "Teplota disku",
-    "glow": "Fotonový prstenec",
+    "glow": "Záře objektivu",
     "stars": "Hvězdy",
     "fov": "Zoom objektivu",
     "autoRotate": "Automatická rotace",
@@ -42,10 +36,10 @@ export const cs: Translation = {
     "horizonTitle": "Horizont událostí a ergosféra: ",
     "horizonDesc": "horizont událostí se zmenšuje se spinem podle r+ = M + √(M²-a²). Vně vzniká ergosféra, kde strhávání nutí veškerou hmotu obíhat ve směru rotace.",
     "iscoTitle": "Nejzazší stabilní kruhová dráha (ISCO): ",
-    "iscoDesc": "vypočtená podle Bardeen-Press-Teukolského vzorce. Při zvýšení spinu na 0.95 se vnitřní okraj disku posouvá z 3.0 na 0.95, což umožňuje plynu klesat mnohem hlouběji a uvolňovat obrovskou gravitační energii.",
+    "iscoDesc": "vypočtená podle Bardeen-Press-Teukolského vzorce. Při zvýšení spinu na 0.95 se vnitřní okraj disku posouvá z 3.0 na 0.97, což umožňuje plynu klesat mnohem hlouběji a uvolňovat obrovskou gravitační energii.",
     "lensingTitle": "Gravitační čočka a fotonový prstenec: ",
-    "lensingDesc": "každý světelný paprsek sleduje nulové geodetiky integrované symplektickou Verletovou metodou 2. řádu se započtením gravitomagnetického zrychlení.",
+    "lensingDesc": "každý paprsek se sleduje zpětně po přesné nulové geodetice Kerrovy metriky (Kerrovy-Schildovy souřadnice): disk se objevuje nad i pod stínem a jeho obrazy vyšších řádů tvoří tenký fotonový prstenec.",
     "dopplerTitle": "Dopplerův jev a relativistický beaming: ",
-    "dopplerDesc": "plyn pohybující se směrem k pozorovateli vykazuje silný modrý posuv a čtvrtou mocninou škálované zesílení záření (δ⁴)."
+    "dopplerDesc": "světlo, které vidíme, je záření černého tělesa o teplotě g·T, kde g spojuje Dopplerův posuv a gravitační rudý posuv (bolometrická intenzita ∝ g⁴): strana, která se k nám blíží, je jasnější a bělejší, vzdalující se strana slabší a červenější."
   }
 };

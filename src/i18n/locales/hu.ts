@@ -19,17 +19,11 @@ export const hu: Translation = {
     "close": "Bezárás"
   },
   "controls": {
-    "quality": "Minőség",
-    "qualityLevels": [
-      "Alacsony",
-      "Közepes",
-      "Magas"
-    ],
     "spin": "Forgás (Kerr-spin)",
     "intensity": "Korong fényessége",
     "diskSpeed": "Korong sebessége",
     "diskTemp": "Korong hőmérséklete",
-    "glow": "Fotongyűrű",
+    "glow": "Lencseragyogás",
     "stars": "Csillagok",
     "fov": "Lencse zoom",
     "autoRotate": "Automatikus forgás",
@@ -42,10 +36,10 @@ export const hu: Translation = {
     "horizonTitle": "Eseményhorizont és Ergoszféra: ",
     "horizonDesc": "az eseményhorizont a spin növekedésével összehúzódik az r+ = M + √(M²-a²) képlet szerint. Kívül jön létre az ergoszféra, ahol a téridő húzása minden anyagot a forgás irányába kényszerít.",
     "iscoTitle": "Legbelső stabil körpálya (ISCO): ",
-    "iscoDesc": "a Bardeen-Press-Teukolsky képlettel számítva. A spin 0.95-re növelésével a korong belső pereme 3.0-ról 0.95-re csökken, lehetővé téve a gáz mélyebbre zuhanását és óriási gravitációs energia felszabadulását.",
+    "iscoDesc": "a Bardeen-Press-Teukolsky képlettel számítva. A spin 0.95-re növelésével a korong belső pereme 3.0-ról 0.97-re csökken, lehetővé téve a gáz mélyebbre zuhanását és óriási gravitációs energia felszabadulását.",
     "lensingTitle": "Gravitációs lencsehatás és Fotongyűrű: ",
-    "lensingDesc": "minden fénysugár null-geodetikus vonalakat követ, melyeket másodrendű szimplektikus Verlet-módszerrel integrálunk a gravitomágneses gyorsulás figyelembevételével.",
+    "lensingDesc": "minden sugarat visszafelé követünk a Kerr-metrika egy pontos null-geodetikusa mentén (Kerr–Schild-koordináták): a korong az árnyék fölött és alatt is látszik, magasabb rendű képei pedig a vékony fotongyűrűt alkotják.",
     "dopplerTitle": "Doppler-effektus és Sugárzási nyalábosodás: ",
-    "dopplerDesc": "a megfigyelő felé mozgó progád gáz erős kékeltolódást és negyedik hatvány szerinti fényerő-erősödést szenved el (δ⁴)."
+    "dopplerDesc": "a látott fény egy g·T hőmérsékletű feketetest sugárzása, ahol g a Doppler-eltolódást és a gravitációs vöröseltolódást egyesíti (bolometrikus intenzitás ∝ g⁴): a felénk közeledő oldal fényesebbnek és fehérebbnek, a távolodó halványabbnak és vörösebbnek látszik."
   }
 };

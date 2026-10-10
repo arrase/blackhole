@@ -19,17 +19,11 @@ export const eu: Translation = {
     "close": "Itxi"
   },
   "controls": {
-    "quality": "Kalitatea",
-    "qualityLevels": [
-      "Baxua",
-      "Ertaina",
-      "Altua"
-    ],
     "spin": "Errotazioa (Kerr Spina)",
     "intensity": "Diskoaren distira",
     "diskSpeed": "Diskoaren abiadura",
     "diskTemp": "Diskoaren tenperatura",
-    "glow": "Fotoi-eraztuna",
+    "glow": "Lentearen distira",
     "stars": "Izarrak",
     "fov": "Lentearen zooma",
     "autoRotate": "Errotazio automatikoa",
@@ -42,10 +36,10 @@ export const eu: Translation = {
     "horizonTitle": "Gertakari-horizontea eta Ergosfera: ",
     "horizonDesc": "gertakari-horizontea spinarekin uzkurtzen da r+ = M + √(M²-a²) formularen arabera. Kanpoaldean ergosfera sortzen da, non arrastatzeak materia guztia biraren norabidean orbitatzera behartzen duen.",
     "iscoTitle": "Zirkular Egonkorreko Barne-Orbita (ISCO): ",
-    "iscoDesc": "Bardeen-Press-Teukolsky formularekin kalkulatua. Spina 0.95era igotzean, diskoaren barne-ertza 3.0tik 0.95era igarotzen da, gasa askoz sakonago sartzea eta energia grabitatorio itzela askatzea ahalbidetuz.",
+    "iscoDesc": "Bardeen-Press-Teukolsky formularekin kalkulatua. Spina 0.95era igotzean, diskoaren barne-ertza 3.0tik 0.97era igarotzen da, gasa askoz sakonago sartzea eta energia grabitatorio itzela askatzea ahalbidetuz.",
     "lensingTitle": "Lente Grabitazionala eta Fotoi-eraztuna: ",
-    "lensingDesc": "izpi bakoitzak 2. mailako Verlet sinplektikoarekin integratutako geodesika nuluak jarraitzen ditu azelerazio grabitomagnetikoa kontuan hartuta.",
+    "lensingDesc": "izpi bakoitza atzerantz trazatzen da Kerr-en geodesiko nulu zehatz batean zehar (Kerr-Schild koordenatuak): diskoa itzalaren gainetik eta azpitik agertzen da, eta ordena altuagoko irudiek fotoi-eraztun mehea osatzen dute.",
     "dopplerTitle": "Doppler Efektua eta Erradiazio Erlatibista: ",
-    "dopplerDesc": "behatzailerantz doan gas prograduak urdineranzko lerratze handia eta anplifikazio argitsu kuartikoa (δ⁴) jasaten ditu."
+    "dopplerDesc": "ikusten dugun argia g·T tenperaturako gorputz beltz batena da; g-k Doppler efektua eta gorriranzko lerrakuntza grabitatorioa biltzen ditu (intentsitate bolometrikoa ∝ g⁴): gugana hurbiltzen den aldea distiratsuagoa eta zuriagoa ikusten da, eta urruntzen dena ahulagoa eta gorrixkagoa."
   }
 };

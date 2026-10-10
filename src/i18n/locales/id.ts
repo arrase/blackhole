@@ -19,17 +19,11 @@ export const id: Translation = {
     "close": "Tutup"
   },
   "controls": {
-    "quality": "Kualitas",
-    "qualityLevels": [
-      "Rendah",
-      "Sedang",
-      "Tinggi"
-    ],
     "spin": "Rotasi (Spin Kerr)",
     "intensity": "Kecerahan Piringan",
     "diskSpeed": "Kecepatan Piringan",
     "diskTemp": "Suhu Piringan",
-    "glow": "Cincin Foton",
+    "glow": "Pendar Lensa",
     "stars": "Bintang-bintang",
     "fov": "Zoom Lensa",
     "autoRotate": "Rotasi Otomatis",
@@ -42,10 +36,10 @@ export const id: Translation = {
     "horizonTitle": "Cakrawala Peristiwa dan Ergosfer: ",
     "horizonDesc": "cakrawala peristiwa menyusut seiring bertambahnya spin sesuai r+ = M + √(M²-a²). Di luarnya terdapat ergosfer, di mana efek seretan memaksa semua materi mengorbit searah putaran.",
     "iscoTitle": "Orbit Melingkar Stabil Terdalam (ISCO): ",
-    "iscoDesc": "dihitung dengan rumus Bardeen-Press-Teukolsky. Saat spin naik menjadi 0.95, tepi dalam piringan menyusut dari 3.0 ke 0.95, memungkinkan gas menukik jauh lebih dalam dan melepaskan energi gravitasi dahsyat.",
+    "iscoDesc": "dihitung dengan rumus Bardeen-Press-Teukolsky. Saat spin naik menjadi 0.95, tepi dalam piringan menyusut dari 3.0 ke 0.97, memungkinkan gas menukik jauh lebih dalam dan melepaskan energi gravitasi dahsyat.",
     "lensingTitle": "Lensa Gravitasi & Cincin Foton: ",
-    "lensingDesc": "setiap sinar cahaya mengikuti geodesik nol yang diintegrasikan dengan Verlet simplektik tingkat ke-2 dengan memperhitungkan percepatan gravitomagnetik.",
+    "lensingDesc": "setiap sinar dilacak mundur sepanjang geodesik nol Kerr yang eksak (koordinat Kerr-Schild): piringan tampak di atas dan di bawah bayangan, dan citra orde lebih tingginya membentuk cincin foton yang tipis.",
     "dopplerTitle": "Efek Doppler dan Beaming Relativistik: ",
-    "dopplerDesc": "gas prograde yang bergerak ke arah pengamat mengalami pergeseran biru yang intens dan penguatan cahaya kuartik (δ⁴)."
+    "dopplerDesc": "cahaya yang kita lihat adalah benda hitam pada g·T, dengan g menggabungkan pergeseran Doppler dan pergeseran merah gravitasi (intensitas bolometrik ∝ g⁴): sisi yang mendekat tampak lebih terang dan lebih putih, sisi yang menjauh lebih redup dan lebih merah."
   }
 };

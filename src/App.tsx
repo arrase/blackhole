@@ -65,10 +65,9 @@ export default function App() {
   const [panel, setPanel] = useState(() => typeof window !== "undefined" && window.innerWidth >= 768);
   const [showInfo, setShowInfo] = useState(false);
   const [settings, setSettings] = useState<SimSettings>({
-    intensity: 0.35,
+    intensity: 0.6,
     diskSpeed: 1.5,
-    diskTemp: 1.75,
-    quality: 1,
+    diskTemp: 2.1,
     stars: 1,
     glow: 0.6,
     autoRotate: true,
@@ -206,26 +205,10 @@ export default function App() {
             </button>
           </div>
 
-          <div>
-            <div className="mb-2 text-[11px] uppercase tracking-widest text-amber-100/70">{t.controls.quality}</div>
-            <div className="grid grid-cols-3 gap-1 rounded-lg bg-white/5 p-1 text-xs">
-              {t.controls.qualityLevels.map((l, i) => (
-                <button
-                  key={l}
-                  type="button"
-                  onClick={() => set("quality", i)}
-                  className={`rounded-md py-1.5 transition cursor-pointer ${settings.quality === i ? "bg-amber-400/90 text-black font-medium" : "text-white/70 hover:text-white"}`}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-          </div>
-
           <Slider label={t.controls.spin} value={settings.spin} min={0} max={0.95} step={0.01} onChange={(v) => set("spin", v)} />
           <Slider label={t.controls.intensity} value={settings.intensity} min={0.2} max={2.5} step={0.01} onChange={(v) => set("intensity", v)} />
           <Slider label={t.controls.diskSpeed} value={settings.diskSpeed} min={0} max={6} step={0.01} onChange={(v) => set("diskSpeed", v)} />
-          <Slider label={t.controls.diskTemp} value={settings.diskTemp} min={0.3} max={3} step={0.01} onChange={(v) => set("diskTemp", v)} />
+          <Slider label={t.controls.diskTemp} value={settings.diskTemp} min={0.5} max={3} step={0.01} onChange={(v) => set("diskTemp", v)} />
           <Slider label={t.controls.glow} value={settings.glow} min={0} max={2} step={0.01} onChange={(v) => set("glow", v)} />
           <Slider label={t.controls.stars} value={settings.stars} min={0} max={2} step={0.01} onChange={(v) => set("stars", v)} />
           <Slider label={t.controls.fov} value={settings.fov} min={0.8} max={3.5} step={0.01} onChange={(v) => set("fov", v)} />

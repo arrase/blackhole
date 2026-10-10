@@ -1,25 +1,10 @@
 import type { RefObject } from "react";
 import { useEffect, useRef } from "react";
-import { fragmentShader, vertexShader } from "./shaders";
+import { Renderer } from "./render/renderer";
+import { AdaptiveScaler, type ScalerOptions } from "./render/scaler";
+import type { CameraState, SimSettings } from "./render/types";
 
-export interface SimSettings {
-  readonly intensity: number;
-  readonly diskSpeed: number;
-  readonly diskTemp: number;
-  readonly quality: number; // 0 baja, 1 media, 2 alta
-  readonly stars: number;
-  readonly glow: number;
-  readonly autoRotate: boolean;
-  readonly fov: number;
-  readonly spin: number;
-  readonly accretionDisk: boolean;
-}
-
-export interface CameraState {
-  theta: number;
-  phi: number;
-  dist: number;
-}
+export type { CameraState, SimSettings } from "./render/types";
 
 interface Props {
   readonly settings: SimSettings;
@@ -28,21 +13,12 @@ interface Props {
   readonly webglUnsupportedMessage: string;
 }
 
-const QUALITY = [
-  { scale: 0.7, steps: 350 },  // Baja
-  { scale: 1.0, steps: 550 },  // Media
-  { scale: 1.0, steps: 800 },  // Alta (optimizado a 800 para 60 FPS estables)
-];
-
-function compile(gl: WebGLRenderingContext, type: number, src: string) {
-  const s = gl.createShader(type)!;
-  gl.shaderSource(s, src);
-  gl.compileShader(s);
-  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-    console.error(gl.getShaderInfoLog(s));
-  }
-  return s;
-}
+// Objetivo de 60 fps. Con tiempo de GPU se deja margen para CPU y composicion; con el intervalo
+// de rAF (sujeto a vsync) el objetivo es el propio periodo de frame
+const GPU_TARGET_MS = 13;
+const FRAME_TARGET_MS = 1000 / 60;
+const MIN_SCALE = 0.35;
+const MAX_SCALE = 1;
 
 export default function BlackHole({ settings, camera, onFps, webglUnsupportedMessage }: Readonly<Props>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -51,90 +27,36 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
 
   useEffect(() => {
     const canvas = canvasRef.current!;
-    const gl = canvas.getContext("webgl", { antialias: false, powerPreference: "high-performance" });
-    if (!gl) {
+    let renderer = Renderer.create(canvas);
+    if (!renderer) {
       alert(webglUnsupportedMessage);
       return;
     }
-    const prog = gl.createProgram()!;
-    gl.attachShader(prog, compile(gl, gl.VERTEX_SHADER, vertexShader));
-    gl.attachShader(prog, compile(gl, gl.FRAGMENT_SHADER, fragmentShader));
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) console.error(gl.getProgramInfoLog(prog));
-    gl.useProgram(prog);
-
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, "aPos");
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
-    const u = (n: string) => gl.getUniformLocation(prog, n);
-    const U = {
-      res: u("uRes"), time: u("uTime"), camPos: u("uCamPos"), fwd: u("uCamFwd"),
-      right: u("uCamRight"), up: u("uCamUp"), fov: u("uFov"),
-      intensity: u("uIntensity"), speed: u("uDiskSpeed"), steps: u("uSteps"),
-      stars: u("uStars"), glow: u("uGlow"), spin: u("uSpin"), quality: u("uQuality"),
-      diskTemp: u("uDiskTemp"), accretionDisk: u("uAccretionDisk"),
-    };
+    const scalerOptions = (): ScalerOptions => ({
+      targetMs: renderer!.hasGpuTimer ? GPU_TARGET_MS : FRAME_TARGET_MS,
+      minScale: MIN_SCALE,
+      maxScale: MAX_SCALE,
+    });
+    const scaler = new AdaptiveScaler(scalerOptions());
 
     let raf = 0;
-    const start = performance.now();
-    let last = start;
+    let last = performance.now();
     let frames = 0;
-    let fpsTime = start;
+    let fpsTime = last;
 
     const render = (now: number) => {
+      const r = renderer!;
       const s = settingsRef.current;
-      const q = QUALITY[s.quality];
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = Math.floor(canvas.clientWidth * dpr * q.scale);
-      const h = Math.floor(canvas.clientHeight * dpr * q.scale);
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
-      }
-      gl.viewport(0, 0, w, h);
-
       const dt = (now - last) / 1000;
       last = now;
       const cam = camera.current;
       if (s.autoRotate) cam.theta += dt * 0.04;
 
-      const cp = Math.cos(cam.phi), sp = Math.sin(cam.phi);
-      const pos = [cam.dist * cp * Math.cos(cam.theta), cam.dist * sp, cam.dist * cp * Math.sin(cam.theta)];
-      const len = Math.hypot(...pos);
-      const f = pos.map((v) => -v / len);
-      // right = normalize(cross(f, worldUp))
-      let r = [f[1] * 0 - f[2] * 1, f[2] * 0 - f[0] * 0, f[0] * 1 - f[1] * 0];
-      const rl = Math.hypot(...r) || 1;
-      r = r.map((v) => v / rl);
-      // up = cross(right, f)
-      const up = [r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]];
-      // Ligera inclinacion (roll) cinematografica
-      const roll = 0.06;
-      const cr = Math.cos(roll), sr = Math.sin(roll);
-      const r2 = r.map((v, i) => v * cr + up[i] * sr);
-      const up2 = up.map((v, i) => v * cr - r[i] * sr);
+      const ms = r.hasGpuTimer ? r.pollGpuMs() : dt * 1000;
+      if (ms !== null) scaler.update(ms);
+      if (ms !== null) (window as unknown as { __perf: number[] }).__perf = [ms, scaler.scale, r.hasGpuTimer ? 1 : 0];
 
-      gl.uniform2f(U.res, w, h);
-      gl.uniform1f(U.time, (now - start) / 1000);
-      gl.uniform3fv(U.camPos, pos);
-      gl.uniform3fv(U.fwd, f);
-      gl.uniform3fv(U.right, r2);
-      gl.uniform3fv(U.up, up2);
-      gl.uniform1f(U.fov, s.fov);
-      gl.uniform1f(U.intensity, s.intensity);
-      gl.uniform1f(U.speed, s.diskSpeed);
-      gl.uniform1f(U.diskTemp, s.diskTemp);
-      gl.uniform1f(U.steps, q.steps);
-      gl.uniform1f(U.stars, s.stars);
-      gl.uniform1f(U.glow, s.glow);
-      gl.uniform1f(U.spin, s.spin);
-      gl.uniform1f(U.quality, s.quality);
-      gl.uniform1f(U.accretionDisk, s.accretionDisk ? 1.0 : 0.0);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      r.render({ camera: cam, settings: s, dt, scale: scaler.scale });
 
       frames++;
       if (now - fpsTime > 500) {
@@ -145,6 +67,26 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
       raf = requestAnimationFrame(render);
     };
     raf = requestAnimationFrame(render);
+
+    // Contexto perdido (reinicio del driver, GPU reclamada): se para el bucle y, al restaurarse, se
+    // recrea el renderer; preventDefault pide al navegador que lo restaure
+    const contextLost = (e: Event) => {
+      e.preventDefault();
+      cancelAnimationFrame(raf);
+      renderer = null;
+    };
+    const contextRestored = () => {
+      renderer = Renderer.create(canvas);
+      if (!renderer) {
+        alert(webglUnsupportedMessage);
+        return;
+      }
+      scaler.configure(scalerOptions());
+      last = performance.now();
+      raf = requestAnimationFrame(render);
+    };
+    canvas.addEventListener("webglcontextlost", contextLost);
+    canvas.addEventListener("webglcontextrestored", contextRestored);
 
     // Controles de camara
     let dragging = false;
@@ -188,6 +130,9 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
 
     return () => {
       cancelAnimationFrame(raf);
+      renderer?.dispose();
+      canvas.removeEventListener("webglcontextlost", contextLost);
+      canvas.removeEventListener("webglcontextrestored", contextRestored);
       canvas.removeEventListener("pointerdown", down);
       canvas.removeEventListener("pointermove", move);
       canvas.removeEventListener("pointerup", up);
@@ -202,7 +147,6 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
     <canvas
       ref={canvasRef}
       className="absolute inset-0 h-full w-full cursor-grab touch-none active:cursor-grabbing"
-      style={{ imageRendering: "auto" }}
     />
   );
 }

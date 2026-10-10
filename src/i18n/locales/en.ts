@@ -19,17 +19,11 @@ export const en: Translation = {
     "close": "Close"
   },
   "controls": {
-    "quality": "Quality",
-    "qualityLevels": [
-      "Low",
-      "Medium",
-      "High"
-    ],
     "spin": "Rotation (Kerr Spin)",
     "intensity": "Disk Brightness",
     "diskSpeed": "Disk Speed",
     "diskTemp": "Disk Temperature",
-    "glow": "Photon Ring",
+    "glow": "Lens Glow",
     "stars": "Stars",
     "fov": "Lens Zoom",
     "autoRotate": "Auto Rotation",
@@ -42,10 +36,10 @@ export const en: Translation = {
     "horizonTitle": "Horizon and Ergosphere: ",
     "horizonDesc": "the event horizon contracts with spin according to r+ = M + √(M²-a²). Outside lies the ergosphere, where frame dragging forces all matter to orbit in the direction of rotation.",
     "iscoTitle": "Innermost Stable Circular Orbit (ISCO): ",
-    "iscoDesc": "calculated using the Bardeen-Press-Teukolsky formula. As spin increases to 0.95, the inner disk edge moves from 3.0 down to 0.95, allowing gas to plunge much deeper and release tremendous gravitational energy.",
+    "iscoDesc": "calculated using the Bardeen-Press-Teukolsky formula. As spin increases to 0.95, the inner disk edge moves from 3.0 down to 0.97, allowing gas to plunge much deeper and release tremendous gravitational energy.",
     "lensingTitle": "Gravitational Lensing & Photon Ring: ",
-    "lensingDesc": "each light ray follows null geodesics integrated with 2nd-order symplectic Verlet accounting for gravitomagnetic acceleration.",
+    "lensingDesc": "each light ray is traced backwards along an exact Kerr null geodesic (Kerr-Schild coordinates): the disk shows above and below the shadow, and its higher-order images form the thin photon ring.",
     "dopplerTitle": "Doppler Effect and Beaming: ",
-    "dopplerDesc": "prograde gas travelling toward the observer experiences strong blueshift and quartic relativistic beaming (δ⁴)."
+    "dopplerDesc": "the light we see is a blackbody at g·T, where g combines the Doppler shift and gravitational redshift (bolometric intensity ∝ g⁴): the side moving toward us looks brighter and whiter, the receding side dimmer and redder."
   }
 };

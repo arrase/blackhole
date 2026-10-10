@@ -19,17 +19,11 @@ export const pl: Translation = {
     "close": "Zamknij"
   },
   "controls": {
-    "quality": "Jakość",
-    "qualityLevels": [
-      "Niska",
-      "Średnia",
-      "Wysoka"
-    ],
     "spin": "Rotacja (Spin Kerra)",
     "intensity": "Jasność dysku",
     "diskSpeed": "Prędkość dysku",
     "diskTemp": "Temperatura dysku",
-    "glow": "Pierścień fotonowy",
+    "glow": "Poświata obiektywu",
     "stars": "Gwiazdy",
     "fov": "Zoom soczewki",
     "autoRotate": "Automatyczny obrót",
@@ -42,10 +36,10 @@ export const pl: Translation = {
     "horizonTitle": "Horyzont zdarzeń i ergosfera: ",
     "horizonDesc": "horyzont zdarzeń kurczy się wraz ze spinem według r+ = M + √(M²-a²). Na zewnątrz powstaje ergosfera, w której pociąganie czasoprzestrzeni zmusza całą materię do rotacji w kierunku wirowania.",
     "iscoTitle": "Wewnętrzna stabilna orbita kołowa (ISCO): ",
-    "iscoDesc": "wyliczana ze wzoru Bardeena-Pressa-Teukolsky'ego. Przy wzroście spinu do 0.95 wewnętrzna krawędź dysku przesuwa się z 3.0 do 0.95, pozwalając gazowi opadać znacznie głębiej i uwalniać potężną energię grawitacyjną.",
+    "iscoDesc": "wyliczana ze wzoru Bardeena-Pressa-Teukolsky'ego. Przy wzroście spinu do 0.95 wewnętrzna krawędź dysku przesuwa się z 3.0 do 0.97, pozwalając gazowi opadać znacznie głębiej i uwalniać potężną energię grawitacyjną.",
     "lensingTitle": "Soczewkowanie grawitacyjne i pierścień fotonowy: ",
-    "lensingDesc": "każdy promień porusza się wzdłuż zerowych geodezyjnych całkowanych symplektycznym algorytmem Verleta 2. rzędu z uwzględnieniem przyspieszenia grawitomagnetycznego.",
+    "lensingDesc": "każdy promień jest śledzony wstecz wzdłuż dokładnej geodezyjnej zerowej metryki Kerra (współrzędne Kerra-Schilda): dysk widać nad i pod cieniem, a jego obrazy wyższych rzędów tworzą cienki pierścień fotonowy.",
     "dopplerTitle": "Efekt Dopplera i beaming: ",
-    "dopplerDesc": "gaz progradacyjny poruszający się w stronę obserwatora doznaje silnego przesunięcia ku fioletowi i relatywistycznego wzmocnienia jasności do czwartej potęgi (δ⁴)."
+    "dopplerDesc": "widziane światło to promieniowanie ciała doskonale czarnego o temperaturze g·T, gdzie g łączy przesunięcie Dopplera i grawitacyjne przesunięcie ku czerwieni (natężenie bolometryczne ∝ g⁴): strona zbliżająca się do nas wygląda jaśniej i bielej, oddalająca się – słabiej i czerwieniej."
   }
 };

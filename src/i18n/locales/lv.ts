@@ -19,17 +19,11 @@ export const lv: Translation = {
     "close": "Aizvērt"
   },
   "controls": {
-    "quality": "Kvalitāte",
-    "qualityLevels": [
-      "Zema",
-      "Vidēja",
-      "Augsta"
-    ],
     "spin": "Rotācija (Kerra spins)",
     "intensity": "Diska spilgtums",
     "diskSpeed": "Diska ātrums",
     "diskTemp": "Diska temperatūra",
-    "glow": "Fotonu gredzens",
+    "glow": "Objektīva mirdzums",
     "stars": "Zvaigznes",
     "fov": "Kameras tālummaiņa",
     "autoRotate": "Automātiska rotācija",
@@ -42,10 +36,10 @@ export const lv: Translation = {
     "horizonTitle": "Notikumu horizonts un Ergosfēra: ",
     "horizonDesc": "notikumu horizonts saraujas līdz ar spinu saskaņā ar r+ = M + √(M²-a²). Ārpusē veidojas ergosfēra, kurā telpas vilkšana liek visai matērijai orbitēt rotācijas virzienā.",
     "iscoTitle": "Iekšējā stabilā riņķveida orbīta (ISCO): ",
-    "iscoDesc": "aprēķināta pēc Bardeen-Press-Teukolsky formulas. Palielinot spinu līdz 0.95, diska iekšējā mala samazinās no 3.0 līdz 0.95, ļaujot gāzei iekļūt daudz dziļāk un atbrīvot milzīgu enerģiju.",
+    "iscoDesc": "aprēķināta pēc Bardeen-Press-Teukolsky formulas. Palielinot spinu līdz 0.95, diska iekšējā mala samazinās no 3.0 līdz 0.97, ļaujot gāzei iekļūt daudz dziļāk un atbrīvot milzīgu enerģiju.",
     "lensingTitle": "Gravitācijas lēca un Fotonu gredzens: ",
-    "lensingDesc": "katrs gaismas stars seko nulles ģeodēziskajām līnijām, kas integrētas ar 2. kārtas simplektisko Verle metodi, ņemot vērā gravitomagnētisko paātrinājumu.",
+    "lensingDesc": "katrs stars tiek izsekots atpakaļ pa precīzu Kera metrikas nulles ģeodēzisko līniju (Kera-Šilda koordinātas): disks redzams virs un zem ēnas, un tā augstākas kārtas attēli veido plāno fotonu gredzenu.",
     "dopplerTitle": "Doplera efekts un Relatīvistiskā starojuma fokusēšana: ",
-    "dopplerDesc": "gāze, kas pārvietojas novērotāja virzienā, piedzīvo spēcīgu zilo nobīdi un starojuma pastiprināšanos ceturtajā pakāpē (δ⁴)."
+    "dopplerDesc": "redzamā gaisma ir absolūti melna ķermeņa starojums temperatūrā g·T, kur g apvieno Doplera nobīdi un gravitācijas sarkano nobīdi (bolometriskā intensitāte ∝ g⁴): mums tuvojošā puse šķiet spožāka un baltāka, attālinošā – blāvāka un sarkanāka."
   }
 };

@@ -19,17 +19,11 @@ export const sw: Translation = {
     "close": "Funga"
   },
   "controls": {
-    "quality": "Ubora",
-    "qualityLevels": [
-      "Chini",
-      "Wastani",
-      "Juu"
-    ],
     "spin": "Mzunguko (Spin ya Kerr)",
     "intensity": "Mwangaza wa Diski",
     "diskSpeed": "Kasi ya Diski",
     "diskTemp": "Joto la Diski",
-    "glow": "Pete ya Fotoni",
+    "glow": "Mng'ao wa Lenzi",
     "stars": "Nyota",
     "fov": "Ukuaji wa Lenzi",
     "autoRotate": "Zungusha Kiotomatiki",
@@ -42,10 +36,10 @@ export const sw: Translation = {
     "horizonTitle": "Upeo wa Matukio na Ergosferi: ",
     "horizonDesc": "upeo wa matukio hujikunja kulingana na spin kwa fomula r+ = M + √(M²-a²). Nje hutokea ergosferi, ambapo mvuto unalazimisha maada yote kuzunguka kuelekea upande wa mzunguko.",
     "iscoTitle": "Mzingo wa Mviringo Thabiti wa Ndani Kabisa (ISCO): ",
-    "iscoDesc": "huhesabiwa kwa fomula ya Bardeen-Press-Teukolsky. Spin inapoongezeka hadi 0.95, ukingo wa ndani wa diski huteremka kutoka 3.0 hadi 0.95, ikiruhusu gesi kuzama ndani zaidi na kutoa nishati kubwa ya uvutano.",
+    "iscoDesc": "huhesabiwa kwa fomula ya Bardeen-Press-Teukolsky. Spin inapoongezeka hadi 0.95, ukingo wa ndani wa diski huteremka kutoka 3.0 hadi 0.97, ikiruhusu gesi kuzama ndani zaidi na kutoa nishati kubwa ya uvutano.",
     "lensingTitle": "Lenzi ya Mvuto na Pete ya Fotoni: ",
-    "lensingDesc": "kila mwonzi wa mwanga hufuata jiodeziki tupu zilizounganishwa na symplectic Verlet ya mpangilio wa 2 kwa kuzingatia mchapuko wa uvutano-sumaku.",
+    "lensingDesc": "kila mwale hufuatiliwa kinyume kwenye jiodesiki sifuri halisi ya Kerr (koordinati za Kerr-Schild): diski huonekana juu na chini ya kivuli, na picha zake za mpangilio wa juu huunda pete nyembamba ya fotoni.",
     "dopplerTitle": "Athari ya Doppler na Mng'ao wa Uhusiano: ",
-    "dopplerDesc": "gesi inayoelekea kwa mtazamaji hupata mabadiliko makubwa kuelekea bluu na ukuzaji wa mwanga kwa kipeo cha nne (δ⁴)."
+    "dopplerDesc": "mwanga tunaouona ni wa jisimu nyeusi kwenye g·T, ambapo g huunganisha mabadiliko ya Doppler na mabadiliko mekundu ya mvutano (ukali wa jumla ∝ g⁴): upande unaotukaribia huonekana angavu zaidi na mweupe zaidi, na unaoondoka hafifu zaidi na mwekundu zaidi."
   }
 };

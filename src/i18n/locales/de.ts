@@ -19,17 +19,11 @@ export const de: Translation = {
     "close": "Schließen"
   },
   "controls": {
-    "quality": "Qualität",
-    "qualityLevels": [
-      "Niedrig",
-      "Mittel",
-      "Hoch"
-    ],
     "spin": "Rotation (Kerr-Spin)",
     "intensity": "Scheibenhelligkeit",
     "diskSpeed": "Scheibengeschwindigkeit",
     "diskTemp": "Scheibentemperatur",
-    "glow": "Photonenring",
+    "glow": "Linsenschein",
     "stars": "Sterne",
     "fov": "Kamerazoom",
     "autoRotate": "Automatische Rotation",
@@ -42,10 +36,10 @@ export const de: Translation = {
     "horizonTitle": "Ereignishorizont und Ergosphäre: ",
     "horizonDesc": "der Ereignishorizont schrumpft mit dem Spin gemäß r+ = M + √(M²-a²). Davor entsteht die Ergosphäre, in der das Frame-Dragging jegliche Materie zwingt, in Rotationsrichtung zu kreisen.",
     "iscoTitle": "Innerste stabile Kreisbahn (ISCO): ",
-    "iscoDesc": "berechnet nach der Bardeen-Press-Teukolsky-Formel. Bei Erhöhung des Spins auf 0,95 wandert der Innenrand der Scheibe von 3,0 auf 0,95 nach innen, wodurch Gas viel tiefer absinken und enorme Gravitationsenergie freisetzen kann.",
+    "iscoDesc": "berechnet nach der Bardeen-Press-Teukolsky-Formel. Bei Erhöhung des Spins auf 0,95 wandert der Innenrand der Scheibe von 3,0 auf 0,97 nach innen, wodurch Gas viel tiefer absinken und enorme Gravitationsenergie freisetzen kann.",
     "lensingTitle": "Gravitationslinse und Photonenring: ",
-    "lensingDesc": "jeder Lichtstrahl folgt Null-Geodäten, integriert mit einem symplektischen Verlet-Verfahren 2. Ordnung unter Berücksichtigung gravitomagnetischer Beschleunigung.",
+    "lensingDesc": "jeder Strahl wird entlang einer exakten Null-Geodäte der Kerr-Metrik rückwärts verfolgt (Kerr-Schild-Koordinaten): Die Scheibe erscheint über und unter dem Schatten, und ihre Bilder höherer Ordnung bilden den dünnen Photonenring.",
     "dopplerTitle": "Doppler-Effekt und Beaming: ",
-    "dopplerDesc": "progrades Gas, das sich auf den Beobachter zubewegt, erfährt eine intensive Blauverschiebung und eine quartische Helligkeitsverstärkung (δ⁴)."
+    "dopplerDesc": "das sichtbare Licht ist das eines Schwarzkörpers bei g·T, wobei g Dopplerverschiebung und gravitative Rotverschiebung vereint (bolometrische Intensität ∝ g⁴): Die auf uns zukommende Seite wirkt heller und weißer, die sich entfernende schwächer und röter."
   }
 };

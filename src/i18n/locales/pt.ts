@@ -19,17 +19,11 @@ export const pt: Translation = {
     "close": "Fechar"
   },
   "controls": {
-    "quality": "Qualidade",
-    "qualityLevels": [
-      "Baixa",
-      "Média",
-      "Alta"
-    ],
     "spin": "Rotação (Spin Kerr)",
     "intensity": "Brilho do disco",
     "diskSpeed": "Velocidade do disco",
     "diskTemp": "Temperatura do disco",
-    "glow": "Anel de fótons",
+    "glow": "Brilho óptico",
     "stars": "Estrelas",
     "fov": "Zoom da lente",
     "autoRotate": "Rotação automática",
@@ -42,10 +36,10 @@ export const pt: Translation = {
     "horizonTitle": "Horizonte e Ergosfera: ",
     "horizonDesc": "o horizonte de eventos se contrai com o spin conforme r+ = M + √(M²-a²). Do lado de fora surge a ergosfera, onde o arrasto obriga toda a matéria a orbitar a favor do giro.",
     "iscoTitle": "Órbita circular estável mais interna (ISCO): ",
-    "iscoDesc": "calculada pela fórmula de Bardeen-Press-Teukolsky. Ao aumentar o spin para 0,95, a borda interna do disco passa de 3,0 para 0,95, permitindo que o gás mergulhe muito mais fundo e libere imensa energia gravitacional.",
+    "iscoDesc": "calculada pela fórmula de Bardeen-Press-Teukolsky. Ao aumentar o spin para 0,95, a borda interna do disco passa de 3,0 para 0,97, permitindo que o gás mergulhe muito mais fundo e libere imensa energia gravitacional.",
     "lensingTitle": "Lente gravitacional e Anel de fótons: ",
-    "lensingDesc": "cada raio segue geodésicas nulas integradas com Verlet simplético de 2ª ordem considerando a aceleração gravitomagnética.",
+    "lensingDesc": "cada raio é traçado para trás ao longo de uma geodésica nula exata de Kerr (coordenadas de Kerr-Schild): o disco aparece acima e abaixo da sombra, e suas imagens de ordem superior formam o fino anel de fótons.",
     "dopplerTitle": "Efeito Doppler e Beaming: ",
-    "dopplerDesc": "o gás prógrado em direção ao observador sofre intenso desvio para o azul e amplificação luminosa quártica (δ⁴)."
+    "dopplerDesc": "a luz que vemos é a de um corpo negro a g·T, onde g combina o efeito Doppler e o desvio gravitacional para o vermelho (intensidade bolométrica ∝ g⁴): o lado que se aproxima parece mais brilhante e branco, e o que se afasta mais tênue e avermelhado."
   }
 };

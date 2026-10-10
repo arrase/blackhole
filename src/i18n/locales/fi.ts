@@ -19,17 +19,11 @@ export const fi: Translation = {
     "close": "Sulje"
   },
   "controls": {
-    "quality": "Laatu",
-    "qualityLevels": [
-      "Matala",
-      "Keskitaso",
-      "Korkea"
-    ],
     "spin": "Pyöriminen (Kerr-spin)",
     "intensity": "Kiekon kirkkaus",
     "diskSpeed": "Kiekon nopeus",
     "diskTemp": "Kiekon lämpötila",
-    "glow": "Fotonirengas",
+    "glow": "Linssin hehku",
     "stars": "Tähdet",
     "fov": "Linssin zoom",
     "autoRotate": "Automaattinen pyöritys",
@@ -42,10 +36,10 @@ export const fi: Translation = {
     "horizonTitle": "Tapahtumahorisontti ja Ergosfääri: ",
     "horizonDesc": "tapahtumahorisontti kutistuu spinin kasvaessa kaavan r+ = M + √(M²-a²) mukaisesti. Ulkopuolelle muodostuu ergosfääri, jossa aika-avaruuden raahaus pakottaa kaiken aineen kiertämään pyörimissuuntaan.",
     "iscoTitle": "Sisin vakaa ympyrärata (ISCO): ",
-    "iscoDesc": "laskettu Bardeen-Press-Teukolsky-kaavalla. Spinin noustessa arvoon 0,95 kiekon sisäreuna siirtyy arvosta 3,0 arvoon 0,95, jolloin kaasu pääsee putoamaan syvemmälle ja vapauttamaan valtavasti gravitaatioenergiaa.",
+    "iscoDesc": "laskettu Bardeen-Press-Teukolsky-kaavalla. Spinin noustessa arvoon 0,95 kiekon sisäreuna siirtyy arvosta 3,0 arvoon 0,97, jolloin kaasu pääsee putoamaan syvemmälle ja vapauttamaan valtavasti gravitaatioenergiaa.",
     "lensingTitle": "Gravitaatiolinssi ja Fotonirengas: ",
-    "lensingDesc": "jokainen valonsäde kulkee nollageodeetteja pitkin, jotka on integroitu toisen kertaluvun symplektisellä Verlet-menetelmällä huomioiden gravitomagneettinen kiihtyvyys.",
+    "lensingDesc": "jokainen säde jäljitetään taaksepäin tarkkaa Kerrin metriikan nollageodeesia pitkin (Kerr–Schild-koordinaatit): kiekko näkyy varjon ylä- ja alapuolella, ja sen korkeamman kertaluvun kuvat muodostavat ohuen fotonirenkaan.",
     "dopplerTitle": "Doppler-ilmiö ja Sädehtiminen: ",
-    "dopplerDesc": "havaitsijaa kohti kulkeva kaasu kokee voimakkaan sinisiirtymän ja neljänteen potenssiin suhteutetun kirkkauden vahvistumisen (δ⁴)."
+    "dopplerDesc": "näkemämme valo on mustan kappaleen säteilyä lämpötilassa g·T, jossa g yhdistää Doppler-siirtymän ja gravitaatiopunasiirtymän (bolometrinen intensiteetti ∝ g⁴): meitä kohti liikkuva puoli näyttää kirkkaammalta ja valkoisemmalta, loittoneva puoli himmeämmältä ja punaisemmalta."
   }
 };

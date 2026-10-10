@@ -66,8 +66,6 @@ export interface Translation {
     close: string;
   };
   controls: {
-    quality: string;
-    qualityLevels: [string, string, string];
     spin: string;
     intensity: string;
     diskSpeed: string;

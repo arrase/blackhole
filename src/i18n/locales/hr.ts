@@ -19,17 +19,11 @@ export const hr: Translation = {
     "close": "Zatvori"
   },
   "controls": {
-    "quality": "Kvaliteta",
-    "qualityLevels": [
-      "Niska",
-      "Srednja",
-      "Visoka"
-    ],
     "spin": "Rotacija (Kerrov spin)",
     "intensity": "Svjetlina diska",
     "diskSpeed": "Brzina diska",
     "diskTemp": "Temperatura diska",
-    "glow": "Fotonski prsten",
+    "glow": "Sjaj objektiva",
     "stars": "Zvijezde",
     "fov": "Zum objektiva",
     "autoRotate": "Automatska rotacija",
@@ -42,10 +36,10 @@ export const hr: Translation = {
     "horizonTitle": "Horizont događaja i Ergosfera: ",
     "horizonDesc": "horizont događaja se skuplja sa spinom prema r+ = M + √(M²-a²). Izvana nastaje ergosfera, gdje povlačenje prisiljava svu materiju da orbitira u smjeru rotacije.",
     "iscoTitle": "Najunutarnija stabilna kružna orbita (ISCO): ",
-    "iscoDesc": "izračunata formulom Bardeen-Press-Teukolsky. Povećanjem spina na 0.95 unutarnji rub diska pomiče se s 3.0 na 0.95, omogućujući plinu da prodre dublje i oslobodi golemu energiju.",
+    "iscoDesc": "izračunata formulom Bardeen-Press-Teukolsky. Povećanjem spina na 0.95 unutarnji rub diska pomiče se s 3.0 na 0.97, omogućujući plinu da prodre dublje i oslobodi golemu energiju.",
     "lensingTitle": "Gravitacijska leća i Fotonski prsten: ",
-    "lensingDesc": "svaka zraka prati nulte geodezike integrirane simplektičkom Verletovom metodom 2. reda uzimajući u obzir gravitomagnetsko ubrzanje.",
+    "lensingDesc": "svaka se zraka prati unatrag duž točne nul-geodezije Kerrove metrike (Kerr-Schildove koordinate): disk se vidi iznad i ispod sjene, a njegove slike višeg reda tvore tanki fotonski prsten.",
     "dopplerTitle": "Dopplerov učinak i Relativističko pojačanje: ",
-    "dopplerDesc": "plin koji putuje prema promatraču trpi intenzivan plavi pomak i četverostruko pojačanje zračenja (δ⁴)."
+    "dopplerDesc": "svjetlost koju vidimo zračenje je crnog tijela na g·T, gdje g objedinjuje Dopplerov pomak i gravitacijski crveni pomak (bolometrijski intenzitet ∝ g⁴): strana koja nam se približava izgleda svjetlije i bjelje, a ona koja se udaljava tamnije i crvenije."
   }
 };

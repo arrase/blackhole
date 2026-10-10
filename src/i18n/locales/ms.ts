@@ -19,17 +19,11 @@ export const ms: Translation = {
     "close": "Tutup"
   },
   "controls": {
-    "quality": "Kualiti",
-    "qualityLevels": [
-      "Rendah",
-      "Sederhana",
-      "Tinggi"
-    ],
     "spin": "Putaran (Putaran Kerr)",
     "intensity": "Kecerahan Cakera",
     "diskSpeed": "Kelajuan Cakera",
     "diskTemp": "Suhu Cakera",
-    "glow": "Cincin Foton",
+    "glow": "Silau Kanta",
     "stars": "Bintang",
     "fov": "Zum Kanta",
     "autoRotate": "Putaran Automatik",
@@ -42,10 +36,10 @@ export const ms: Translation = {
     "horizonTitle": "Ufuk Peristiwa dan Ergosfera: ",
     "horizonDesc": "ufuk peristiwa mengecut mengikut putaran berdasarkan r+ = M + √(M²-a²). Di luarnya wujud ergosfera, di mana seretan memaksa semua jirim mengorbit mengikut arah putaran.",
     "iscoTitle": "Orbit Pekeliling Stabil Terdalam (ISCO): ",
-    "iscoDesc": "dikira menggunakan formula Bardeen-Press-Teukolsky. Apabila putaran meningkat ke 0.95, pinggir dalam cakera menyusut dari 3.0 ke 0.95, membolehkan gas menjunam lebih dalam dan membebaskan tenaga graviti yang besar.",
+    "iscoDesc": "dikira menggunakan formula Bardeen-Press-Teukolsky. Apabila putaran meningkat ke 0.95, pinggir dalam cakera menyusut dari 3.0 ke 0.97, membolehkan gas menjunam lebih dalam dan membebaskan tenaga graviti yang besar.",
     "lensingTitle": "Kanta Graviti & Cincin Foton: ",
-    "lensingDesc": "setiap sinar cahaya mengikut geodesik sifar yang disepadukan dengan Verlet simplektik peringkat ke-2 dengan mengambil kira pecutan gravitomagnetik.",
+    "lensingDesc": "setiap sinar dijejak ke belakang di sepanjang geodesik nol Kerr yang tepat (koordinat Kerr-Schild): cakera kelihatan di atas dan di bawah bayang-bayang, dan imej tertib lebih tingginya membentuk cincin foton yang nipis.",
     "dopplerTitle": "Kesan Doppler dan Pancaran Relativistik: ",
-    "dopplerDesc": "gas prograd yang bergerak ke arah pemerhati mengalami anjakan biru yang kuat dan penguatan kecerahan kuasa empat (δ⁴)."
+    "dopplerDesc": "cahaya yang kita lihat ialah jasad hitam pada g·T, dengan g menggabungkan anjakan Doppler dan anjakan merah graviti (keamatan bolometrik ∝ g⁴): sisi yang menghampiri kita kelihatan lebih terang dan putih, sisi yang menjauh lebih malap dan kemerahan."
   }
 };

@@ -19,17 +19,11 @@ export const es: Translation = {
     "close": "Cerrar"
   },
   "controls": {
-    "quality": "Calidad",
-    "qualityLevels": [
-      "Baja",
-      "Media",
-      "Alta"
-    ],
     "spin": "Rotación (Spin Kerr)",
     "intensity": "Brillo del disco",
     "diskSpeed": "Velocidad del disco",
     "diskTemp": "Temperatura del disco",
-    "glow": "Anillo de fotones",
+    "glow": "Resplandor óptico",
     "stars": "Estrellas",
     "fov": "Zoom de lente",
     "autoRotate": "Rotación automática",
@@ -42,10 +36,10 @@ export const es: Translation = {
     "horizonTitle": "Horizonte y Ergosfera: ",
     "horizonDesc": "el horizonte de sucesos se contrae con el spin según r+ = M + √(M²-a²). Por fuera surge la ergosfera, donde el arrastre obliga a toda la materia a orbitar a favor del giro.",
     "iscoTitle": "Órbita circular estable (ISCO): ",
-    "iscoDesc": "calculada con la fórmula de Bardeen-Press-Teukolsky. Al aumentar el spin a 0.95, el borde interior del disco pasa de 3.0 a 0.95, permitiendo al gas penetrar mucho más hondo y liberar enorme energía gravitatoria.",
+    "iscoDesc": "calculada con la fórmula de Bardeen-Press-Teukolsky. Al aumentar el spin a 0.95, el borde interior del disco pasa de 3.0 a 0.97, permitiendo al gas penetrar mucho más hondo y liberar enorme energía gravitatoria.",
     "lensingTitle": "Lente gravitacional y Anillo de fotones: ",
-    "lensingDesc": "cada rayo sigue geodésicas nulas integradas con Verlet simpléctico de 2º orden considerando la aceleración gravitomagnética.",
+    "lensingDesc": "cada rayo se traza hacia atrás por una geodésica nula exacta de Kerr (coordenadas de Kerr-Schild): el disco asoma por encima y por debajo de la sombra, y sus imágenes de orden superior forman el fino anillo de fotones.",
     "dopplerTitle": "Efecto Doppler y Beaming: ",
-    "dopplerDesc": "el gas prógrado que viaja hacia el observador sufre un intenso corrimiento al azul y amplificación luminosa cuártica (δ⁴)."
+    "dopplerDesc": "la luz que vemos es la de un cuerpo negro a g·T, donde g reúne el efecto Doppler y el corrimiento al rojo gravitatorio (intensidad bolométrica ∝ g⁴): el lado que se acerca se ve más brillante y blanco, y el que se aleja más tenue y rojizo."
   }
 };

@@ -19,17 +19,11 @@ export const sl: Translation = {
     "close": "Zapri"
   },
   "controls": {
-    "quality": "Kakovost",
-    "qualityLevels": [
-      "Nizka",
-      "Srednja",
-      "Visoka"
-    ],
     "spin": "Vrtenje (Kerrov spin)",
     "intensity": "Svetlost diska",
     "diskSpeed": "Hitrost diska",
     "diskTemp": "Temperatura diska",
-    "glow": "Fotonski obroč",
+    "glow": "Sij objektiva",
     "stars": "Zvezde",
     "fov": "Povečava objektiva",
     "autoRotate": "Samodejno vrtenje",
@@ -42,10 +36,10 @@ export const sl: Translation = {
     "horizonTitle": "Dogodkovni horizont in Ergosfera: ",
     "horizonDesc": "dogodkovni horizont se krči s spinom po enačbi r+ = M + √(M²-a²). Zunaj nastane ergosfera, kjer vlačenje prisili vso snov, da kroži v smeri vrtenja.",
     "iscoTitle": "Najbolj notranja stabilna krožna orbita (ISCO): ",
-    "iscoDesc": "izračunana po formuli Bardeen-Press-Teukolsky. Ob povečanju spina na 0.95 se notranji rob diska premakne s 3.0 na 0.95, kar plinu omogoča globlji padec in sprostitev ogromne gravitacijske energije.",
+    "iscoDesc": "izračunana po formuli Bardeen-Press-Teukolsky. Ob povečanju spina na 0.95 se notranji rob diska premakne s 3.0 na 0.97, kar plinu omogoča globlji padec in sprostitev ogromne gravitacijske energije.",
     "lensingTitle": "Gravitacijska leča in Fotonski obroč: ",
-    "lensingDesc": "vsak svetlobni žarek sledi ničelnim geodetkam, integriranim s simplektično Verletovo metodo 2. reda ob upoštevanju gravitomagnetnega pospeška.",
+    "lensingDesc": "vsak žarek sledimo nazaj vzdolž natančne ničelne geodetke Kerrove metrike (Kerr-Schildove koordinate): disk se vidi nad in pod senco, njegove slike višjega reda pa tvorijo tanek fotonski obroč.",
     "dopplerTitle": "Dopplerjev pojav in Relativistično sevanje: ",
-    "dopplerDesc": "plin, ki se giblje proti opazovalcu, doživi močan modri premik in četrtopotenco ojačitev svetilnosti (δ⁴)."
+    "dopplerDesc": "svetloba, ki jo vidimo, je sevanje črnega telesa pri g·T, kjer g združuje Dopplerjev premik in gravitacijski rdeči premik (bolometrična jakost ∝ g⁴): stran, ki se nam približuje, je svetlejša in bolj bela, oddaljujoča se pa šibkejša in bolj rdeča."
   }
 };

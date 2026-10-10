@@ -19,17 +19,11 @@ export const no: Translation = {
     "close": "Lukk"
   },
   "controls": {
-    "quality": "Kvalitet",
-    "qualityLevels": [
-      "Lav",
-      "Middels",
-      "Høy"
-    ],
     "spin": "Rotasjon (Kerr-spinn)",
     "intensity": "Skivens lysstyrke",
     "diskSpeed": "Skivehastighet",
     "diskTemp": "Skivetemperatur",
-    "glow": "Fotonring",
+    "glow": "Linseglød",
     "stars": "Stjerner",
     "fov": "Kamerazoom",
     "autoRotate": "Automatisk rotasjon",
@@ -42,10 +36,10 @@ export const no: Translation = {
     "horizonTitle": "Hendelseshorisont og Ergosfære: ",
     "horizonDesc": "hendelseshorisonten krymper med spinn ifølge r+ = M + √(M²-a²). Utenfor oppstår ergosfæren, hvor romdragningen tvinger alt stoff til å rotere i spinnretningen.",
     "iscoTitle": "Innerste stabile sirkulære bane (ISCO): ",
-    "iscoDesc": "beregnet med Bardeen-Press-Teukolsky-formelen. Når spinnet økes til 0,95, krymper skivens indre kant fra 3,0 til 0,95, slik at gassen faller dypere og frigjør enorm gravitasjonsenergi.",
+    "iscoDesc": "beregnet med Bardeen-Press-Teukolsky-formelen. Når spinnet økes til 0,95, krymper skivens indre kant fra 3,0 til 0,97, slik at gassen faller dypere og frigjør enorm gravitasjonsenergi.",
     "lensingTitle": "Gravitasjonslinse og Fotonring: ",
-    "lensingDesc": "hver lysstråle følger null-geodeter integrert med 2. ordens symplektisk Verlet under hensyn til gravitomagnetisk akselerasjon.",
+    "lensingDesc": "hver stråle spores bakover langs en eksakt nullgeodet i Kerr-metrikken (Kerr-Schild-koordinater): skiven sees over og under skyggen, og bildene av høyere orden danner den tynne fotonringen.",
     "dopplerTitle": "Dopplereffekt og Relativistisk beaming: ",
-    "dopplerDesc": "gass som beveger seg mot observatøren gjennomgår kraftig blåforskyvning og en fjerdepotens lysforsterkning (δ⁴)."
+    "dopplerDesc": "lyset vi ser er fra et svart legeme ved g·T, der g kombinerer dopplerforskyvning og gravitasjonell rødforskyvning (bolometrisk intensitet ∝ g⁴): siden som beveger seg mot oss ser lysere og hvitere ut, siden som fjerner seg svakere og rødere."
   }
 };

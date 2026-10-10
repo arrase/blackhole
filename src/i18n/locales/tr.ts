@@ -19,17 +19,11 @@ export const tr: Translation = {
     "close": "Kapat"
   },
   "controls": {
-    "quality": "Kalite",
-    "qualityLevels": [
-      "Düşük",
-      "Orta",
-      "Yüksek"
-    ],
     "spin": "Dönüş (Kerr Spini)",
     "intensity": "Disk Parlaklığı",
     "diskSpeed": "Disk Hızı",
     "diskTemp": "Disk Sıcaklığı",
-    "glow": "Foton Halkası",
+    "glow": "Mercek Parıltısı",
     "stars": "Yıldızlar",
     "fov": "Görüş Alanı (FOV)",
     "autoRotate": "Otomatik Döndürme",
@@ -42,10 +36,10 @@ export const tr: Translation = {
     "horizonTitle": "Olay Ufku ve Ergosfer: ",
     "horizonDesc": "olay ufku spin ile r+ = M + √(M²-a²) formülüne göre büzülür. Dışında, çerçevenin sürüklenmesi nedeniyle tüm maddeyi dönüş yönünde yörüngeye zorlayan ergosfer yer alır.",
     "iscoTitle": "En İç Kararlı Dairesel Yörünge (ISCO): ",
-    "iscoDesc": "Bardeen-Press-Teukolsky formülü ile hesaplanır. Spin 0.95'e çıktığında diskin iç kenarı 3.0'dan 0.95'e çekilir, gazın çok daha derine inmesine ve muazzam kütleçekimsel enerji açığa çıkarmasına olanak tanır.",
+    "iscoDesc": "Bardeen-Press-Teukolsky formülü ile hesaplanır. Spin 0.95'e çıktığında diskin iç kenarı 3.0'dan 0.97'e çekilir, gazın çok daha derine inmesine ve muazzam kütleçekimsel enerji açığa çıkarmasına olanak tanır.",
     "lensingTitle": "Kütleçekimsel Merceklenme ve Foton Halkası: ",
-    "lensingDesc": "her ışık ışını, gravitomanyetik ivme dikkate alınarak 2. derece simplektik Verlet ile entegre edilen sıfır jeodezikleri izler.",
+    "lensingDesc": "her ışın, Kerr metriğinin tam bir sıfır jeodeziği boyunca geriye doğru izlenir (Kerr-Schild koordinatları): disk gölgenin üstünde ve altında görünür, yüksek mertebeden görüntüleri ise ince foton halkasını oluşturur.",
     "dopplerTitle": "Doppler Etkisi ve Işıma (Beaming): ",
-    "dopplerDesc": "gözlemciye doğru yaklaşan eş yönlü gaz, güçlü maviye kayma ve dördüncü dereceden rölativistik parlaklık artışı (δ⁴) yaşar."
+    "dopplerDesc": "gördüğümüz ışık g·T sıcaklığındaki bir kara cismin ışığıdır; g, Doppler kaymasını ve kütleçekimsel kırmızıya kaymayı birleştirir (bolometrik şiddet ∝ g⁴): bize yaklaşan taraf daha parlak ve beyaz, uzaklaşan taraf daha sönük ve kırmızı görünür."
   }
 };
