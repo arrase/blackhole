@@ -29,10 +29,10 @@ describe("halton", () => {
 
 describe("noise texture", () => {
   it("is deterministic, full size and roughly uniform with mean 0.5", () => {
-    const a = generateNoise(16);
+    const a = generateNoise(16 ** 3);
     expect(a.length).toBe(16 ** 3);
-    expect(generateNoise(16)).toEqual(a);
-    expect(generateNoise(16, 2)).not.toEqual(a);
+    expect(generateNoise(16 ** 3)).toEqual(a);
+    expect(generateNoise(16 ** 3, 2)).not.toEqual(a);
     const mean = a.reduce((s, v) => s + v, 0) / a.length / 255;
     expect(mean).toBeGreaterThan(0.47);
     expect(mean).toBeLessThan(0.53);
