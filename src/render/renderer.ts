@@ -46,7 +46,7 @@ export class Renderer {
   private samples = 0;
   private frame = 0;
   private flowCycle = 0; // ciclos del mapa de flujo del gas, en [0, EPOCHS)
-  private theta = NaN;
+  private theta = Number.NaN;
   private disk: { spin: number; temp: number; params: DiskParams } | null = null;
 
   private constructor(private readonly gl: WebGL2RenderingContext) {
@@ -101,7 +101,7 @@ export class Renderer {
     }
     const w = Math.max(1, Math.round(cw * scale));
     const h = Math.max(1, Math.round(ch * scale));
-    if (!this.history || this.history.width !== w || this.history.height !== h) this.resize(w, h);
+    if (this.history?.width !== w || this.history?.height !== h) this.resize(w, h);
     const history = this.history!;
 
     const key = historyKey(camera, settings);

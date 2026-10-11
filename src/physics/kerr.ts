@@ -27,6 +27,11 @@ export function iscoEnergyMomentum(spin: number): { E: number; L: number } {
   return { E: (r * sr - 2 * M * sr + a * sm) / den, L: (sm * (r * r - 2 * a * sm * sr + a * a)) / den };
 }
 
+function minkowskiEta(i: number, j: number): number {
+  if (i !== j) return 0;
+  return i === 0 ? -1 : 1;
+}
+
 // Metrica g_mu_nu = eta + f L_mu L_nu en un punto (indices t, x, y, z del shader)
 export function ksMetric(pos: Vec3, spin: number): Mat4 {
   const a = spin * M, a2 = a * a;
@@ -36,7 +41,7 @@ export function ksMetric(pos: Vec3, spin: number): Mat4 {
   const r2 = 0.5 * (b + Math.sqrt(b * b + 4 * a2 * Z * Z)), r = Math.sqrt(r2), d = r2 + a2;
   const f = (2 * M * r2 * r) / (r2 * r2 + a2 * Z * Z);
   const L: Vec4 = [1, -(r * Y + a * X) / d, -Z / r, -(r * X - a * Y) / d];
-  return L.map((li, i) => L.map((lj, j) => (i === j ? (i === 0 ? -1 : 1) : 0) + f * li * lj) as Vec4);
+  return L.map((li, i) => L.map((lj, j) => minkowskiEta(i, j) + f * li * lj) as Vec4);
 }
 
 const dot = (g: Mat4, u: Vec4, v: Vec4) => g.reduce((s, row, i) => s + row.reduce((t, gij, j) => t + gij * u[i] * v[j], 0), 0);

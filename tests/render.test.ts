@@ -30,7 +30,7 @@ describe("halton", () => {
 describe("noise texture", () => {
   it("is deterministic, full size and roughly uniform with mean 0.5", () => {
     const a = generateNoise(16 ** 3);
-    expect(a.length).toBe(16 ** 3);
+    expect(a).toHaveLength(16 ** 3);
     expect(generateNoise(16 ** 3)).toEqual(a);
     expect(generateNoise(16 ** 3, 2)).not.toEqual(a);
     const mean = a.reduce((s, v) => s + v, 0) / a.length / 255;
@@ -138,5 +138,7 @@ describe("camera", () => {
     expect(dot(b.fwd, b.up)).toBeCloseTo(0);
     expect(dot(b.right, b.up)).toBeCloseTo(0);
     expect(dot(b.fwd, b.pos.map((v) => -v / 9))).toBeCloseTo(1);
+    const pole = cameraBasis({ theta: 0, phi: Math.PI / 2, dist: 10 });
+    expect(Math.hypot(...pole.pos)).toBeCloseTo(10);
   });
 });
