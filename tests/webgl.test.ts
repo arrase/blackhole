@@ -152,6 +152,7 @@ describe("gpuTimer", () => {
       timer.begin();
       timer.end();
     }
+    expect(timer.poll()).toBeNull();
     timer.dispose();
   });
 });
@@ -160,12 +161,12 @@ describe("gl Program and targets", () => {
   it("compiles and links a full program, setting uniforms", () => {
     const { gl } = createMockGL();
     const p = new Program(gl, "precision highp float; out vec4 color; void main() { color = vec4(1.0); }");
-    p.use();
-    p.f("uOne", 1);
-    p.f("uTwo", 1, 2);
-    p.f("uThree", 1, 2, 3);
+    expect(p.use()).toBe(p);
+    expect(p.f("uOne", 1)).toBe(p);
+    expect(p.f("uTwo", 1, 2)).toBe(p);
+    expect(p.f("uThree", 1, 2, 3)).toBe(p);
     const tex = gl.createTexture()!;
-    p.tex("uTex", 0, tex);
+    expect(p.tex("uTex", 0, tex)).toBe(p);
     p.dispose();
   });
 
