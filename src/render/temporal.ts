@@ -1,8 +1,8 @@
 import type { CameraState, SimSettings } from "./types";
 
-// Obturador equivalente de la acumulacion (s): con el disco animado o la camara orbitando, la
-// historia se convierte en desenfoque de movimiento de cine en vez de estelas sin limite
-export const SHUTTER = 1 / 12;
+// Obturador equivalente de la acumulacion (s): acota la ventana temporal en movimiento para conservar
+// nitidas las turbulencias y filamentos del disco mientras suaviza el muestreo subpixel
+export const SHUTTER = 1 / 30;
 
 // Peso del frame nuevo en la media exponencial: media acumulativa 1/(n+1) tras un reinicio. Si la
 // imagen se mueve (moving), acotada para que la edad media de la historia, (1-w)/w*dt, sea SHUTTER/2

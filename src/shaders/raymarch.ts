@@ -1,6 +1,6 @@
 import { background } from "./background";
 import { color } from "./color";
-import { hash, header, sceneUniforms } from "./common";
+import { hash, header, ign, sceneUniforms } from "./common";
 import { disk } from "./disk";
 import { kerr } from "./kerr";
 import { noise } from "./noise";
@@ -8,6 +8,7 @@ import { noise } from "./noise";
 // Raymarch principal: radiancia lineal HDR sin tonemap; la exposicion y el revelado van en post
 export const raymarchFragment = `${header}
 ${sceneUniforms}
+${ign}
 ${hash}
 ${noise}
 ${kerr}
@@ -15,11 +16,11 @@ ${color}
 ${background}
 ${disk}
 
-// La losa del volumen llega a SLAB escalas de altura: por encima la densidad es < e^-8 de la central,
-// despreciable incluso para las cuerdas largas de canto
-const float SLAB = 4.0;
+// La losa del volumen llega a SLAB escalas de altura: por encima la densidad es < e^-4.5 de la central,
+// concentrando todos los pasos del raymarch en la fotosfera activa
+const float SLAB = 3.0;
 // Profundidad optica maxima de un paso dentro del disco
-const float STEP_TAU = 0.25;
+const float STEP_TAU = 0.12;
 // Maximo de RGBA16F: un Inf en la historia la envenenaria hasta el siguiente reinicio
 const float F16_MAX = 65000.0;
 
@@ -37,10 +38,8 @@ void main(){
   // Tamano angular del pixel: con la longitud recorrida da la huella del rayo para el LOD del ruido
   float pixelAngle = 1.0 / (uRes.y * uFov);
 
-  // Fase del primer paso tras entrar en la losa, distinta en cada frame: el muestreo por pasos deja
-  // de ser un patron fijo (muare de "escamas"). Ruido blanco por pixel y frame: con los ~3.5 frames
-  // efectivos de la acumulacion la IGN dejaba un damero residual; el blanco queda como grano fino
-  float jitter = hash4(uvec4(uvec2(gl_FragCoord.xy), uint(uFrame), 0u)).x;
+  // Fase cuasi-aleatoria de bajo ruido azul (IGN + razon aurea temporal) para el primer paso en la losa
+  float jitter = fract(ign(gl_FragCoord.xy) + 0.6180339887 * uFrame);
   bool hasDisk = uAccretionDisk > 0.5;
   float s = 0.0;
 
@@ -68,8 +67,8 @@ void main(){
     float lens = pow(LENS_DEMAG, float(order));
     float fp = s * pixelAngle * lens;
 
-    float dt = clamp(0.1 * r * r / (r + 2.0), 0.015, 1.4);
-    if(r < 3.2) dt = min(dt, 0.02 + 0.04 * (r - uRPlus));
+    float dt = clamp(0.09 * r * r / (r + 2.0), 0.012, 1.3);
+    if(r < 3.4) dt = min(dt, 0.015 + 0.035 * (r - uRPlus));
     vec3 dir = dx / length(dx);
 
     vec3 gas;
@@ -80,16 +79,14 @@ void main(){
       column = diskColumn(r, gas.y);
       field = gasFields(x, r, H, gas.z / gas.x, fp);
       k = diskAbsorption(x.y, H, column, field.x);
-      // Paso por profundidad optica, resolviendo el perfil vertical y la celda de la textura
-      dt = min(dt, min(STEP_TAU / max(k, 1e-6), min(0.4 * H / max(abs(dir.y), 1e-3), r / GAS_RADIAL)));
-      // Primer paso tras entrar con fase aleatoria por frame: la rejilla de muestreo cambia en cada
-      // frame y la acumulacion la promedia
-      if(!inside) dt *= jitter;
+      // Paso fino por profundidad optica, perfil vertical y celda radial para definir las turbulencias
+      dt = min(dt, min(STEP_TAU / max(k, 1e-6), min(0.24 * H / max(abs(dir.y), 1e-3), 0.55 * r / GAS_RADIAL)));
+      if(!inside) dt *= 0.04 + 0.96 * jitter;
     } else if(hasDisk){
       // Aterriza en la losa (por arriba o por el borde exterior) en vez de saltarsela
       if(r < DISK_OUT && x.y * dir.y < 0.0) dt = min(dt, (abs(x.y) - SLAB * H) / abs(dir.y) + 1e-4);
       float inward = -dot(x.xz, dir.xz) / length(x.xz);
-      if(r >= DISK_OUT && inward > 0.0 && abs(x.y) < SLAB * diskHeight(DISK_OUT)) dt = min(dt, (r - DISK_OUT) / inward + 1e-4);
+      if(r >= DISK_OUT && inward > 0.0 && abs(x.y) < SLAB * diskHeight(DISK_OUT) + 0.25) dt = min(dt, (r - DISK_OUT) / inward + 1e-3);
     }
     inside = inSlab;
 
@@ -101,12 +98,14 @@ void main(){
     vec3 nextP = p + 0.5 * h * (dp + dp2);
 
     if(inSlab){
-      // Transporte radiativo del tramo: col += tr S (1 - e^-dtau)
-      float dtau = k * dt;
+      // Transporte radiativo con integral analitica del perfil gaussiano vertical en [x.y, nextX.y]
+      vec3 midX = 0.5 * (x + nextX);
+      vec3 midP = 0.5 * (p + nextP);
+      float dtau = diskSlabTau(x.y, nextX.y, H, column, field.x, dt);
       float teff = diskTeff(r, field.y);
-      if(teff > 0.0) col += tr * (1.0 - exp(-dtau)) * diskSource(x, p, r, gas, teff, diskDepth(x.y, H, column));
+      if(teff > 0.0) col += tr * (1.0 - exp(-dtau)) * diskSource(midX, midP, r, gas, teff, diskDepth(midX.y, H, column));
       tr *= exp(-dtau);
-      if(tr < 0.008) break;
+      if(tr < 0.005) break;
     }
     if(diskZone && x.y * nextX.y < 0.0) crossings++;
 

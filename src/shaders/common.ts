@@ -58,6 +58,6 @@ uniform float uRIsco;
 uniform float uAccretionDisk;
 
 const float PI = 3.14159265;
-const int MAX_STEPS = 800;
+const int MAX_STEPS = 1000;
 const float DISK_OUT = 13.0;
 `;
