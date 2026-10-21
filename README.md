@@ -2,11 +2,20 @@
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-arrase.github.io%2Fblackhole-0ea5e9?style=flat-square&logo=github)](https://arrase.github.io/blackhole/)
 [![Tests](https://img.shields.io/badge/Tests-41%20passing-emerald?style=flat-square&logo=vitest)](https://github.com/arrase/blackhole)
-[![Coverage](https://img.shields.io/badge/Coverage-96%25-success?style=flat-square)](https://github.com/arrase/blackhole)
 [![WebGL 2.0](https://img.shields.io/badge/WebGL-2.0%20GLSL%203.00-orange?style=flat-square&logo=webgl)](https://www.khronos.org/registry/webgl/specs/latest/2.0/)
 [![React](https://img.shields.io/badge/React-19.3-61dafb?style=flat-square&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-7.0-3178c6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
+[![Quality Gate Status](https://img.shields.io/sonar/quality_gate/arrase_blackhole?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&logo=sonarcloud)](https://sonarcloud.io/summary/new_code?id=arrase_blackhole)
+[![Coverage](https://img.shields.io/sonar/coverage/arrase_blackhole?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&logo=sonarcloud)](https://sonarcloud.io/summary/new_code?id=arrase_blackhole)
+[![Bugs](https://img.shields.io/sonar/bugs/arrase_blackhole?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&logo=sonarcloud)](https://sonarcloud.io/summary/new_code?id=arrase_blackhole)
+[![Vulnerabilities](https://img.shields.io/sonar/vulnerabilities/arrase_blackhole?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&logo=sonarcloud)](https://sonarcloud.io/summary/new_code?id=arrase_blackhole)
+[![Code Smells](https://img.shields.io/sonar/code_smells/arrase_blackhole?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&logo=sonarcloud)](https://sonarcloud.io/summary/new_code?id=arrase_blackhole)
+[![Tech Debt](https://img.shields.io/sonar/tech_debt/arrase_blackhole?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&logo=sonarcloud)](https://sonarcloud.io/summary/new_code?id=arrase_blackhole)
+[![Duplicated Lines](https://img.shields.io/sonar/duplicated_lines_density/arrase_blackhole?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&logo=sonarcloud)](https://sonarcloud.io/summary/new_code?id=arrase_blackhole)
+[![Security Rating](https://img.shields.io/sonar/security_rating/arrase_blackhole?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&logo=sonarcloud)](https://sonarcloud.io/summary/new_code?id=arrase_blackhole)
+[![Reliability Rating](https://img.shields.io/sonar/reliability_rating/arrase_blackhole?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&logo=sonarcloud)](https://sonarcloud.io/summary/new_code?id=arrase_blackhole)
+[![Maintainability Rating](https://img.shields.io/sonar/sqale_rating/arrase_blackhole?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&logo=sonarcloud)](https://sonarcloud.io/summary/new_code?id=arrase_blackhole)
 
 An interactive, scientifically grounded real-time relativistic simulation of a spinning supermassive black hole (**Kerr metric**) and its accretion disk, running directly in modern web browsers at 60+ FPS via **WebGL 2**, **GLSL 3.00 ES**, **React 19**, and **TypeScript**.
 
