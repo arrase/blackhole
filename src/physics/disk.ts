@@ -35,7 +35,9 @@ export function pageThorneFlux(r: number, spin: number, pt: PageThorne = pageTho
   const x = Math.sqrt(r / M), { x0, roots, coefs } = pt;
   if (x <= x0) return 0;
   let b = x - x0 - 1.5 * spin * Math.log(x / x0);
-  roots.forEach((xi, i) => (b -= coefs[i] * Math.log((x - xi) / (x0 - xi))));
+  roots.forEach((xi, i) => {
+    b -= coefs[i] * Math.log((x - xi) / (x0 - xi));
+  });
   return b / (x ** 4 * (x ** 3 - 3 * x + 2 * spin));
 }
 

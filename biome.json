@@ -1,0 +1,23 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.3/schema.json",
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "noNonNullAssertion": "off"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["src/render/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useHookAtTopLevel": "off"
+          }
+        }
+      }
+    }
+  ]
+}

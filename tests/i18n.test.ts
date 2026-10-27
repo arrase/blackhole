@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   LANGUAGES,
   LANGUAGE_MAP,
-  LanguageCode,
+  type LanguageCode,
   detectLanguage,
   translations,
 } from "../src/i18n";
@@ -68,8 +68,8 @@ describe("i18n system", () => {
     for (const code of rtlCodes) {
       expect(LANGUAGE_MAP[code].dir).toBe("rtl");
     }
-    expect(LANGUAGE_MAP["es"].dir).toBe("ltr");
-    expect(LANGUAGE_MAP["en"].dir).toBe("ltr");
+    expect(LANGUAGE_MAP.es.dir).toBe("ltr");
+    expect(LANGUAGE_MAP.en.dir).toBe("ltr");
   });
 
   describe("detectLanguage", () => {
