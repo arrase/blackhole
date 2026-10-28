@@ -24,12 +24,14 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
+  const messageRef = useRef(webglUnsupportedMessage);
+  messageRef.current = webglUnsupportedMessage;
 
   useEffect(() => {
     const canvas = canvasRef.current!;
     let renderer = Renderer.create(canvas);
     if (!renderer) {
-      alert(webglUnsupportedMessage);
+      alert(messageRef.current);
       return;
     }
     const scalerOptions = (): ScalerOptions => ({
@@ -78,7 +80,7 @@ export default function BlackHole({ settings, camera, onFps, webglUnsupportedMes
     const contextRestored = () => {
       renderer = Renderer.create(canvas);
       if (!renderer) {
-        alert(webglUnsupportedMessage);
+        alert(messageRef.current);
         return;
       }
       scaler.configure(scalerOptions());

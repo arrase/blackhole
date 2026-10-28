@@ -90,7 +90,9 @@ export function createTarget(gl: WebGL2RenderingContext, width: number, height: 
 
 export function deleteTarget(gl: WebGL2RenderingContext, t: Target): void {
   gl.deleteFramebuffer(t.fbo);
-  t.layers.forEach((l) => gl.deleteTexture(l));
+  t.layers.forEach((l) => {
+    gl.deleteTexture(l);
+  });
 }
 
 // Dibuja el triangulo de pantalla completa sobre el destino (null = canvas)

@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import BlackHole, { CameraState, SimSettings } from "./BlackHole";
+import BlackHole, { type CameraState, type SimSettings } from "./BlackHole";
 import {
   LANGUAGES,
   LANGUAGE_MAP,
-  LanguageCode,
-  PresetKey,
+  type LanguageCode,
+  type PresetKey,
   detectLanguage,
   translations,
 } from "./i18n";
@@ -103,7 +103,7 @@ export default function App() {
     const t0 = performance.now();
     const step = (now: number) => {
       const t = Math.min(1, (now - t0) / 1800);
-      const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const e = t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
       camera.current.theta = from.theta + (target.theta - from.theta) * e;
       camera.current.phi = from.phi + (target.phi - from.phi) * e;
       camera.current.dist = from.dist + (target.dist - from.dist) * e;
@@ -145,7 +145,7 @@ export default function App() {
             title={t.buttons.info}
             className="flex items-center gap-1.5 rounded-lg border border-white/15 bg-black/50 px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs text-white/80 backdrop-blur-md hover:border-amber-300/60 hover:text-amber-200 transition active:scale-95 cursor-pointer"
           >
-            <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg aria-hidden="true" className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="hidden md:inline">{t.buttons.info}</span>
@@ -158,7 +158,7 @@ export default function App() {
             title={panel ? t.buttons.hideControls : t.buttons.showControls}
             className="flex items-center gap-1.5 rounded-lg border border-white/15 bg-black/50 px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs text-white/80 backdrop-blur-md hover:border-amber-300/60 hover:text-amber-200 transition active:scale-95 cursor-pointer"
           >
-            <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg aria-hidden="true" className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
             </svg>
             <span className="hidden md:inline">{panel ? t.buttons.hideControls : t.buttons.showControls}</span>
@@ -199,7 +199,7 @@ export default function App() {
               aria-label={t.buttons.close}
               className="rounded p-1 text-white/50 hover:text-white hover:bg-white/10 transition cursor-pointer"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -254,7 +254,7 @@ export default function App() {
                 aria-label={t.buttons.close}
                 className="rounded-lg p-1 text-white/50 hover:text-white hover:bg-white/10 transition cursor-pointer"
               >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>

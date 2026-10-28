@@ -33,11 +33,11 @@ describe("kerr horizon and ISCO", () => {
     for (const spin of [0.3, 0.85, 0.95]) {
       const a = spin * M, r0 = rIsco(spin), { E, L } = iscoEnergyMomentum(spin);
       // Potencial radial ecuatorial R(r) = (u^r)^2 r^4: R = R' = R'' = 0 en el ISCO
-      const R = (r: number) => (E * (r * r + a * a) - a * L) ** 2 - (r * r - 2 * M * r + a * a) * (r * r + (L - a * E) ** 2);
+      const radialPot = (r: number) => (E * (r * r + a * a) - a * L) ** 2 - (r * r - 2 * M * r + a * a) * (r * r + (L - a * E) ** 2);
       const h = 1e-3;
-      expect(Math.abs(R(r0))).toBeLessThan(1e-9);
-      expect(Math.abs((R(r0 + h) - R(r0 - h)) / (2 * h))).toBeLessThan(1e-6);
-      expect(Math.abs((R(r0 + h) - 2 * R(r0) + R(r0 - h)) / (h * h))).toBeLessThan(1e-4);
+      expect(Math.abs(radialPot(r0))).toBeLessThan(1e-9);
+      expect(Math.abs((radialPot(r0 + h) - radialPot(r0 - h)) / (2 * h))).toBeLessThan(1e-6);
+      expect(Math.abs((radialPot(r0 + h) - 2 * radialPot(r0) + radialPot(r0 - h)) / (h * h))).toBeLessThan(1e-4);
     }
   });
 });

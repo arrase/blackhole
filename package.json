@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "lint": "biome lint src tests",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
@@ -17,6 +19,7 @@
     "tailwind-merge": "3.7.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.6.3",
     "@tailwindcss/vite": "4.3.3",
     "@types/node": "26.6.5",
     "@types/react": "19.3.0",
