@@ -91,7 +91,7 @@ function packNormalizedChannel(rgba: Uint8Array, ch: number, buf: Float32Array):
 }
 
 // Volumen RGBA8 periodico con 3 octavas sin aliasing (pasos de 8, 4 y 2 texels; espectro Kolmogorov):
-// R = densidad (rho), G = disipacion (diss), B = hojas de corriente MHD (ridge = -|g|), A = warp
+// R = densidad (rho), G = disipacion (diss), B = hojas de corriente MHD (ridge suave), A = warp
 export function generateTurbulence(w: number, h: number, d: number, seed = 1): Uint8Array {
   const rand = mulberry32(seed);
   const voxels = w * h * d;
@@ -108,7 +108,9 @@ export function generateTurbulence(w: number, h: number, d: number, seed = 1): U
     addOctave(diss, w, h, d, step, amp, rand);
     addOctave(rawRidge, w, h, d, step, amp * 0.96, rand);
   }
-  for (let i = 0; i < voxels; i++) rawRidge[i] = -Math.abs(rawRidge[i]);
+  // Cresta suave -sqrt(g^2 + eps^2): sin el pliegue C0 de -|g|, cuyo perfil simetrico dibuja lineas en espejo
+  const eps2 = (0.0625 * rawRidge.reduce((acc, g) => acc + g * g, 0)) / voxels;
+  for (let i = 0; i < voxels; i++) rawRidge[i] = -Math.sqrt(rawRidge[i] ** 2 + eps2);
 
   addOctave(warp, w, h, d, 8, 1, rand);
   addOctave(warp, w, h, d, 4, 0.55, rand);

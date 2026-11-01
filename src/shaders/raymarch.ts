@@ -105,35 +105,32 @@ void main(){
 
           // 2. Fotosfera turbulenta [t0, t1] con sub-muestreo estratificado
           if(t1 > t0 && tr >= 0.005){
-            float column = diskColumn(midR, gas.y);
-            if(column > 1e-4){
-              float lens = order == 0 ? 1.0 : (order == 1 ? LENS_DEMAG : LENS_DEMAG * LENS_DEMAG);
-              float fp = (s + 0.5 * (t0 + t1) * dt) * pixelAngle * lens;
-              float zonal = diskZonalRing(midR, fp);
-              float subLen = (t1 - t0) * dt;
-              float subDy = abs(dySeg) * (t1 - t0);
-              int steps = clamp(int(ceil(max(subLen * GAS_RADIAL / (2.2 * midR), subDy / (0.45 * H)))), 1, 10);
-              float invSteps = 1.0 / float(steps);
-              float subComoving = (t1 - t0) * dtComoving * invSteps;
-              float omega = gas.z / gas.x;
+            float lens = order == 0 ? 1.0 : (order == 1 ? LENS_DEMAG : LENS_DEMAG * LENS_DEMAG);
+            float subLen = (t1 - t0) * dt;
+            float subDy = abs(dySeg) * (t1 - t0);
+            int steps = clamp(int(ceil(max(subLen * GAS_RADIAL / (2.2 * midR), subDy / (0.45 * H)))), 1, 10);
+            float invSteps = 1.0 / float(steps);
 
-              for(int k = 0; k < steps; k++){
-                float ta = mix(t0, t1, float(k) * invSteps);
-                float tb = mix(t0, t1, float(k + 1) * invSteps);
-                float tm = mix(ta, tb, 0.25 + 0.5 * jitter);
-                vec3 sx = mix(x, nextX, tm);
-                vec3 sp = mix(p, nextP, tm);
-                float sr = max(ksRadius(sx), uRPlus + 1e-4);
-                vec2 field = gasFields(sx, sr, H, omega, fp, zonal);
-                float dtau = diskSlabTau(mix(x.y, nextX.y, ta), mix(x.y, nextX.y, tb), H, column, field.x, subComoving);
-                float teff = diskTeff(sr, field.y);
-                if(teff > 0.0){
-                  float sg = redshift(sp, ksVelocity(sx, sr, gas));
-                  col += tr * (1.0 - exp(-dtau)) * diskSource(sg, teff, diskDepth(sx.y, H, column));
-                }
-                tr *= exp(-dtau);
-                if(tr < 0.005) break;
-              }
+            for(int k = 0; k < steps; k++){
+              float ta = mix(t0, t1, float(k) * invSteps);
+              float tb = mix(t0, t1, float(k + 1) * invSteps);
+              float tm = mix(ta, tb, 0.25 + 0.5 * jitter);
+              vec3 sx = mix(x, nextX, tm);
+              vec3 sp = mix(p, nextP, tm);
+              // Todo lo que depende de r se evalua en la muestra: continuo entre macro-pasos, sin costuras
+              float sr = max(ksRadius(sx), uRPlus + 1e-4);
+              vec3 sGas = gasVelocity(sr);
+              float sH = diskHeight(sr);
+              float sColumn = diskColumn(sr, sGas.y);
+              float sg = redshift(sp, ksVelocity(sx, sr, sGas));
+              float fp = (s + tm * dt) * pixelAngle * lens;
+              vec2 field = gasFields(sx, sr, sH, sGas.z / sGas.x, fp);
+              float subComoving = (tb - ta) * dt / max(sg * speed, 0.08);
+              float dtau = diskSlabTau(mix(x.y, nextX.y, ta), mix(x.y, nextX.y, tb), sH, sColumn, field.x, subComoving);
+              float teff = diskTeff(sr, field.y);
+              if(teff > 0.0) col += tr * (1.0 - exp(-dtau)) * diskSource(sg, teff, diskDepth(sx.y, sH, sColumn));
+              tr *= exp(-dtau);
+              if(tr < 0.005) break;
             }
           }
 

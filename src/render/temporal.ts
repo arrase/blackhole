@@ -1,8 +1,9 @@
 import type { CameraState, SimSettings } from "./types";
 
-// Obturador equivalente de la acumulacion (s): acota la ventana temporal en movimiento para conservar
-// nitidas las turbulencias y filamentos del disco mientras suaviza el muestreo subpixel
-export const SHUTTER = 1 / 30;
+// Obturador equivalente de la acumulacion (s): acota la ventana temporal en movimiento (~5 frames a
+// 60 fps) para promediar el muestreo subpixel y volumetrico; el desenfoque del gas va a lo largo de su
+// orbita, paralelo a las estrias, y conserva nitidos los filamentos
+export const SHUTTER = 1 / 12;
 
 // Peso del frame nuevo en la media exponencial: media acumulativa 1/(n+1) tras un reinicio. Si la
 // imagen se mueve (moving), acotada para que la edad media de la historia, (1-w)/w*dt, sea SHUTTER/2

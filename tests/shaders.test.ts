@@ -27,10 +27,8 @@ describe("shaders", () => {
     }
   });
 
-  it("gas texture is seamless in azimuth: whole noise periods per turn and integer lacunarity", () => {
+  it("gas texture is seamless in azimuth: whole noise periods per turn", () => {
     const cells = Number(/const float GAS_CELLS = ([\d.]+);/.exec(raymarchFragment)![1]);
     expect(cells % NOISE_SIZE[0]).toBe(0);
-    const lacunarity = Number(/p = p \* ([\d.]+) \+/.exec(raymarchFragment)![1]);
-    expect(Number.isInteger(lacunarity)).toBe(true);
   });
 });

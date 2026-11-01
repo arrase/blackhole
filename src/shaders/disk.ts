@@ -17,8 +17,9 @@ const float DISK_TAU = 15.0;
 // Velocidad radial transonica de entrada al ISCO (~ c_s en discos magnetizados GRMHD): produce
 // lenguas espirales semitransparentes visibles entre r_ISCO y el horizonte r+
 const float ISCO_INFLOW = 6e-3;
-// Dispersion de ln(densidad): fluctuaciones marcadas de densidad y disipacion en la turbulencia MRI
-const float TURBULENCE = 0.94;
+// Dispersion de ln(densidad) y ln(disipacion) de la turbulencia MRI: huecos moderados y modulacion de
+// brillo de +-30-40 % (en el visible d ln B / d ln T ~ 3-5 y T ~ diss^0.21)
+const vec2 TURBULENCE = vec2(0.55, 0.38);
 // Celdas base por vuelta: multiplo exacto de NOISE_SIZE.x (64), azimut 100 % sin costura (32..1024 octavas)
 const float GAS_CELLS = 256.0;
 // Densidad radial base en ln r: combinada con la cizalla espiral inclina los remolinos en brazos
@@ -28,6 +29,8 @@ const float GAS_RADIAL = 2.6 * GAS_CELLS / (2.0 * PI);
 const float LENS_DEMAG = 11.0;
 // Peso relativo de la segunda cascada (8x frecuencia -> 2048 muestras azimutales efectivas): 0.78^3
 const float CASCADE_GAIN = 0.474552;
+// Frecuencia de los anillos zonales MRI por celda de ln r: periodos de 12, 6 y 3 celdas radiales
+const float ZONAL_SCALE = 0.64;
 
 // Escala de altura con flaring concavo de Shakura-Sunyaev (H/r ~ r^(1/8)): geometria 3D realista
 // en el borde exterior y adelgazamiento relativista limpio hacia el horizonte
@@ -78,50 +81,53 @@ float diskColumn(float r, float ur){
   return DISK_TAU * edge / (1.0 + r * abs(ur) / (uRIsco * ISCO_INFLOW));
 }
 
-// Flujos zonales cuasi-axisimetricos (anillos de presion MRI en ln r, evaluados 1 vez por macro-paso)
-float diskZonalRing(float r, float fp){
-  float qy = log(r) * GAS_RADIAL;
-  float fpCells = 0.70 * fp * GAS_RADIAL / r;
-  return fbm(vec3(0.0, qy * 0.08, 3.7), fpCells * 0.16, 4, 0.78).x;
-}
-
 // Turbulencia MRI en 2 cascadas (32..128 -> 256..1024 remolinos azimutales efectivos) con
 // solo 4 a 6 lecturas 3D por sub-paso en lugar de 50:
 // - Espiral logaritmica trailing (+1.15 * q.y) + adveccion sesgada hacia delante (f - 0.18)
 // - Torsión de lineas de corriente en caida libre dentro del ISCO
-vec2 gasFields(vec3 x, float r, float H, float omega, float fp, float zonalRing){
+// - Flujos zonales cuasi-axisimetricos (anillos de presion MRI en ln r) leidos en diagonal de la
+//   textura: sin periodo visible en todo el rango radial del disco
+vec2 gasFields(vec3 x, float r, float H, float omega, float fp){
   vec3 q = vec3(atan(x.x, x.z) * GAS_CELLS / (2.0 * PI), log(r) * GAS_RADIAL, 2.2 * x.y / H);
+  float zonal = turbulence(vec3(0.37, 1.0, 0.0) * (q.y * ZONAL_SCALE) + vec3(0.0, 0.0, 3.7),
+                           fp * ZONAL_SCALE * GAS_RADIAL / r).x;
   // Espiral kepleriana trailing: el gas interior va adelantado en +phi respecto al exterior
   q.x += 1.15 * q.y;
+  // d(q.x) / d(ln r) de la espiral; la torsion de caida y la adveccion la aumentan
+  float shear = 1.15 * GAS_RADIAL;
   if(r < uRIsco){
-    float u = (uRIsco - r) / max(uRIsco - uRPlus, 0.08);
-    float deltaPhi = 2.1 * (u * u) / (u + 0.16);
-    q.x -= deltaPhi * GAS_CELLS / (2.0 * PI);
+    float span = max(uRIsco - uRPlus, 0.08);
+    float u = (uRIsco - r) / span;
+    q.x -= 2.1 * u * u / (u + 0.16) * GAS_CELLS / (2.0 * PI);
+    shear += 2.1 * u * (u + 0.32) / ((u + 0.16) * (u + 0.16)) * r / span * GAS_CELLS / (2.0 * PI);
   }
 
-  float fp0 = 0.85 * fp * GAS_RADIAL / r;
-  float fp1 = 8.0 * fp0;
-  float w1 = 1.0 - smoothstep(3.5, 9.0, fp1);
   float normCasc = inversesqrt(1.0 + CASCADE_GAIN * CASCADE_GAIN);
-  float v0 = 1.0 / (1.0 + 0.06 * fp0 * fp0);
-  float v1 = (w1 * w1) / (1.0 + 0.06 * fp1 * fp1);
-  float kept = (v0 + CASCADE_GAIN * CASCADE_GAIN * v1) / (1.0 + CASCADE_GAIN * CASCADE_GAIN);
-
-  vec2 sum = vec2(0.0);
-  float w2 = 0.0;
   float flowSpan = 2.0 * uFlowPeriod * GAS_CELLS / (2.0 * PI);
+  vec2 sum = vec2(0.0);
+  float w2 = 0.0, kept = 0.0;
 
   for(int i = 0; i < 2; i++){
     float f = uLayerPhase[i];
     float w = 1.0 - abs(2.0 * f - 1.0);
+    // Huella del pixel en celdas: norma del jacobiano de q con la cizalla kepleriana de la adveccion
+    // (Omega ~ r^-1.5), que estrecha los remolinos radialmente a lo largo del ciclo
+    float layerShear = shear + 1.5 * (f - 0.18) * omega * flowSpan;
+    float fp0 = fp * length(vec3(GAS_CELLS / (2.0 * PI), GAS_RADIAL, layerShear)) / r;
+    float fp1 = 8.0 * fp0;
+    float w1 = 1.0 - smoothstep(3.5, 9.0, fp1);
+    float v0 = 1.0 / (1.0 + 0.06 * fp0 * fp0);
+    float v1 = (w1 * w1) / (1.0 + 0.06 * fp1 * fp1);
+    kept += w * w * (v0 + CASCADE_GAIN * CASCADE_GAIN * v1) / (1.0 + CASCADE_GAIN * CASCADE_GAIN);
+
     vec3 seed = hash4(uvec4(uint(uLayerEpoch[i]), uint(i), 0u, 0u)).xyz * NOISE_SIZE;
     vec3 qi = q + vec3(floor(seed.x), seed.yz);
     // Adveccion sesgada hacia delante (f - 0.18): nace ya trailing y se enrolla con la cizalla real
     qi.x -= (f - 0.18) * omega * flowSpan;
 
-    float warpA = turbulence(qi * vec3(1.0, 0.28, 0.35), fp0 * 0.5).w;
-    float warpB = turbulence(qi * vec3(1.0, 0.28, 0.35) + vec3(16.0, 31.0, 9.0), fp0 * 0.5).w;
-    vec3 qw = qi + vec3(warpA * 2.4, warpB * 1.0, 0.0);
+    // Warp de dominio de una sola lectura: canales warp y rho, independientes en la textura
+    vec2 warp = turbulence(qi * vec3(1.0, 0.28, 0.35), fp0 * 0.5).wx;
+    vec3 qw = qi + vec3(warp * vec2(2.4, 1.0), 0.0);
 
     vec3 c0 = turbulence(qw, fp0).xyz;
     if(w1 > 0.0){
@@ -132,13 +138,13 @@ vec2 gasFields(vec3 x, float r, float H, float omega, float fp, float zonalRing)
 
     // c0.x = rho, c0.y = diss, c0.z = ridge (hojas de corriente MHD brillantes y huecos filamentosos)
     vec2 g = vec2(
-      0.74 * c0.x - 0.42 * c0.z + 0.48 * zonalRing,
-      0.55 * c0.y + 0.68 * c0.z + 0.48 * zonalRing - 0.28 * c0.x
+      0.74 * c0.x - 0.42 * c0.z + 0.48 * zonal,
+      0.55 * c0.y + 0.68 * c0.z + 0.48 * zonal - 0.28 * c0.x
     );
     sum += w * g;
     w2 += w * w;
   }
-  float totalVar = min(kept + 0.23, 1.15);
+  float totalVar = min(kept / w2 + 0.23, 1.15);
   return exp(TURBULENCE * sum * inversesqrt(w2) - 0.5 * TURBULENCE * TURBULENCE * totalVar);
 }
 
