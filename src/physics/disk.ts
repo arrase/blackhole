@@ -10,7 +10,7 @@ export const T_UNIT = 2;
 // Brillo del gas mas brillante respecto al cielo (artistico: con el real las estrellas serian
 // invisibles). Con la exposicion por defecto deja el gas mas brillante bajo el hombro de AgX en vez de
 // quemarlo a blanco plano, y la mayor parte del disco en los tonos medios
-export const DISK_BRIGHTNESS = 6;
+export const DISK_BRIGHTNESS = 4.5;
 
 // Flujo de Page-Thorne en x = sqrt(r / M):
 // F = 3 Mdot / (8 pi M^2) * [x - x0 - 3/2 a ln(x/x0) - sum_i c_i ln((x - x_i)/(x0 - x_i))] / (x^4 (x^3 - 3x + 2a))

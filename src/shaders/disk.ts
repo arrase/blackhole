@@ -31,6 +31,8 @@ const float LENS_DEMAG = 11.0;
 const float CASCADE_GAIN = 0.474552;
 // Frecuencia de los anillos zonales MRI por celda de ln r: periodos de 12, 6 y 3 celdas radiales
 const float ZONAL_SCALE = 0.64;
+// Sesgo de la huella del LOD (-0.75 mip): el jitter subpixel acumulado en la historia supermuestrea
+const float LOD_BIAS = 0.6;
 
 // Escala de altura con flaring concavo de Shakura-Sunyaev (H/r ~ r^(1/8)): geometria 3D realista
 // en el borde exterior y adelgazamiento relativista limpio hacia el horizonte
@@ -113,7 +115,7 @@ vec2 gasFields(vec3 x, float r, float H, float omega, float fp){
     // Huella del pixel en celdas: norma del jacobiano de q con la cizalla kepleriana de la adveccion
     // (Omega ~ r^-1.5), que estrecha los remolinos radialmente a lo largo del ciclo
     float layerShear = shear + 1.5 * (f - 0.18) * omega * flowSpan;
-    float fp0 = fp * length(vec3(GAS_CELLS / (2.0 * PI), GAS_RADIAL, layerShear)) / r;
+    float fp0 = LOD_BIAS * fp * length(vec3(GAS_CELLS / (2.0 * PI), GAS_RADIAL, layerShear)) / r;
     float fp1 = 8.0 * fp0;
     float w1 = 1.0 - smoothstep(3.5, 9.0, fp1);
     float v0 = 1.0 / (1.0 + 0.06 * fp0 * fp0);

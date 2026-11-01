@@ -86,7 +86,7 @@ const float AGX_MIN_EV = -12.47393;
 const float AGX_MAX_EV = 4.026069;
 // Saturacion de la mirada (look) tras la curva, como el look "Punchy" de Blender sin su contraste:
 // el AgX base apaga los cuerpos negros de 3-5 kK a un sepia; ajuste artistico, solo de croma
-const float AGX_SATURATION = 1.6;
+const float AGX_SATURATION = 1.7;
 
 // Devuelve sRGB lineal en [0, 1]
 vec3 agx(vec3 c){
