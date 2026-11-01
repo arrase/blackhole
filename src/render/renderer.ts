@@ -8,6 +8,7 @@ import { Program, type Target, createTarget, deleteTarget, drawTo } from "./gl";
 import { GpuTimer } from "./gpuTimer";
 import { subpixelJitter } from "./halton";
 import { createNoiseTexture } from "./noiseTexture";
+import { createSkyCubemap } from "./skyCubemap";
 import { blendWeight, historyKey, sameKey } from "./temporal";
 import type { CameraState, SimSettings } from "./types";
 
@@ -22,9 +23,11 @@ const EPOCHS = 65536;
 // -> 3 %, del orden del halo de un buen objetivo o del ojo; 2 (maximo) -> 10 %
 const SCATTER_PER_GLOW = 0.05;
 
-// Exposicion lineal por unidad del control de intensidad: la intensidad por defecto (0.35) da 1.4.
-// El disco ya llega medido (physics/disk.ts): su gas mas brillante vale DISK_BRIGHTNESS
+// Exposicion lineal por unidad del control de intensidad
 const EXPOSURE_PER_INTENSITY = 4;
+
+// Peso minimo de mezcla hardware en reposo (64 frames = periodo completo determinista de Halton/IGN)
+const MIN_HW_WEIGHT = 1 / 64;
 
 export interface Frame {
   readonly camera: CameraState;
@@ -39,6 +42,7 @@ export class Renderer {
   private readonly composite: Program;
   private readonly bloom: Bloom;
   private readonly noise: WebGLTexture;
+  private readonly skyCube: WebGLTexture;
   private readonly vao: WebGLVertexArrayObject;
   private readonly timer: GpuTimer | null;
   private history: Target | null = null;
@@ -55,9 +59,10 @@ export class Renderer {
     this.bloom = new Bloom(gl);
     this.noise = createNoiseTexture(gl);
     this.timer = GpuTimer.create(gl);
-    // WebGL2 exige un VAO enlazado aunque el triangulo no use atributos
+    // WebGL2 exige un VAO enlazado aunque el triangulo no use atributos (necesario tambien al hornear skyCube)
     this.vao = gl.createVertexArray()!;
     gl.bindVertexArray(this.vao);
+    this.skyCube = createSkyCubemap(gl);
   }
 
   // null si no hay WebGL2, no se puede renderizar en coma flotante o los shaders no compilan
@@ -110,21 +115,20 @@ export class Renderer {
 
     this.timer?.begin();
 
-    // Reloj del gas integrado aqui, en ciclos del mapa de flujo y doble precision: cambiar diskSpeed
-    // cambia el ritmo sin saltos de la textura, y el shader solo recibe fases acotadas
+    // Reloj del gas integrado aqui, en ciclos del mapa de flujo (2 * flowPeriod = 1 orbita completa en r_peak)
     if (this.disk?.spin !== settings.spin || this.disk.temp !== settings.diskTemp) {
       this.disk = { spin: settings.spin, temp: settings.diskTemp, params: diskParams(settings.spin, settings.diskTemp) };
     }
     const disk = this.disk.params;
-    const advance = (Math.min(dt, MAX_DT) * settings.diskSpeed) / disk.flowPeriod;
+    const advance = (Math.min(dt, MAX_DT) * settings.diskSpeed) / (2 * disk.flowPeriod);
     this.flowCycle = (this.flowCycle + advance) % EPOCHS;
     const layers = [this.flowCycle, this.flowCycle + 0.5];
-    // Con la escena quieta la historia promedia sin limite y el ruido converge; si algo se mueve,
-    // el obturador acota su edad
+    // Con la escena quieta la historia promedia; si algo se mueve, el obturador acota su edad
     const moving = (settings.accretionDisk && advance > 0) || camera.theta !== this.theta;
     this.theta = camera.theta;
     // Raymarch mezclado sobre la historia: media exponencial por mezcla de hardware, sin ping-pong
-    const weight = blendWeight(this.samples, dt, moving);
+    const weight = Math.max(blendWeight(this.samples, dt, moving), MIN_HW_WEIGHT);
+    const starScale = Math.max(weight, 0.25) / weight;
     // Capa 1 (estrellas del frame) a cero: la mezcla deja en ella weight * salida
     gl.bindFramebuffer(gl.FRAMEBUFFER, history.fbo);
     gl.clearBufferfv(gl.COLOR, 1, [0, 0, 0, 1]);
@@ -137,6 +141,7 @@ export class Renderer {
     this.raymarch
       .use()
       .tex("uNoise", 0, this.noise, gl.TEXTURE_3D)
+      .tex("uSkyCube", 1, this.skyCube, gl.TEXTURE_CUBE_MAP)
       .f("uRes", w, h)
       .f("uJitter", jx, jy)
       .f("uHistoryWeight", weight)
@@ -166,7 +171,7 @@ export class Renderer {
     gl.disable(gl.BLEND);
     this.samples++;
 
-    this.bloom.render(history);
+    this.bloom.render(history, starScale);
 
     const bloom = this.bloom.output;
     this.composite
@@ -175,6 +180,7 @@ export class Renderer {
       .tex("uBloom", 1, bloom.texture)
       .tex("uStarLayer", 2, history.layers[1])
       .f("uBloomTexel", 1 / bloom.width, 1 / bloom.height)
+      .f("uStarScale", starScale)
       .f("uScatter", settings.glow * SCATTER_PER_GLOW)
       .f("uExposure", settings.intensity * EXPOSURE_PER_INTENSITY)
       .f("uFov", settings.fov)
@@ -202,6 +208,7 @@ export class Renderer {
     this.composite.dispose();
     this.timer?.dispose();
     gl.deleteTexture(this.noise);
+    gl.deleteTexture(this.skyCube);
     gl.deleteVertexArray(this.vao);
   }
 }

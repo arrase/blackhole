@@ -2,8 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import { Bloom } from "../src/render/bloom";
 import { Program, createTarget, deleteTarget, drawTo } from "../src/render/gl";
 import { GpuTimer } from "../src/render/gpuTimer";
-import { createNoiseTexture } from "../src/render/noiseTexture";
+import { createNoiseTexture, generateTurbulence } from "../src/render/noiseTexture";
 import { Renderer, type Frame } from "../src/render/renderer";
+import { createSkyCubemap } from "../src/render/skyCubemap";
+import { TURB_SCALE } from "../src/shaders/noise";
 
 if (typeof window === "undefined") {
   (globalThis as unknown as { window: { devicePixelRatio: number } }).window = { devicePixelRatio: 1 };
@@ -26,10 +28,14 @@ function createMockGL(): { gl: WebGL2RenderingContext; canvas: HTMLCanvasElement
     LINK_STATUS: 35714,
     TEXTURE_2D: 3553,
     TEXTURE_3D: 32879,
+    TEXTURE_CUBE_MAP: 34067,
+    TEXTURE_CUBE_MAP_POSITIVE_X: 34069,
     TEXTURE0: 33984,
     FRAMEBUFFER: 36160,
     COLOR_ATTACHMENT0: 36064,
     RGBA16F: 34842,
+    RGBA8: 32856,
+    RGBA: 6408,
     LINEAR: 9729,
     CLAMP_TO_EDGE: 33071,
     TEXTURE_MIN_FILTER: 10241,
@@ -114,11 +120,41 @@ function createMockGL(): { gl: WebGL2RenderingContext; canvas: HTMLCanvasElement
   return { gl, canvas };
 }
 
-describe("noiseTexture", () => {
-  it("creates a 3D noise texture with expected parameters", () => {
+describe("noiseTexture and skyCubemap", () => {
+  it("creates a 3D RGBA8 turbulence texture with zero-centered normalized channels", () => {
     const { gl } = createMockGL();
     const tex = createNoiseTexture(gl);
     expect(tex).toBeDefined();
+
+    const vol = generateTurbulence(16, 16, 16);
+    expect(vol).toHaveLength(16 * 16 * 16 * 4);
+    expect(generateTurbulence(16, 16, 16)).toEqual(vol);
+    for (let ch = 0; ch < 4; ch++) {
+      let sum = 0;
+      let sum2 = 0;
+      const n = 16 ** 3;
+      for (let i = 0; i < n; i++) {
+        const v = (vol[i * 4 + ch] / 255 - 0.5) / TURB_SCALE;
+        sum += v;
+        sum2 += v * v;
+      }
+      const mean = sum / n;
+      const sd = Math.sqrt(sum2 / n - mean * mean);
+      expect(Math.abs(mean)).toBeLessThan(0.05);
+      expect(sd).toBeGreaterThan(0.92);
+      expect(sd).toBeLessThan(1.08);
+    }
+  });
+
+  it("bakes a 6-face HDR sky cubemap", () => {
+    const { gl } = createMockGL();
+    const faces: number[] = [];
+    gl.framebufferTexture2D = (_t: number, _a: number, textarget: number) => {
+      faces.push(textarget);
+    };
+    const cube = createSkyCubemap(gl);
+    expect(cube).toBeDefined();
+    expect(faces).toHaveLength(6);
   });
 });
 
@@ -203,8 +239,8 @@ describe("bloom", () => {
     bloom.resize(400, 300);
     expect(bloom.output).toBeDefined();
 
-    const src = createTarget(gl, 400, 300);
-    bloom.render(src);
+    const src = createTarget(gl, 400, 300, 2);
+    bloom.render(src, 1.5);
     deleteTarget(gl, src);
     bloom.dispose();
   });

@@ -24,12 +24,18 @@ export class Bloom {
     }
   }
 
-  render(src: Target): void {
+  render(src: Target, starScale = 0): void {
     const gl = this.gl;
     this.down.use();
     let from = src;
-    for (const level of this.levels) {
-      this.down.tex("uSrc", 0, from.texture).f("uTexel", 1 / from.width, 1 / from.height);
+    for (let i = 0; i < this.levels.length; i++) {
+      const level = this.levels[i];
+      const includeStars = i === 0 && src.layers.length > 1 && starScale > 0;
+      this.down
+        .tex("uSrc", 0, from.texture)
+        .f("uTexel", 1 / from.width, 1 / from.height)
+        .f("uStarScale", includeStars ? starScale : 0);
+      if (includeStars) this.down.tex("uStarSrc", 1, src.layers[1]);
       drawTo(gl, level);
       from = level;
     }

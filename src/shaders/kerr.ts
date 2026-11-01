@@ -46,11 +46,18 @@ float geodesic(vec3 x, vec3 p, out vec3 dx, out vec3 dp){
   return r;
 }
 
-// Para el disco: 4-velocidad de una orbita circular (u^t, u^phi de Boyer-Lindquist, u^r = u^theta = 0)
-// en KS saliente, layout vec4(u^x, u^y, u^z, u^t). Con u^r = 0, t y phi de KS avanzan como los de BL.
-// Solo emite el gas fuera del ISCO, que esta en orbita circular: el que cae no necesita esta forma
-vec4 ksVelocity(vec3 x, float ut, float uphi){
-  return vec4(uphi * vec3(x.z, 0.0, -x.x), ut);
+// 4-velocidad ecuatorial del gas (u^t, u^r, u^phi de Boyer-Lindquist) en coordenadas Kerr-Schild
+// salientes, layout vec4(u^x, u^y, u^z, u^t). Fuera del ISCO (u^r = 0) es la orbita circular exacta;
+// dentro del ISCO incluye la caida radial geodesica y su transformacion exacta a KS saliente,
+// cumpliendo g_{mu nu} u^mu u^nu = -1 y produciendo g -> 0 exacto al acercarse al horizonte r+
+vec4 ksVelocity(vec3 x, float r, vec3 gas){
+  float a = spinA(), r2 = r * r, id = 1.0 / (r2 + a * a);
+  float delta = max(r2 - r + a * a, 1e-6);
+  float ut = gas.x - r * gas.y / delta;
+  float uphi = gas.z - a * gas.y / delta;
+  vec3 phiVec = uphi * vec3(x.z, 0.0, -x.x);
+  vec3 radVec = (gas.y * id) * vec3(r * x.x + a * x.z, 0.0, r * x.z - a * x.x);
+  return vec4(phiVec + radVec, ut);
 }
 
 // Corrimiento g = nu_obs / nu_emit de un emisor con 4-velocidad u (layout de ksVelocity)

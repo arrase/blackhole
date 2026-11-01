@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DISK_BRIGHTNESS, T_UNIT, diskParams, dopplerMax, fluxPeak, keplerOmega, pageThorneFlux } from "../src/physics/disk";
-import { M, iscoEnergyMomentum, rIsco } from "../src/physics/kerr";
+import { M, iscoEnergyMomentum, ksEquatorialVelocity, ksMetric, rIsco, rPlus } from "../src/physics/kerr";
 import { blackbody, luminance } from "../src/physics/color";
 
 // Energia y momento angular de la orbita circular prograda de radio r (Bardeen-Press-Teukolsky)
@@ -65,6 +65,34 @@ describe("plunging gas", () => {
       const ut = ((r * r + a * a + (2 * M * a * a) / r) * E - (2 * M * a * L) / r) / delta;
       expect(uphi / ut).toBeCloseTo(keplerOmega(r, spin), 10);
     }
+  });
+
+  it("transforms plunging 4-velocity to outgoing Kerr-Schild with exact g_{mu nu} u^mu u^nu = -1 and horizon redshift", () => {
+    for (const spin of [0, 0.5, 0.85, 0.95]) {
+      const a = spin * M, r0 = rIsco(spin), rh = rPlus(spin), { E, L } = iscoEnergyMomentum(spin);
+      for (const frac of [0.15, 0.5, 0.85]) {
+        const r = rh + frac * (r0 - rh);
+        const delta = r * r - 2 * M * r + a * a;
+        const ur = -Math.sqrt((1 - E * E) * (r0 / r - 1) ** 3);
+        const uphi = (L * (1 - (2 * M) / r) + (2 * M * a * E) / r) / delta;
+        const ut = ((r * r + a * a + (2 * M * a * a) / r) * E - (2 * M * a * L) / r) / delta;
+        const phi = 0.7;
+        const pos: [number, number, number] = [r * Math.sin(phi) - a * Math.cos(phi), 0, r * Math.cos(phi) + a * Math.sin(phi)];
+        const uKS = ksEquatorialVelocity(pos, spin, ut, ur, uphi);
+        const g = ksMetric(pos, spin);
+        const norm = g.reduce((s, row, i) => s + row.reduce((t, gij, j) => t + gij * uKS[i] * uKS[j], 0), 0);
+        expect(norm).toBeCloseTo(-1, 8);
+      }
+    }
+    // Redshift exacto de Painleve-Gullstrand (E = 1, L = 0, a = 0) para foton radial saliente p_mu = (-1, 0, 0, 1)
+    for (const r of [1.05, 1.5, 4]) {
+      const ur = -1 / Math.sqrt(r);
+      const ut = r / (r - 1);
+      const uKS = ksEquatorialVelocity([0, 0, r], 0, ut, ur, 0);
+      const gShift = -1 / (-1 * uKS[0] + 1 * uKS[3]);
+      expect(gShift).toBeCloseTo(1 - 1 / Math.sqrt(r), 10);
+    }
+    expect(1 - 1 / Math.sqrt(1.0001)).toBeLessThan(1e-4);
   });
 });
 

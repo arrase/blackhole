@@ -1,19 +1,24 @@
-// Lados de la textura de ruido en texels (periodo de repeticion por eje). 16x128x128 (256 KB en R8)
-// da celdas largas en azimut (sin costura) y alta resolucion radial y vertical para los filamentos
-export const NOISE_SIZE: readonly number[] = [16, 128, 128];
+// Lados de la textura 3D periodica en texels: 64 en azimut (alta resolucion orbital sin costura),
+// 128 en ln(r) y 32 en altura vertical (262 144 voxels = 1 MB en RGBA8).
+// Canales pre-horneados con 3 octavas C2 sin aliasing: R = rho, G = diss, B = ridge, A = warp.
+export const NOISE_SIZE: readonly number[] = [64, 128, 32];
 
-// Ruido de valor 3D leido de una textura R8 tileable con mipmaps y suavizado quintico C2 sub-texel.
-// Coordenadas en celdas de red (1 unidad = 1 texel). fp es la huella del pixel en esas unidades:
-// fija el mip y permite saltarse las octavas mas finas que el pixel.
+// Escala de codificacion en RGBA8: valor_normalizado = (texel - 0.5) / TURB_SCALE (~ +-2.27 sigma)
+export const TURB_SCALE = 0.22;
+
 export const noise = `
 uniform sampler3D uNoise;
 const vec3 NOISE_SIZE = vec3(${NOISE_SIZE.map((n) => n.toFixed(1)).join(", ")});
-// Desviacion tipica de una octava con suavizado quintico sub-texel, medida
-const float NOISE_SD = 0.175;
+const float NOISE_SD = ${TURB_SCALE.toFixed(2)};
 
-// Suavizado quintico C2 de Quilez antes de la interpolacion trilineal de hardware: elimina las
-// aristas de derivada discontinua de la red lineal con una sola lectura de textura y se funde al
-// muestreo lineal cuando actuan los mipmaps (fp >= 1)
+// Lectura de los 4 canales pre-horneados (rho, diss, ridge, warp) normalizados a media 0 y varianza 1.
+// Las 3 octavas internas (periodos 8, 4 y 2 texels) ya llevan interpolacion quintica C2 en la red
+vec4 turbulence(vec3 p, float fp){
+  vec4 t = textureLod(uNoise, p / NOISE_SIZE, log2(max(fp, 0.5)));
+  return (t - 0.5) / NOISE_SD;
+}
+
+// Suavizado quintico C2 de Quilez antes de la interpolacion trilineal de hardware
 float noise(vec3 p, float fp){
   vec3 i = floor(p - 0.5);
   vec3 f = p - 0.5 - i;
@@ -22,14 +27,11 @@ float noise(vec3 p, float fp){
   return textureLod(uNoise, p / NOISE_SIZE, log2(max(fp, 0.5))).r;
 }
 
-// fbm normalizado: x = suma de octavas centrada con varianza unidad (casi gaussiana), y = fraccion
-// de esa varianza que sobrevive al LOD. Lacunaridad exactamente 2: conserva la periodicidad de la
-// textura en todas las octavas (coordenadas angulares sin costura). gain: amplitud relativa de cada
-// octava (pendiente del espectro)
+// fbm normalizado: x = suma centrada de varianza unidad, y = fraccion de varianza que sobrevive al LOD.
+// Lacunaridad exactamente 2: conserva la periodicidad azimutal sin costura en todas las octavas
 vec2 fbm(vec3 p, float fp, int octaves, float gain){
   float v = 0.0, kept = 0.0, total = 0.0, a = 1.0;
   for(int i = 0; i < octaves; i++){
-    // Octava mas fina que el pixel: se funde hacia su media al cruzar el limite de Nyquist
     float w = 1.0 - smoothstep(1.25, 2.5, fp);
     if(w > 0.0) v += a * w * (noise(p, fp) - 0.5);
     kept += a * a * w * w;

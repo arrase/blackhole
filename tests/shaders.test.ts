@@ -1,10 +1,18 @@
 import { describe, expect, it } from "vitest";
+import { skyCubemapFragment } from "../src/shaders/background";
 import { fullscreenVertex } from "../src/shaders/common";
-import { bloomDownFragment, bloomUpFragment, compositeFragment } from "../src/shaders/post";
 import { NOISE_SIZE } from "../src/shaders/noise";
+import { bloomDownFragment, bloomUpFragment, compositeFragment } from "../src/shaders/post";
 import { raymarchFragment } from "../src/shaders/raymarch";
 
-const programs = { fullscreenVertex, raymarchFragment, bloomDownFragment, bloomUpFragment, compositeFragment };
+const programs = {
+  fullscreenVertex,
+  skyCubemapFragment,
+  raymarchFragment,
+  bloomDownFragment,
+  bloomUpFragment,
+  compositeFragment,
+};
 
 describe("shaders", () => {
   it("are GLSL ES 3.00 programs (WebGL2 only)", () => {

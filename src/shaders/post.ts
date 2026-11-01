@@ -4,14 +4,22 @@ import { header, ign } from "./common";
 export const BLOOM_LEVELS = 6;
 
 // Reduccion de 13 muestras (Jimenez, CoD:AW): pesos que suman 1, conserva la energia y no
-// produce el parpadeo de un filtro de caja 2x2
+// produce el parpadeo de un filtro de caja 2x2. En el nivel 0 incorpora tambien la capa de estrellas
+// para que astros brillantes y arcos de Einstein reciban dispersion optica real 1/theta^2
 export const bloomDownFragment = `${header}
 uniform sampler2D uSrc;
+uniform sampler2D uStarSrc;
+uniform float uStarScale;
 uniform vec2 uTexel;
 in vec2 vUv;
 out vec4 fragColor;
 
-vec3 tap(float x, float y){ return texture(uSrc, vUv + uTexel * vec2(x, y)).rgb; }
+vec3 tap(float x, float y){
+  vec2 uv = vUv + uTexel * vec2(x, y);
+  vec3 c = texture(uSrc, uv).rgb;
+  if(uStarScale > 0.0) c += uStarScale * texture(uStarSrc, uv).rgb;
+  return c;
+}
 
 void main(){
   vec3 c = tap(0.0, 0.0) * 0.125;
@@ -53,6 +61,7 @@ uniform sampler2D uScene;
 uniform sampler2D uStarLayer;
 uniform sampler2D uBloom;
 uniform vec2 uBloomTexel;
+uniform float uStarScale;
 uniform float uScatter;
 uniform float uExposure;
 uniform float uFov;
@@ -102,8 +111,9 @@ vec3 srgbEncode(vec3 c){
 void main(){
   vec3 scene = texture(uScene, vUv).rgb;
   vec3 bloom = tent(uBloom, vUv, uBloomTexel) / ${BLOOM_LEVELS.toFixed(1)};
-  // Las estrellas del frame (fuera de la historia y del bloom) pierden igualmente la fraccion dispersada
-  vec3 c = mix(scene, bloom, uScatter) + (1.0 - uScatter) * texture(uStarLayer, vUv).rgb;
+  vec3 stars = uStarScale * texture(uStarLayer, vUv).rgb;
+  // Conservacion exacta de energia: el porcentaje dispersado (uScatter) de escena y estrellas viene en bloom
+  vec3 c = mix(scene + stars, bloom, uScatter);
 
   // Vineteo natural cos^4 del angulo real de cada rayo (mismo mapeo que el raymarch), en lineal
   vec2 p = (vUv - 0.5) * vec2(uAspect, 1.0);

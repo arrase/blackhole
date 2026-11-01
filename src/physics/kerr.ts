@@ -2,7 +2,7 @@
 // M = 0.5, a = spin * M, J sobre +y; Kerr-Schild saliente en el layout del shader (t, x, y, z).
 
 export type Vec3 = [number, number, number];
-type Vec4 = [number, number, number, number];
+export type Vec4 = [number, number, number, number];
 type Mat4 = Vec4[];
 
 export const M = 0.5;
@@ -77,4 +77,22 @@ export function cameraTetrad(pos: Vec3, fwd: Vec3, right: Vec3, up: Vec3, spin: 
   const spatial = (v: Vec4): Vec3 => [v[1], v[2], v[3]];
   const [f, r, u] = legs.map((e) => spatial(lower(g, e)));
   return { pos, pt: Ul[0], u: spatial(Ul).map((x) => -x) as Vec3, fwd: f, right: r, up: u };
+}
+
+// Transformacion exacta de la 4-velocidad ecuatorial de Boyer-Lindquist (ut, ur, uphi) a coordenadas
+// Kerr-Schild salientes en indices del shader (t, x, y, z)
+export function ksEquatorialVelocity(pos: Vec3, spin: number, utBL: number, urBL: number, uphiBL: number): Vec4 {
+  const a = spin * M;
+  const [x, , z] = pos;
+  const r2 = x * x + z * z - a * a;
+  const r = Math.sqrt(r2), id = 1 / (r2 + a * a);
+  const delta = r2 - 2 * M * r + a * a;
+  const ut = utBL - (2 * M * r * urBL) / delta;
+  const uphi = uphiBL - (a * urBL) / delta;
+  return [
+    ut,
+    uphi * z + urBL * id * (r * x + a * z),
+    0,
+    -uphi * x + urBL * id * (r * z - a * x),
+  ];
 }
