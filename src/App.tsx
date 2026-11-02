@@ -18,7 +18,7 @@ const ALLOWED_LANGUAGES = [
 ] as const;
 
 const PRESET_CAMERAS: Record<PresetKey, CameraState> = {
-  cine: { theta: 1.2, phi: 0.12, dist: 22 },
+  cine: { theta: 1.2, phi: 0.06, dist: 22 },
   kerr: { theta: 0.0, phi: 0.08, dist: 14 },
   cerca: { theta: 0.6, phi: 0.14, dist: 9 },
   arriba: { theta: 0.3, phi: 1.1, dist: 26 },
