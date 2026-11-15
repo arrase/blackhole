@@ -12,12 +12,12 @@ uniform float uFlowPeriod;// ventana base de media orbita en r_peak, r_s / c
 uniform vec2 uLayerPhase; // fase de cada capa del mapa de flujo en [0, 1) (reloj en CPU, doble precision)
 uniform vec2 uLayerEpoch; // numero de siembra de cada capa (entero modulo 65536)
 
-// Profundidad optica vertical base del disco en el anillo interno: el perfil radial Sigma ~ r^-1.2
-// hace el borde exterior translucido con vetas volumetricas delante del nucleo ardiente
-const float DISK_TAU = 4.6;
+// Profundidad optica vertical base del disco en el anillo interno: mantiene el disco opticamente
+// grueso hasta el borde exterior y conserva lenguas espirales en la caida al ISCO
+const float DISK_TAU = 9.0;
 // Velocidad radial transonica de entrada al ISCO (~ c_s en discos magnetizados GRMHD): produce
 // lenguas espirales semitransparentes visibles entre r_ISCO y el horizonte r+
-const float ISCO_INFLOW = 0.025;
+const float ISCO_INFLOW = 0.015;
 // Dispersion de ln(densidad) y ln(disipacion) de la turbulencia MRI: filamentos de choque MHD
 // definidos y canales entre brazos con profundidad volumetrica real
 const vec2 TURBULENCE = vec2(0.84, 0.56);
@@ -32,11 +32,12 @@ const float CASCADE_GAIN = 0.56;
 // Sesgo de la huella del LOD: el jitter subpixel acumulado en la historia supermuestrea
 const float LOD_BIAS = 0.45;
 
-// Escala de altura volumetrica con flaring suave (H/r ~ 0.032 * r^0.18): cuerpo 3D visible
-// estilo Interstellar y adelgazamiento relativista limpio hacia el horizonte
+// Escala de altura volumetrica con flaring suave (H/r ~ 0.022 * r^0.10): cuerpo 3D visible
+// estilo Interstellar, estrechamiento limpio en el borde exterior y adelgazamiento hacia r+
 float diskHeight(float r){
-  float flare = pow(max(r / uRIsco, 1.0), 0.18);
-  return 0.032 * r * flare * sqrt(max(0.0, (r - uRPlus) / r));
+  float flare = pow(max(r / uRIsco, 1.0), 0.10);
+  float outerTaper = mix(0.45, 1.0, smoothstep(DISK_OUT, 0.78 * DISK_OUT, r));
+  return 0.022 * r * flare * outerTaper * sqrt(max(0.0, (r - uRPlus) / r));
 }
 
 // 4-velocidad del gas (u^t, u^r, u^phi) en Boyer-Lindquist. Fuera del ISCO, orbita circular prograda
@@ -74,11 +75,11 @@ float diskTeff(float r, float d){
   return uTPeak * pow(d * 0.077, 0.225) * 0.99 * plunge;
 }
 
-// Profundidad optica vertical en r: perfil concentrado en el anillo interno para que la periferia
-// sea translucida con vetas volumetricas delante del nucleo ardiente
+// Profundidad optica vertical en r: perfil compacto y denso hasta el borde exterior para evitar
+// que la periferia se disuelva en gas difuso
 float diskColumn(float r, float ur){
-  float edge = smoothstep(DISK_OUT, 0.72 * DISK_OUT, r);
-  float radial = pow(uRIsco / max(r, uRIsco), 1.20);
+  float edge = smoothstep(DISK_OUT, 0.86 * DISK_OUT, r);
+  float radial = pow(uRIsco / max(r, uRIsco), 0.65);
   return DISK_TAU * edge * radial / (1.0 + r * abs(ur) / (uRIsco * ISCO_INFLOW));
 }
 
@@ -170,7 +171,7 @@ float diskDepth(float y, float H, float column){
 // conservando profundidad volumetrica a angulos rasantes sin ocultar del todo el nucleo
 float diskSlabTau(float y0, float y1, float H, float column, float q, float dtComoving){
   float dy = abs(y1 - y0);
-  float dtEff = min(dtComoving, 3.0 * dy + 0.38 * dtComoving);
+  float dtEff = min(dtComoving, 3.0 * dy + 0.45 * dtComoving);
   if(dy < 1e-4 * H){
     float ym = 0.5 * (y0 + y1);
     return q * column * exp(-0.5 * ym * ym / (H * H)) / (sqrt(2.0 * PI) * H) * dtEff;
