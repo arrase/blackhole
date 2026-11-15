@@ -12,11 +12,11 @@ out vec4 fragColor;
 ${hash}
 ${color}
 
-const float GALAXY_RADIANCE = 0.025;
-const vec3 GALAXY_AXIS = vec3(0.8289, -0.4964, -0.258);
-const vec3 GALAXY_X = vec3(-0.2966, 0.0, -0.955);
-const vec3 GALAXY_Z = vec3(0.4738, 0.8681, -0.147);
-const float GALAXY_T = 5.8;
+const float GALAXY_RADIANCE = 0.014;
+const vec3 GALAXY_AXIS = vec3(0.7793, -0.5612, 0.2787);
+const vec3 GALAXY_X = vec3(0.4106, 0.8188, 0.4012);
+const vec3 GALAXY_Z = vec3(-0.4733, -0.1222, 0.8724);
+const float GALAXY_T = 6.8;
 
 vec3 restTint(float T){
   vec3 bb = blackbody(T) / dot(blackbody(T), LUMA);
@@ -67,43 +67,51 @@ void main(){
   float lon = atan(dot(d, GALAXY_Z), dot(d, GALAXY_X));
   float center = max(dot(d, GALAXY_X), 0.0);
 
-  // Geometria galactica: bulbo central calido, disco fino estelar y halo difuso
-  float bulge = 1.20 * exp(-2.5 * (1.0 - center) - 6.5 * lat * lat);
-  float thinDisk = exp(-15.0 * lat * lat);
-  float thickDisk = 0.36 * exp(-3.0 * lat * lat);
+  // Geometria galactica: bulbo central, disco fino estelar y halo oscuro para contraste de espacio profundo
+  float bulge = 1.05 * exp(-3.4 * (1.0 - center) - 9.0 * lat * lat);
+  float thinDisk = exp(-26.0 * lat * lat);
+  float thickDisk = 0.18 * exp(-5.5 * lat * lat);
   float band = thinDisk + thickDisk;
-  float corePlane = exp(-54.0 * lat * lat);
+  float corePlane = exp(-72.0 * lat * lat);
 
-  // Nubes estelares no resueltas y brazos espirales granulados
-  float clouds = 0.60 + 0.44 * smoothstep(-1.2, 1.3, skyFbm(d * 7.5 + vec3(0.4, 1.3, 2.1), 7, 0.58));
-  float fineStars = 0.78 + 0.32 * smoothstep(-0.9, 1.2, skyFbm(d * 24.0 + vec3(5.2, 1.9, 3.4), 5, 0.55));
+  // Warp de dominio 3D (horneado una sola vez al inicio): evita manchas de baja frecuencia bajo lente
+  vec3 warp = vec3(
+    skyFbm(d * 6.0 + vec3(0.5, 1.2, 2.7), 4, 0.55),
+    skyFbm(d * 6.0 + vec3(4.1, 2.8, 0.9), 4, 0.55),
+    skyFbm(d * 6.0 + vec3(1.9, 5.3, 3.4), 4, 0.55)
+  );
+  vec3 dw = d + 0.11 * warp;
 
-  // Grietas fractales de polvo molecular con extincion selectiva CCM89 (enrojecimiento en los bordes)
-  float dust1 = skyFbm(d * 8.2, 7, 0.57);
-  float dust2 = skyFbm(d * 19.5 + vec3(1.7, 3.2, 0.5), 6, 0.54);
-  float ridgeDust = 1.0 - abs(skyFbm(d * 13.0 + vec3(3.1, 0.7, 4.8), 5, 0.56));
-  float dustTau = (0.14 + 1.35 * corePlane + 0.32 * thinDisk)
-    * smoothstep(-0.28, 0.92, 0.75 * dust1 + 0.42 * dust2 + 0.35 * (ridgeDust - 0.65));
-  vec3 extinction = exp(-dustTau * vec3(0.68, 0.98, 1.36));
-  vec3 nearVeil = exp(-0.24 * dustTau * vec3(0.74, 0.98, 1.28));
+  // Nubes estelares no resueltas y brazos espirales de alta definicion
+  float clouds = 0.55 + 0.48 * smoothstep(-1.1, 1.2, skyFbm(dw * 11.5 + vec3(0.4, 1.3, 2.1), 7, 0.56));
+  float fineStars = 0.76 + 0.36 * smoothstep(-0.9, 1.2, skyFbm(dw * 32.0 + vec3(5.2, 1.9, 3.4), 5, 0.55));
+
+  // Filamentos finos de polvo molecular con extincion selectiva CCM89
+  float dust1 = skyFbm(dw * 14.0, 7, 0.56);
+  float dust2 = skyFbm(dw * 31.0 + vec3(1.7, 3.2, 0.5), 6, 0.54);
+  float ridgeDust = 1.0 - abs(skyFbm(dw * 21.0 + vec3(3.1, 0.7, 4.8), 5, 0.56));
+  float dustTau = (0.08 + 1.45 * corePlane + 0.28 * thinDisk)
+    * smoothstep(-0.18, 0.90, 0.68 * dust1 + 0.45 * dust2 + 0.42 * (ridgeDust - 0.62));
+  vec3 extinction = exp(-dustTau * vec3(0.72, 0.98, 1.32));
+  vec3 nearVeil = exp(-0.22 * dustTau * vec3(0.76, 0.98, 1.26));
   float clear = dot(extinction, LUMA);
 
-  // Capa lejana (bulbo ambar-marfil + brazos azulados extinguida por polvo) + capa cercana en primer plano
-  vec3 farLight = (bulge * restTint(4.7) + band * clouds * restTint(GALAXY_T)) * fineStars * extinction;
-  vec3 armBlue = 0.24 * thinDisk * smoothstep(0.1, 1.1, clouds * fineStars - 0.35) * extinction * restTint(11.5);
-  vec3 nearLight = 0.20 * (0.65 * thinDisk + thickDisk) * fineStars * nearVeil * restTint(6.4);
+  // Capa lejana (bulbo marfil + brazos estelares azul-plata) + velo cercano
+  vec3 farLight = (bulge * restTint(5.2) + band * clouds * restTint(GALAXY_T)) * fineStars * extinction;
+  vec3 armBlue = 0.34 * thinDisk * smoothstep(0.08, 1.05, clouds * fineStars - 0.30) * extinction * restTint(12.5);
+  vec3 nearLight = 0.14 * (0.70 * thinDisk + thickDisk) * fineStars * nearVeil * restTint(7.4);
 
   // Regiones H II ionizadas (emision Balmer H-alfa/H-beta + [O III]) y nebulosas de reflexion OB
-  float h2Knots = corePlane * smoothstep(0.36, 0.92, skyFbm(d * 15.0 + vec3(4.1, 0.8, 2.9), 6, 0.56));
-  float o3Mix = smoothstep(-0.3, 0.6, skyFbm(d * 22.0 + vec3(8.3, 2.4, 6.1), 4, 0.55));
-  vec3 hAlpha = mix(vec3(1.0, 0.24, 0.38), vec3(0.22, 0.76, 0.90), 0.35 * o3Mix);
-  vec3 emissionNeb = 0.28 * h2Knots * mix(nearVeil, extinction, 0.55) * hAlpha;
+  float h2Knots = corePlane * smoothstep(0.38, 0.92, skyFbm(dw * 20.0 + vec3(4.1, 0.8, 2.9), 6, 0.56));
+  float o3Mix = smoothstep(-0.3, 0.6, skyFbm(dw * 28.0 + vec3(8.3, 2.4, 6.1), 4, 0.55));
+  vec3 hAlpha = mix(vec3(1.0, 0.22, 0.42), vec3(0.20, 0.78, 0.94), 0.38 * o3Mix);
+  vec3 emissionNeb = 0.32 * h2Knots * mix(nearVeil, extinction, 0.55) * hAlpha;
 
-  float reflField = thinDisk * smoothstep(0.20, 0.88, skyFbm(d * 10.5 + vec3(2.2, 6.4, 1.5), 5, 0.55));
-  vec3 reflectionNeb = 0.18 * reflField * (0.5 + 0.5 * sin(lon * 2.0 + dust1)) * nearVeil * restTint(16.5);
+  float reflField = thinDisk * smoothstep(0.18, 0.86, skyFbm(dw * 14.5 + vec3(2.2, 6.4, 1.5), 5, 0.55));
+  vec3 reflectionNeb = 0.24 * reflField * (0.5 + 0.5 * sin(lon * 2.0 + dust1)) * nearVeil * restTint(16.5);
 
   vec3 radiance = GALAXY_RADIANCE * (farLight + armBlue + nearLight + emissionNeb + reflectionNeb);
-  float starBoost = clamp((band + 0.45 * bulge) * (0.28 + 0.72 * clear), 0.0, 1.6);
+  float starBoost = clamp((band + 0.45 * bulge) * (0.30 + 0.70 * clear), 0.0, 1.6);
   fragColor = vec4(max(radiance, 0.0), starBoost);
 }
 `;

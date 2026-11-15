@@ -84,24 +84,33 @@ const mat3 AGX_OUT = mat3(
   -0.0990297440797205, -0.0989611768448433, 1.15107367264116);
 const float AGX_MIN_EV = -12.47393;
 const float AGX_MAX_EV = 4.026069;
-// Saturacion de la mirada (look) tras la curva, como el look "Punchy" de Blender sin su contraste:
-// el AgX base apaga los cuerpos negros de 3-5 kK a un sepia; ajuste artistico, solo de croma
-const float AGX_SATURATION = 1.7;
+// Saturacion y contraste del look tras el revelado: al aplicar AGX_OUT en lineal (donde es la
+// inversa exacta de AGX_IN) se elimina la contaminacion cruzada marron en sombras y medios tonos,
+// manteniendo la desaturacion suave hacia blanco puro en el nucleo con beaming Doppler
+const float AGX_CONTRAST = 1.15;
+const float AGX_SATURATION = 1.42;
 
 // Devuelve sRGB lineal en [0, 1]
 vec3 agx(vec3 c){
+  // Compresion suave de hombro por luminancia antes de AGX_IN: preserva intacta la cromaticidad
+  // del cuerpo negro y evita recortar a blanco plano el anillo de fotones y el pico Doppler
+  float y = max(dot(c, vec3(0.2126, 0.7152, 0.0722)), 1e-10);
+  c *= (1.0 + y / 65.0) / (1.0 + y / 15.0);
   c = AGX_IN * c;
-  // Compresion suave de hombro en altas luces (> 2 en lineal) antes del techo de AgX: conserva intactos
-  // los tonos medios y oscuros mientras evita que el lado con beaming Doppler se recorte a blanco plano
-  c = c * (1.0 + c / 55.0) / (1.0 + c / 11.5);
   c = clamp(log2(max(c, 1e-10)), AGX_MIN_EV, AGX_MAX_EV);
   c = (c - AGX_MIN_EV) / (AGX_MAX_EV - AGX_MIN_EV);
   vec3 c2 = c * c;
   vec3 c4 = c2 * c2;
   c = 15.5 * c4 * c2 - 40.14 * c4 * c + 31.96 * c4 - 6.868 * c2 * c + 0.4298 * c2 + 0.1191 * c - 0.00232;
+  c = pow(max(c, 0.0), vec3(AGX_CONTRAST * 2.2));
+  c = clamp(AGX_OUT * c, 0.0, 1.0);
+  // Compensacion psicovisual de Bezold-Brucke en tonos calidos (R > G): evita que el amarillo
+  // oscuro se perciba como marron-oliva en el lado recesivo, virandolo a ambar/naranja/rubi ardiente
+  // sin alterar las altas luces blancas (c -> 1) ni las estrellas azules (B >= R)
+  float warm = clamp((c.r - c.b) / max(c.r, 1e-4), 0.0, 1.0);
+  c = mix(c, pow(c, vec3(1.0, 1.16, 1.32)), 0.75 * warm);
   float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
-  c = l + AGX_SATURATION * (c - l);
-  return pow(max(AGX_OUT * c, 0.0), vec3(2.2));
+  return max(l + AGX_SATURATION * (c - l), 0.0);
 }
 
 vec3 srgbEncode(vec3 c){

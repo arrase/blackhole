@@ -81,7 +81,7 @@ void main(){
           float dtComoving = dt / max(gMid * speed, 0.08);
           float corCol = coronaColumn(midR);
           float corHScale = 3.0 * H;
-          vec3 corSrc = corCol > 0.0 ? blackbody(effectiveRedshift(gMid) * 1.05 * uTPeak) * uDiskUnit : vec3(0.0);
+          vec3 corSrc = corCol > 0.0 ? blackbody(effectiveRedshift(gMid) * 1.22 * uTPeak) * uDiskUnit : vec3(0.0);
 
           float slabH = SLAB * H;
           float dySeg = nextX.y - x.y;
@@ -105,10 +105,14 @@ void main(){
 
           // 2. Fotosfera turbulenta [t0, t1] con sub-muestreo estratificado
           if(t1 > t0 && tr >= 0.005){
-            float lens = order == 0 ? 1.0 : (order == 1 ? LENS_DEMAG : LENS_DEMAG * LENS_DEMAG);
+            // El arco primario inferior cruza y=0 una vez en vacio antes del pericentro pero mantiene
+            // imagen de orden 0 (magnificacion O(1)); la demagnificacion de Lyapunov aplica junto a la
+            // esfera de fotones (midR < 2.2) y en los sub-anillos relativistas n >= 2
+            float lens = order >= 2 ? LENS_DEMAG * LENS_DEMAG : (order == 1 && midR < 2.2 ? LENS_DEMAG : 1.0);
             float subLen = (t1 - t0) * dt;
             float subDy = abs(dySeg) * (t1 - t0);
-            int steps = clamp(int(ceil(max(subLen * GAS_RADIAL / (2.2 * midR), subDy / (0.45 * H)))), 1, 10);
+            int maxSteps = order == 0 ? 8 : 5;
+            int steps = clamp(int(ceil(max(subLen * GAS_RADIAL / (2.2 * midR), subDy / (0.75 * H)))), 1, maxSteps);
             float invSteps = 1.0 / float(steps);
 
             for(int k = 0; k < steps; k++){

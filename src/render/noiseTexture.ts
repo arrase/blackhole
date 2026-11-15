@@ -72,20 +72,21 @@ function addOctave(
   }
 }
 
-// Normaliza un canal a media 0 y desviacion tipica 1 y lo empaqueta en el canal `ch` de `rgba`
-function packNormalizedChannel(rgba: Uint8Array, ch: number, buf: Float32Array): void {
+// Elimina la media azimutal (eje x) de cada fila (y, z) para que ningun radio tenga un sesgo DC
+// axisimetrico que dibuje anillos concentricos al girar, y normaliza a media 0 y varianza 1
+function packNormalizedChannel(rgba: Uint8Array, ch: number, buf: Float32Array, w: number): void {
   const n = buf.length;
-  let sum = 0;
-  for (let i = 0; i < n; i++) sum += buf[i];
-  const mean = sum / n;
-  let varSum = 0;
-  for (let i = 0; i < n; i++) {
-    const d = buf[i] - mean;
-    varSum += d * d;
+  for (let row = 0; row < n; row += w) {
+    let rowSum = 0;
+    for (let x = 0; x < w; x++) rowSum += buf[row + x];
+    const rowMean = rowSum / w;
+    for (let x = 0; x < w; x++) buf[row + x] -= rowMean;
   }
+  let varSum = 0;
+  for (let i = 0; i < n; i++) varSum += buf[i] * buf[i];
   const scale = TURB_SCALE / Math.sqrt(varSum / n);
   for (let i = 0; i < n; i++) {
-    const u = Math.min(1, Math.max(0, 0.5 + (buf[i] - mean) * scale));
+    const u = Math.min(1, Math.max(0, 0.5 + buf[i] * scale));
     rgba[i * 4 + ch] = Math.round(u * 255);
   }
 }
@@ -115,10 +116,10 @@ export function generateTurbulence(w: number, h: number, d: number, seed = 1): U
   addOctave(warp, w, h, d, 8, 1, rand);
   addOctave(warp, w, h, d, 4, 0.55, rand);
 
-  packNormalizedChannel(rgba, 0, rho);
-  packNormalizedChannel(rgba, 1, diss);
-  packNormalizedChannel(rgba, 2, rawRidge);
-  packNormalizedChannel(rgba, 3, warp);
+  packNormalizedChannel(rgba, 0, rho, w);
+  packNormalizedChannel(rgba, 1, diss, w);
+  packNormalizedChannel(rgba, 2, rawRidge, w);
+  packNormalizedChannel(rgba, 3, warp, w);
   return rgba;
 }
 
