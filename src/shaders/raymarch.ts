@@ -54,7 +54,7 @@ void main(){
     // Macro-paso geodesico gobernado solo por la curvatura del espaciotiempo (desacoplado de H)
     float dt = clamp(0.09 * r * r / (r + 2.0), 0.012, 1.3);
     if(r < 3.4) dt = min(dt, 0.014 + 0.032 * (r - uRPlus));
-    if(hasDisk && r < DISK_OUT + 1.2 && abs(x.y) < 0.14 * r) dt = min(dt, 0.046 * r);
+    if(hasDisk && r < DISK_OUT + 1.2 && abs(x.y) < 0.25 * r) dt = min(dt, 0.032 * r);
 
     float speed = length(dx);
     float h = dt / speed;
@@ -65,7 +65,7 @@ void main(){
 
     // Interseccion exacta del segmento [x, nextX] con la envoltura del disco y la corona: nunca salta
     // losas finas en los anillos de fotones (n = 1, 2) y tiene coste nulo en el espacio vacio
-    if(hasDisk && crossings < 3 && (min(abs(x.y), abs(nextX.y)) < 0.65 || x.y * nextX.y <= 0.0)){
+    if(hasDisk && crossings < 3 && (min(abs(x.y), abs(nextX.y)) < 2.9 || x.y * nextX.y <= 0.0)){
       vec3 midX = 0.5 * (x + nextX);
       float midR = ksRadius(midX);
       if(midR > uRPlus && midR < DISK_OUT){
@@ -111,8 +111,8 @@ void main(){
             float lens = order >= 2 ? LENS_DEMAG * LENS_DEMAG : (order == 1 && midR < 2.2 ? LENS_DEMAG : 1.0);
             float subLen = (t1 - t0) * dt;
             float subDy = abs(dySeg) * (t1 - t0);
-            int maxSteps = order == 0 ? 8 : 5;
-            int steps = clamp(int(ceil(max(subLen * GAS_RADIAL / (2.2 * midR), subDy / (0.75 * H)))), 1, maxSteps);
+            int maxSteps = order == 0 ? 12 : 6;
+            int steps = clamp(int(ceil(max(subLen * 0.5 * GAS_RADIAL / (2.2 * sqrt(midR)), max(subLen / (0.75 * H), subDy / (0.45 * H))))), 1, maxSteps);
             float invSteps = 1.0 / float(steps);
 
             for(int k = 0; k < steps; k++){
@@ -132,7 +132,7 @@ void main(){
               float subComoving = (tb - ta) * dt / max(sg * speed, 0.08);
               float dtau = diskSlabTau(mix(x.y, nextX.y, ta), mix(x.y, nextX.y, tb), sH, sColumn, field.x, subComoving);
               float teff = diskTeff(sr, field.y);
-              if(teff > 0.0) col += tr * (1.0 - exp(-dtau)) * diskSource(sg, teff, diskDepth(sx.y, sH, sColumn));
+              if(teff > 0.0) col += tr * (1.0 - exp(-dtau)) * diskSource(sg, teff, diskDepth(sx.y, sH, sColumn * mix(0.45, 1.35, clamp(field.x, 0.0, 2.0))));
               tr *= exp(-dtau);
               if(tr < 0.005) break;
             }

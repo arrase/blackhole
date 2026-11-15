@@ -12,32 +12,31 @@ uniform float uFlowPeriod;// ventana base de media orbita en r_peak, r_s / c
 uniform vec2 uLayerPhase; // fase de cada capa del mapa de flujo en [0, 1) (reloj en CPU, doble precision)
 uniform vec2 uLayerEpoch; // numero de siembra de cada capa (entero modulo 65536)
 
-// Profundidad optica vertical base del disco en el anillo interno: el perfil radial Sigma ~ r^-1
-// hace el borde exterior semitransparente para no tapar el nucleo ardiente en vistas rasantes
-const float DISK_TAU = 5.2;
+// Profundidad optica vertical base del disco en el anillo interno: el perfil radial Sigma ~ r^-1.2
+// hace el borde exterior translucido con vetas volumetricas delante del nucleo ardiente
+const float DISK_TAU = 4.6;
 // Velocidad radial transonica de entrada al ISCO (~ c_s en discos magnetizados GRMHD): produce
 // lenguas espirales semitransparentes visibles entre r_ISCO y el horizonte r+
 const float ISCO_INFLOW = 0.025;
 // Dispersion de ln(densidad) y ln(disipacion) de la turbulencia MRI: filamentos de choque MHD
 // definidos y canales entre brazos con profundidad volumetrica real
-const vec2 TURBULENCE = vec2(0.78, 0.54);
-// Celdas base por vuelta: multiplo exacto de NOISE_SIZE.x (64), azimut 100 % sin costura (32..1024 octavas)
+const vec2 TURBULENCE = vec2(0.84, 0.56);
+// Celdas base por vuelta: multiplo exacto de NOISE_SIZE.x (64), azimut 100 % sin costura
 const float GAS_CELLS = 256.0;
-// Frecuencia a lo largo del brazo espiral (4x menor que la transversal) para elongar los remolinos
-// a lo largo de las espirales logaritmicas (~32 grados) en lugar de formar anillos concentricos
-const float GAS_RADIAL = 0.28 * GAS_CELLS / (2.0 * PI);
+// Celdas radiales por unidad de sqrt(r): mantiene el espesor fino de los filamentos hasta el borde
+const float GAS_RADIAL = 22.0;
 // Demagnificacion de Lyapunov por medio giro en la esfera de fotones para el LOD de anillos n>=1
 const float LENS_DEMAG = 6.0;
 // Peso relativo de la segunda cascada de filamentos finos
-const float CASCADE_GAIN = 0.54;
-// Sesgo de la huella del LOD (-0.75 mip): el jitter subpixel acumulado en la historia supermuestrea
+const float CASCADE_GAIN = 0.56;
+// Sesgo de la huella del LOD: el jitter subpixel acumulado en la historia supermuestrea
 const float LOD_BIAS = 0.45;
 
-// Escala de altura con flaring concavo de Shakura-Sunyaev (H/r ~ r^(1/8)): geometria 3D realista
-// en el borde exterior y adelgazamiento relativista limpio hacia el horizonte
+// Escala de altura volumetrica con flaring suave (H/r ~ 0.032 * r^0.18): cuerpo 3D visible
+// estilo Interstellar y adelgazamiento relativista limpio hacia el horizonte
 float diskHeight(float r){
-  float flare = pow(max(r / uRIsco, 1.0), 0.125);
-  return 0.0074 * r * flare * sqrt(max(0.0, (r - uRPlus) / r));
+  float flare = pow(max(r / uRIsco, 1.0), 0.18);
+  return 0.032 * r * flare * sqrt(max(0.0, (r - uRPlus) / r));
 }
 
 // 4-velocidad del gas (u^t, u^r, u^phi) en Boyer-Lindquist. Fuera del ISCO, orbita circular prograda
@@ -75,23 +74,26 @@ float diskTeff(float r, float d){
   return uTPeak * pow(d * 0.077, 0.225) * 0.99 * plunge;
 }
 
-// Profundidad optica vertical en r: perfil Shakura-Sunyaev Sigma ~ r^-1 concentrado en el anillo
-// interno para que la periferia mas fria sea translucida y no oculte el nucleo en vistas rasantes
+// Profundidad optica vertical en r: perfil concentrado en el anillo interno para que la periferia
+// sea translucida con vetas volumetricas delante del nucleo ardiente
 float diskColumn(float r, float ur){
   float edge = smoothstep(DISK_OUT, 0.72 * DISK_OUT, r);
-  float radial = pow(uRIsco / max(r, uRIsco), 0.95);
+  float radial = pow(uRIsco / max(r, uRIsco), 1.20);
   return DISK_TAU * edge * radial / (1.0 + r * abs(ur) / (uRIsco * ISCO_INFLOW));
 }
 
-// Turbulencia MRI en 2 cascadas con solo 2 a 3 lecturas 3D por capa:
-// - Velocidad de patron sub-kepleriana (omega^0.42) que evita que el obturador temporal emborrone
-//   azimutalmente los arcos internos de alta velocidad (r ~ 1.5..4)
-// - Warp de dominio 3D que trenza los brazos espirales y genera filamentos MHD nitidos
+// Turbulencia MRI en 2 cascadas:
+// - Coordenada radial en sqrt(r) y espiral apretada (~8-12 grados) para formar filamentos
+//   concéntricos tipo Interstellar hasta el borde exterior sin brazos de galaxia
+// - Rotacion diferencial casi kepleriana (omega^0.78) y caida radial solo cerca/dentro del ISCO
+// - Estructura 3D vertical marcada (q.z ~ 3.6 y/H) con nubes frias absorbentes en altura
 vec2 gasFields(vec3 x, float r, float H, float omega, float fp){
-  vec3 q = vec3(atan(x.x, x.z) * GAS_CELLS / (2.0 * PI), log(r) * GAS_RADIAL, 1.8 * x.y / H);
-  // Espiral logaritmica trailing (~31 grados de angulo de paso: dphi / d(ln r) ~ 1.62)
-  q.x += 5.8 * q.y;
-  float shear = 5.8 * GAS_RADIAL;
+  float sr = sqrt(r);
+  vec3 q = vec3(atan(x.x, x.z) * GAS_CELLS / (2.0 * PI), sr * GAS_RADIAL, 3.6 * x.y / H);
+  // Espiral apretada tipo Kepler/MRI (~8-12 grados de angulo de paso en el disco principal)
+  float spiral = 9.0;
+  q.x += spiral * q.y;
+  float shear = 0.5 * spiral * GAS_RADIAL * sr;
   if(r < uRIsco){
     float span = max(uRIsco - uRPlus, 0.08);
     float u = (uRIsco - r) / span;
@@ -101,19 +103,19 @@ vec2 gasFields(vec3 x, float r, float H, float omega, float fp){
 
   float normCasc = inversesqrt(1.0 + CASCADE_GAIN * CASCADE_GAIN);
   float omegaPeak = PI / uFlowPeriod;
-  // Velocidad angular efectiva del patron: conserva la rotacion diferencial sin sobreescurrir ni
-  // desenfocar por movimiento los filamentos del anillo interior frente al exterior
-  float omegaPat = omegaPeak * pow(max(omega / omegaPeak, 1e-3), 0.35);
+  // Velocidad angular diferencial cercana a la kepleriana: nucleo rapido, borde exterior sereno
+  float omegaPat = omegaPeak * pow(max(omega / omegaPeak, 1e-3), 0.78);
   float flowSpan = 0.55 * uFlowPeriod * GAS_CELLS / (2.0 * PI);
+  float inflow = smoothstep(1.20 * uRIsco, uRPlus, r);
   float fp0 = LOD_BIAS * fp * length(vec2(0.5 * GAS_CELLS / (2.0 * PI), shear)) / r;
-  float hLayer = smoothstep(0.65, 1.85, abs(x.y) / H);
+  float hLayer = smoothstep(0.45, 1.75, abs(x.y) / H);
   vec2 sum = vec2(0.0);
   float w2 = 0.0, kept = 0.0;
 
   for(int i = 0; i < 2; i++){
     float f = uLayerPhase[i];
     float w = 1.0 - abs(2.0 * f - 1.0);
-    float layerShear = shear + 0.52 * (f - 0.35) * omegaPat * flowSpan;
+    float layerShear = shear + 1.17 * (f - 0.35) * omegaPat * flowSpan;
     float fp1 = 4.0 * fp0 * sqrt(1.0 + 6.0e-5 * layerShear * layerShear);
     float w1 = 1.0 - smoothstep(4.5, 11.0, fp1);
     float v0 = 1.0 / (1.0 + 0.05 * fp0 * fp0);
@@ -124,16 +126,16 @@ vec2 gasFields(vec3 x, float r, float H, float omega, float fp){
     // floor(seed.x / 4) * 4 conserva la periodicidad exacta en 0.25 * qi.x (64) y 0.5 * qi.x (128)
     vec3 qi = q + vec3(floor(seed.x * 0.25) * 4.0, seed.yz);
     qi.x -= (f - 0.35) * omegaPat * flowSpan;
-    qi.y += (f - 0.35) * 1.4;
+    qi.y += (f - 0.35) * (0.12 + 1.8 * inflow);
 
     // 1 sola lectura macro (0.25 * 256 = 64 = NOISE_SIZE.x, 100 % sin costura en azimut):
-    // .wx aporta un warp 3D amplio a lo largo y ancho de la espiral y .yz modula los brazos
-    vec4 macro = turbulence(qi * vec3(0.25, 0.85, 0.45), fp0 * 0.35);
-    vec3 qw = qi + vec3(macro.wx * vec2(7.5, 2.2), macro.z * 0.70);
+    // warp 3D suave para ondular filamentos y capas verticales sin crear brazos de galaxia
+    vec4 macro = turbulence(qi * vec3(0.25, 0.90, 0.65), fp0 * 0.35);
+    vec3 qw = qi + vec3(macro.wx * vec2(2.6, 0.75), macro.z * 0.90);
 
-    vec3 c0 = turbulence(qw * vec3(0.5, 1.0, 1.0), fp0 * 0.65).xyz;
+    vec3 c0 = turbulence(qw * vec3(0.5, 1.25, 1.0), fp0 * 0.65).xyz;
     if(w1 > 0.0){
-      vec3 c1 = turbulence(qw * vec3(2.0, 4.0, 4.0) + vec3(0.0, 19.3, 7.1), fp1 * 0.55).xyz;
+      vec3 c1 = turbulence(qw * vec3(2.0, 4.0, 3.0) + vec3(0.0, 19.3, 7.1), fp1 * 0.55).xyz;
       c0 += (CASCADE_GAIN * w1) * c1;
     }
     c0 *= normCasc;
@@ -141,10 +143,9 @@ vec2 gasFields(vec3 x, float r, float H, float omega, float fp){
     // c0.x = rho, c0.y = diss, c0.z = ridge (filamentos de choque MHD densos e incandescentes).
     // En el plano medio (hLayer=0) la densidad y la temperatura se refuerzan; en las capas altas
     // (hLayer=1) las nubes densas se enfrian y crean vetas de absorcion volumetrica 3D
-    float spiralArm = 0.34 * macro.y + 0.26 * macro.z;
     vec2 g = vec2(
-      0.66 * c0.x + 0.50 * c0.z + spiralArm,
-      0.58 * c0.y + 0.76 * c0.z + 0.88 * spiralArm + mix(0.26, -0.34, hLayer) * c0.x
+      0.72 * c0.x + 0.56 * c0.z + 0.16 * macro.z,
+      0.62 * c0.y + 0.78 * c0.z + mix(0.32, -0.45, hLayer) * c0.x
     );
     sum += w * g;
     w2 += w * w;
@@ -160,17 +161,16 @@ float erfc(float x){
   return 1.0 / (d * d);
 }
 
-// Profundidad optica vertical efectiva hacia el nucleo caliente (normalizada alrededor de tau ~ 1.35
-// en y = 0 para evitar sobrecalentar los rayos verticales frente a los rasantes)
+// Profundidad optica vertical efectiva hacia el nucleo caliente
 float diskDepth(float y, float H, float column){
-  return min(max(column, 1.4), 2.6) * 0.5 * erfc(abs(y) / (sqrt(2.0) * H));
+  return min(max(column, 1.2), 2.6) * 0.5 * erfc(abs(y) / (sqrt(2.0) * H));
 }
 
 // Integral analitica del perfil gaussiano vertical entre y0 e y1 en el marco comovil del plasma,
-// con saturacion por porosidad turbulenta a angulos rasantes para penetrar hasta el plano medio
+// conservando profundidad volumetrica a angulos rasantes sin ocultar del todo el nucleo
 float diskSlabTau(float y0, float y1, float H, float column, float q, float dtComoving){
   float dy = abs(y1 - y0);
-  float dtEff = min(dtComoving, 2.4 * dy + 0.08 * dtComoving);
+  float dtEff = min(dtComoving, 3.0 * dy + 0.38 * dtComoving);
   if(dy < 1e-4 * H){
     float ym = 0.5 * (y0 + y1);
     return q * column * exp(-0.5 * ym * ym / (H * H)) / (sqrt(2.0 * PI) * H) * dtEff;
@@ -189,12 +189,12 @@ float effectiveRedshift(float g){
   return sqrt(gc * gc + 0.58 * gc * u * u);
 }
 
-// Funcion fuente S = B(g T) con estratificacion vertical de Eddington y soporte bolometrico en la
-// cola de Wien para que el plasma frio (2.2-4 kK) brille en naranja/ambar/carmesi sin apagarse
+// Funcion fuente S = B(g T) con estratificacion vertical de Eddington y soporte en la cola de Wien
+// moderado para que las nubes frias en altura aporten sombreado volumetrico delante del nucleo
 vec3 diskSource(float g, float teff, float tau){
   float gEff = effectiveRedshift(g);
   float T = gEff * teff * sqrt(sqrt(0.75 * (tau + 0.55)));
-  float wienSupport = pow(max(uTPeak / max(T, 1.4), 1.0), 1.42);
+  float wienSupport = pow(max(uTPeak / max(T, 1.4), 1.0), 1.10);
   return blackbody(T) * (wienSupport * uDiskUnit);
 }
 
